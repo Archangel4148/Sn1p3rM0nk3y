@@ -36,6 +36,18 @@ class InputController:
         pgui.click(button=button)
 
     @staticmethod
+    def press_key(key: str, hold_time: float = 0.05):
+        """Press and release a keyboard key."""
+        pgui.keyDown(key)
+        time.sleep(hold_time)
+        pgui.keyUp(key)
+
+    @staticmethod
+    def scroll(amount: int):
+        """Scroll the mouse wheel. Positive=up, negative=down."""
+        pgui.scroll(amount)
+
+    @staticmethod
     def drag(
             start_pos: tuple[float, float],
             end_pos: tuple[float, float],
@@ -60,6 +72,8 @@ def main():
 
     time.sleep(1)
     controller.click(w / 2, h / 2)
+    time.sleep(1)
+    controller.scroll(-500)
 
 
 if __name__ == '__main__':
