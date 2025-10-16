@@ -67,7 +67,9 @@
         "base_sees_camo": false,
         "base_pops_lead": false,
         "base_range": 60,
-        "placement_type": "land"
+        "placement_type": "land",
+      "footprint_shape": "circular",
+        "footprint_radius": 7
     },
     "Druid": {
         "category": "Magic",
