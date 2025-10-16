@@ -3,151 +3,224 @@
         "category": "Magic",
         "base_sees_camo": false,
         "base_pops_lead": true,
-        "base_range": 45
+        "base_range": 45,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 6
     },
     "Banana Farm": {
         "category": "Support",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 40
-
+        "base_range": 40,
+        "placement_type": "land",
+        "footprint_shape": "rectangular",
+        "footprint_width": 30
     },
     "Beast Handler": {
         "category": "Magic",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 20
+        "base_range": 20,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 7
     },
     "Bomb Shooter": {
         "category": "Primary",
         "base_sees_camo": false,
         "base_pops_lead": true,
-        "base_range": 40
+        "base_range": 40,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 7
     },
     "Boomerang Monkey": {
         "category": "Primary",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 43
+        "base_range": 43,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 7
     },
     "Dart Monkey": {
         "category": "Primary",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 32
+        "base_range": 32,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 6
     },
     "Dartling Gunner": {
         "category": "Military",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 0
+        "base_range": 0,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 7
     },
     "Desperado": {
         "category": "Primary",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 60
+        "base_range": 60,
+        "placement_type": "land"
     },
     "Druid": {
         "category": "Magic",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 35
+        "base_range": 35,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 7
     },
     "Engineer Monkey": {
         "category": "Support",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 40
+        "base_range": 40,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 7
     },
     "Glue Gunner": {
         "category": "Primary",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 46
+        "base_range": 46,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 6
     },
     "Heli Pilot": {
         "category": "Military",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 0
+        "base_range": 0,
+        "placement_type": "land",
+        "footprint_shape": "rectangular",
+        "footprint_height": 27
     },
     "Ice Monkey": {
         "category": "Primary",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 20
+        "base_range": 20,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 6
     },
     "Mermonkey": {
         "category": "Magic",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 28
+        "base_range": 28,
+        "placement_type": "any",
+        "footprint_shape": "circular",
+        "footprint_radius": 8
     },
     "Monkey Ace": {
         "category": "Military",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 0
+        "base_range": 0,
+        "placement_type": "land",
+        "footprint_shape": "rectangular",
+        "footprint_width": 28,
+        "footprint_height": 18
     },
     "Monkey Buccaneer": {
         "category": "Military",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 60
+        "base_range": 60,
+        "placement_type": "water",
+        "footprint_shape": "circular",
+        "footprint_radius": 8
     },
     "Monkey Sub": {
         "category": "Military",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 42
+        "base_range": 42,
+        "placement_type": "water",
+        "footprint_shape": "circular",
+        "footprint_radius": 7
     },
     "Monkey Village": {
         "category": "Support",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 40
+        "base_range": 40,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 11
     },
     "Mortar Monkey": {
         "category": "Military",
         "base_sees_camo": false,
         "base_pops_lead": true,
-        "base_range": 0
+        "base_range": 0,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 11
     },
     "Ninja Monkey": {
         "category": "Magic",
         "base_sees_camo": true,
         "base_pops_lead": false,
-        "base_range": 40
+        "base_range": 40,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 6
     },
     "Sniper Monkey": {
         "category": "Military",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 0
+        "base_range": 0,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 6
     },
     "Spike Factory": {
         "category": "Support",
         "base_sees_camo": true,
         "base_pops_lead": false,
-        "base_range": 34
+        "base_range": 34,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 8
     },
     "Super Monkey": {
         "category": "Magic",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 50
+        "base_range": 50,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 11
     },
     "Tack Shooter": {
         "category": "Primary",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 23
+        "base_range": 23,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 6
     },
     "Wizard Monkey": {
         "category": "Magic",
         "base_sees_camo": false,
         "base_pops_lead": false,
-        "base_range": 40
+        "base_range": 40,
+        "placement_type": "land",
+        "footprint_shape": "circular",
+        "footprint_radius": 7
     }
 }
