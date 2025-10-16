@@ -2,126 +2,152 @@
     "Alchemist": {
         "category": "Magic",
         "base_sees_camo": false,
-        "base_pops_lead": true
+        "base_pops_lead": true,
+        "base_range": 45
     },
     "Banana Farm": {
         "category": "Support",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 40
+
     },
     "Beast Handler": {
         "category": "Magic",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 20
     },
     "Bomb Shooter": {
         "category": "Primary",
         "base_sees_camo": false,
-        "base_pops_lead": true
+        "base_pops_lead": true,
+        "base_range": 40
     },
     "Boomerang Monkey": {
         "category": "Primary",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 43
     },
     "Dart Monkey": {
         "category": "Primary",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 32
     },
     "Dartling Gunner": {
         "category": "Military",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 0
     },
     "Desperado": {
         "category": "Primary",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 60
     },
     "Druid": {
         "category": "Magic",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 35
     },
     "Engineer Monkey": {
         "category": "Support",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 40
     },
     "Glue Gunner": {
         "category": "Primary",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 46
     },
     "Heli Pilot": {
         "category": "Military",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 0
     },
     "Ice Monkey": {
         "category": "Primary",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 20
     },
     "Mermonkey": {
         "category": "Magic",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 28
     },
     "Monkey Ace": {
         "category": "Military",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 0
     },
     "Monkey Buccaneer": {
         "category": "Military",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 60
     },
     "Monkey Sub": {
         "category": "Military",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 42
     },
     "Monkey Village": {
         "category": "Support",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 40
     },
     "Mortar Monkey": {
         "category": "Military",
         "base_sees_camo": false,
-        "base_pops_lead": true
+        "base_pops_lead": true,
+        "base_range": 0
     },
     "Ninja Monkey": {
         "category": "Magic",
         "base_sees_camo": true,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 40
     },
     "Sniper Monkey": {
         "category": "Military",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 0
     },
     "Spike Factory": {
         "category": "Support",
         "base_sees_camo": true,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 34
     },
     "Super Monkey": {
         "category": "Magic",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 50
     },
     "Tack Shooter": {
         "category": "Primary",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 23
     },
     "Wizard Monkey": {
         "category": "Magic",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": false,
+        "base_range": 40
     }
 }

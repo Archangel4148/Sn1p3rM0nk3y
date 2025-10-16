@@ -175,11 +175,49 @@ def mark_lead_upgrades(json_path, output_path="btd6_upgrades_lead.json"):
 
     print(f"Added lead info to {output_path}")
 
+def mark_upgrade_ranges(json_path, output_path="btd6_upgrades_range.json"):
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
 
-mark_lead_upgrades(
-    json_path=r"C:\Users\sedmunds\PycharmProjects\Sn1p3rM0nk3y\btd6_upgrades.json",
-    output_path=r"C:\Users\sedmunds\PycharmProjects\Sn1p3rM0nk3y\btd6_upgrades_lead.json"
-)
+    range_values = {
+        "Ice Monkey": [("0-4-0", 10), ("0-5-0", 10), ("0-0-1", 7), ("0-0-4", 16)],
+        "Tack Shooter": [("5-0-0", 12), ("0-1-0", 4), ("0-2-0", 4), ("0-0-5", 7)],
+        "Dart Monkey": [("4-0-0", 7), ("0-4-0", 4), ("0-5-0", 4), ("0-0-1", 8), ("0-0-2", 8), ("0-0-3", 8), ("0-0-4", 4), ("0-0-5", 20)],
+        "Spike Factory": [("0-0-1", 8)],
+        "Druid": [("0-4-0", 10), ("0-0-1", 10), ("0-0-5", 5)],
+        "Bomb Shooter": [("4-0-0", 3), ("0-2-0", 4), ("0-3-0", 5), ("0-4-0", 5), ("0-0-1", 7), ("0-0-2", 2)],
+        "Wizard Monkey": [("3-0-0", 20), ("0-0-2", 10), ("0-0-3", 10), ("0-0-5", 20)],
+        "Ninja Monkey": [("5-0-0", 10), ("0-0-1", 7), ("0-0-4", 8)],
+        "Monkey Village": [("1-0-0", 8), ("5-0-0", 8), ("0-0-4", 10)],
+        "Engineer Monkey": [("1-0-0", 5), ("3-0-0", 4), ("0-1-0", 20)],
+        "Monkey Sub": [("1-0-0", 10), ("0-3-0", 8)],
+        "Boomerang Monkey": [("0-0-1", 14)],
+        "Alchemist": [("5-0-0", 20), ("0-3-0", 22)],
+        "Super Monkey": [("0-1-0", 10), ("0-2-0", 12), ("0-5-0", 10), ("0-0-2", 3), ("0-0-5", 4)],
+        "Monkey Buccaneer": [("0-0-1", 11)],
+        "Beast Handler": [("1-0-0", 5), ("2-0-0", 5), ("3-0-0", 10), ("4-0-0", 10), ("5-0-0", 10), ("0-3-0", 4), ("0-4-0", 6), ("0-5-0", 20)],
+        "Mermonkey": [("0-0-2", 2)],
+    }
+
+    # Convert range_values into a quick lookup table
+    range_lookup = {}
+    for tower, entries in range_values.items():
+        range_lookup[tower] = {combo: value for combo, value in entries}
+
+    # Apply range data
+    for tower, upgrades in data.items():
+        for upgrade in upgrades:
+            combo = ["0", "0", "0"]
+            combo[upgrade["path"] - 1] = str(upgrade["tier"])
+            combo_str = "-".join(combo)
+
+            added_range = range_lookup.get(tower, {}).get(combo_str, 0)
+            upgrade["added_range"] = added_range
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
+
+    print(f"Added range info to {output_path}")
 
 
 if __name__ == "__main__":
@@ -189,4 +227,5 @@ if __name__ == "__main__":
     #     json_path=r"btd6_upgrades.json",
     #     output_path=r"btd6_upgrades_camo.json"
     # )
-    mark_lead_upgrades("btd6_upgrades_camo.json")
+    # mark_lead_upgrades("btd6_upgrades_camo.json")
+    mark_upgrade_ranges("btd6_upgrades_lead.json")
