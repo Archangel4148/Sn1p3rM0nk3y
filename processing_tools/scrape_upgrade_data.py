@@ -228,4 +228,5 @@ if __name__ == "__main__":
     #     output_path=r"btd6_upgrades_camo.json"
     # )
     # mark_lead_upgrades("btd6_upgrades_camo.json")
-    mark_upgrade_ranges("btd6_upgrades_lead.json")
+    # mark_upgrade_ranges("btd6_upgrades_lead.json")
+    pass

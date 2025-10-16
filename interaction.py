@@ -207,9 +207,9 @@ def main():
     window_manager = WindowManager("BloonsTD6")
     time.sleep(1)
     window_manager.focus_window()
-    window_manager.capture_window("test.png")
+    window_manager.capture_window("monkey_meadow.png")
     controller = window_manager.get_relative_controller()
-    controller.click(0.5, 0.9)
+    # controller.click(0.5, 0.9)
 
 
 if __name__ == '__main__':
