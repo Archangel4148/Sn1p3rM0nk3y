@@ -1,8 +1,16 @@
 import json
+from enum import IntEnum
 
 import cv2
 
 from interaction import WindowManager, InputController
+
+
+class BloonsDifficulty(IntEnum):
+    EASY = 0
+    MEDIUM = 1
+    HARD = 2
+    IMPOPPABLE = 3
 
 
 class BloonsBrain:
@@ -13,6 +21,9 @@ class BloonsBrain:
         self.land_mask = None
         self.water_mask = None
         self.flow_points = None
+
+        # Game data
+        self.difficulty = None
 
         # Window controller
         self.window_manager = WindowManager(window_title)
@@ -43,12 +54,18 @@ class BloonsBrain:
         if not self.flow_points:
             raise RuntimeError(f"No flow points found in '{track_json_path}'.")
 
+    def set_difficulty(self, difficulty: BloonsDifficulty):
+        self.difficulty = difficulty
+
 
 def main():
     brain = BloonsBrain()
 
     # Load data for Monkey Meadow
     brain.load_track_data("data/tracks/monkey_meadow")
+
+    # Update game difficulty
+    brain.set_difficulty(BloonsDifficulty.MEDIUM)
 
 
 if __name__ == "__main__":
