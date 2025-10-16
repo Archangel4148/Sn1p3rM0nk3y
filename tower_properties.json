@@ -1,0 +1,127 @@
+{
+    "Alchemist": {
+        "category": "Magic",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Banana Farm": {
+        "category": "Support",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Beast Handler": {
+        "category": "Magic",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Bomb Shooter": {
+        "category": "Primary",
+        "base_sees_camo": false,
+        "base_pops_lead": true
+    },
+    "Boomerang Monkey": {
+        "category": "Primary",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Dart Monkey": {
+        "category": "Primary",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Dartling Gunner": {
+        "category": "Military",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Desperado": {
+        "category": "Primary",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Druid": {
+        "category": "Magic",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Engineer Monkey": {
+        "category": "Support",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Glue Gunner": {
+        "category": "Primary",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Heli Pilot": {
+        "category": "Military",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Ice Monkey": {
+        "category": "Primary",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Mermonkey": {
+        "category": "Magic",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Monkey Ace": {
+        "category": "Military",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Monkey Buccaneer": {
+        "category": "Military",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Monkey Sub": {
+        "category": "Military",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Monkey Village": {
+        "category": "Support",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Mortar Monkey": {
+        "category": "Military",
+        "base_sees_camo": false,
+        "base_pops_lead": true
+    },
+    "Ninja Monkey": {
+        "category": "Magic",
+        "base_sees_camo": true,
+        "base_pops_lead": false
+    },
+    "Sniper Monkey": {
+        "category": "Military",
+        "base_sees_camo": false,
+        "base_pops_lead": true
+    },
+    "Spike Factory": {
+        "category": "Support",
+        "base_sees_camo": true,
+        "base_pops_lead": false
+    },
+    "Super Monkey": {
+        "category": "Magic",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Tack Shooter": {
+        "category": "Primary",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    },
+    "Wizard Monkey": {
+        "category": "Magic",
+        "base_sees_camo": false,
+        "base_pops_lead": false
+    }
+}

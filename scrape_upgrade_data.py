@@ -39,6 +39,7 @@ def parse_btd6_upgrades_first_table(url, output_file="btd6_upgrades.json"):
 
         if n == 7:
             current_tower = tds[tower_col].get_text(strip=True)
+            print(current_tower)
             if current_tower not in data:
                 data[current_tower] = []
 
@@ -89,7 +90,102 @@ def parse_btd6_upgrades_first_table(url, output_file="btd6_upgrades.json"):
     print(f"Processed first table and saved to {output_file}")
     return data
 
+def mark_camo_upgrades(json_path, output_path="btd6_upgrades_camo.json"):
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    camo_sources = {
+        "Dart Monkey": ["0-0-2"],
+        "Boomerang Monkey": ["5-0-0", "0-4-0"],
+        "Bomb Shooter": ["0-0-5"],
+        "Desperado": ["0-1-0"],
+        "Ice Monkey": ["2-0-0"],
+        "Glue Gunner": ["0-4-0"],
+        "Sniper Monkey": ["0-1-0"],
+        "Monkey Sub": ["3-0-0"],
+        "Monkey Buccaneer": ["0-0-2"],
+        "Monkey Ace": ["0-2-0"],
+        "Heli Pilot": ["0-2-0"],
+        "Mortar Monkey": ["0-0-3", "0-5-0"],
+        "Dartling Gunner": ["0-1-0"],
+        "Wizard Monkey": ["0-0-2", "0-0-3", "5-0-0"],
+        "Super Monkey": ["0-0-2", "0-4-0"],
+        "Ninja Monkey": ["0-0-0", "0-2-0"],
+        "Druid": ["5-0-0", "0-5-0"],
+        "Mermonkey": ["0-0-1"],
+        "Spike Factory": ["0-0-0"],
+        "Monkey Village": ["0-2-0", "5-0-0"],
+        "Engineer Monkey": ["0-3-0"],
+        "Beast Handler": ["0-0-2"],
+    }
+
+    for tower, upgrades in data.items():
+        camo_list = camo_sources.get(tower, [])  # empty if tower not in dict
+
+        for upgrade in upgrades:
+            combo = ["0", "0", "0"]
+            combo[upgrade["path"] - 1] = str(upgrade["tier"])
+            combo_str = "-".join(combo)
+
+            upgrade["grants_camo"] = combo_str in camo_list
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
+
+    print(f"Added camo info to {output_path}")
+
+
+def mark_lead_upgrades(json_path, output_path="btd6_upgrades_lead.json"):
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # Upgrades that enable lead popping for each tower
+    lead_sources = {
+        "Dart Monkey": ["4-0-0", "0-5-0", "0-0-5"],
+        "Boomerang Monkey": ["0-0-2"],
+        "Tack Shooter": ["3-0-0", "0-5-0"],
+        "Ice Monkey": ["2-0-0", "0-5-0"],
+        "Sniper Monkey": ["1-0-0", "0-4-0"],
+        "Monkey Sub": ["0-2-0"],
+        "Monkey Buccaneer": ["0-2-0"],
+        "Monkey Ace": ["0-1-0", "0-0-4", "5-0-0"],
+        "Heli Pilot": ["3-0-0", "0-5-0", "0-0-3"],
+        "Dartling Gunner": ["0-3-0", "4-0-0"],
+        "Wizard Monkey": ["0-1-0", "0-0-4", "4-0-0"],
+        "Super Monkey": ["2-0-0", "0-4-0", "0-0-4"],
+        "Ninja Monkey": ["0-0-3"],
+        "Druid": ["1-0-0"],
+        "Spike Factory": ["2-0-0"],
+        "Monkey Village": ["0-3-0", "5-0-0"],
+        "Engineer Monkey": ["0-3-0", "4-0-0"],
+        "Beast Handler": ["0-2-0", "3-0-0", "0-0-5"],
+    }
+
+    for tower, upgrades in data.items():
+        for upgrade in upgrades:
+            combo = ["0", "0", "0"]
+            combo[upgrade["path"] - 1] = str(upgrade["tier"])
+            combo_str = "-".join(combo)
+
+            upgrade["grants_lead"] = combo_str in lead_sources.get(tower, [])
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
+
+    print(f"Added lead info to {output_path}")
+
+
+mark_lead_upgrades(
+    json_path=r"C:\Users\sedmunds\PycharmProjects\Sn1p3rM0nk3y\btd6_upgrades.json",
+    output_path=r"C:\Users\sedmunds\PycharmProjects\Sn1p3rM0nk3y\btd6_upgrades_lead.json"
+)
+
 
 if __name__ == "__main__":
-    url = "https://www.bloonswiki.com/List_of_upgrades_in_BTD6"
-    parse_btd6_upgrades_first_table(url)
+    # url = "https://www.bloonswiki.com/List_of_upgrades_in_BTD6"
+    # parse_btd6_upgrades_first_table(url)
+    # mark_camo_upgrades(
+    #     json_path=r"btd6_upgrades.json",
+    #     output_path=r"btd6_upgrades_camo.json"
+    # )
+    mark_lead_upgrades("btd6_upgrades_camo.json")
