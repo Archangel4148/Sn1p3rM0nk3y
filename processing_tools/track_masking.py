@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 
 # --- Config ---
-screenshot_path = "../data/tracks/monkey_meadow/monkey_meadow.png"
-output_mask_path = "../data/tracks/monkey_meadow/monkey_meadow_water_mask.png"
+screenshot_path = "../data/tracks/monkey_meadow/screenshot.png"
+output_mask_path = "../data/tracks/monkey_meadow/water_mask.png"
 max_width, max_height = 1200, 800  # editor window size limit
 color_tolerance = 30  # +/- tolerance in each BGR channel
 

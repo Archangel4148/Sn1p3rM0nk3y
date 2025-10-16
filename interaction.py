@@ -17,13 +17,19 @@ class InputController:
         self.window_geometry = window_geometry
         self.window_ref = window_ref
 
-    def set_window_geometry(self, geometry: tuple | None):
-        """Attach or update the window geometry (None = use full screen)."""
-        self.window_geometry = geometry
+    def _refresh_geometry(self):
+        if self.window_ref:
+            win = self.window_ref
+            if win:
+                self.window_geometry = (win.left, win.top, win.width, win.height)
+                print(f"Refreshed window geometry: {self.window_geometry}")
 
-    def _screen_coords(self, x: float, y: float) -> tuple[float, float]:
+    def screen_coords(self, x: float, y: float) -> tuple[float, float]:
         """Get the absolute screen coordinates of a relative window position
         (either a pixel coordinate or a fraction of the window size)"""
+        # Refresh geometry in case window moved
+        self._refresh_geometry()
+
         if not self.window_geometry:
             return x, y  # No window, just use absolute coords
 
@@ -35,6 +41,8 @@ class InputController:
         return x, y
 
     def _is_in_window_bounds(self, x: float, y: float) -> bool:
+        # Refresh geometry in case window moved
+        self._refresh_geometry()
         if not self.window_geometry:
             return True
         left, top, width, height = self.window_geometry
@@ -54,7 +62,7 @@ class InputController:
             print("Action aborted: target window is not focused.")
             return None
 
-        x, y = self._screen_coords(x, y)
+        x, y = self.screen_coords(x, y)
         if not self._is_in_window_bounds(x, y):
             print(f"Action aborted: ({x:.0f}, {y:.0f}) outside window bounds.")
             return None
@@ -207,7 +215,7 @@ def main():
     window_manager = WindowManager("BloonsTD6")
     time.sleep(1)
     window_manager.focus_window()
-    window_manager.capture_window("monkey_meadow.png")
+    window_manager.capture_window("screenshot.png")
     controller = window_manager.get_relative_controller()
     # controller.click(0.5, 0.9)
 

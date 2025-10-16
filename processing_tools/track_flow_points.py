@@ -3,8 +3,8 @@ import numpy as np
 import json
 
 # --- Config ---
-image_path = "../data/tracks/monkey_meadow/monkey_meadow.png"
-output_path = "../data/tracks/monkey_meadow/monkey_meadow_path.json"
+image_path = "../data/tracks/monkey_meadow/screenshot.png"
+output_path = "../data/tracks/monkey_meadow/path_points.json"
 max_width, max_height = 1200, 800
 spacing = 20  # pixels between flow points
 

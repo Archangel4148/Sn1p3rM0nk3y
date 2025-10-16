@@ -3,12 +3,12 @@ import numpy as np
 import os
 
 # --- Config ---
-track_mask_path = "../data/tracks/monkey_meadow/monkey_meadow_track_mask.png"
-wall_mask_path = "../data/tracks/monkey_meadow/monkey_meadow_wall_mask.png"
-water_mask_path = "../data/tracks/monkey_meadow/monkey_meadow_water_mask.png"
+track_mask_path = "../data/tracks/monkey_meadow/track_mask.png"
+wall_mask_path = "../data/tracks/monkey_meadow/wall_mask.png"
+water_mask_path = "../data/tracks/monkey_meadow/water_mask.png"
 
-output_land_path = "../data/tracks/monkey_meadow/monkey_meadow_land_placement_mask.png"
-output_water_path = "../data/tracks/monkey_meadow/monkey_meadow_water_placement_mask.png"
+output_land_path = "../data/tracks/monkey_meadow/land_placement_mask.png"
+output_water_path = "../data/tracks/monkey_meadow/water_placement_mask.png"
 
 # --- Load masks as grayscale ---
 track_mask = cv2.imread(track_mask_path, cv2.IMREAD_GRAYSCALE)
