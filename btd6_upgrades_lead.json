@@ -1386,7 +1386,7 @@
             "effect": "Glued Bloons pop one layer every few seconds.",
             "cost": 300,
             "grants_camo": false,
-            "grants_lead": false
+            "grants_lead": true
         },
         {
             "path": 1,

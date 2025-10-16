@@ -2,7 +2,7 @@
     "Alchemist": {
         "category": "Magic",
         "base_sees_camo": false,
-        "base_pops_lead": false
+        "base_pops_lead": true
     },
     "Banana Farm": {
         "category": "Support",
@@ -102,7 +102,7 @@
     "Sniper Monkey": {
         "category": "Military",
         "base_sees_camo": false,
-        "base_pops_lead": true
+        "base_pops_lead": false
     },
     "Spike Factory": {
         "category": "Support",

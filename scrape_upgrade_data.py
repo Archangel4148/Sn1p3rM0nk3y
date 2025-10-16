@@ -143,6 +143,7 @@ def mark_lead_upgrades(json_path, output_path="btd6_upgrades_lead.json"):
     lead_sources = {
         "Dart Monkey": ["4-0-0", "0-5-0", "0-0-5"],
         "Boomerang Monkey": ["0-0-2"],
+        "Glue Monkey": ["2-0-0"],
         "Tack Shooter": ["3-0-0", "0-5-0"],
         "Ice Monkey": ["2-0-0", "0-5-0"],
         "Sniper Monkey": ["1-0-0", "0-4-0"],
