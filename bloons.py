@@ -4,15 +4,10 @@ from collections import deque
 
 import cv2
 
-from data.enums import BloonsDifficulty, Tower, BloonsScreen, PAGE_IDENTIFIER_POINTS, MAP_SELECT_PAGE_POINTS, \
-    SELECTED_MAP_SELECT_TAB_COLOR, SCREEN_TRANSITIONS, MAP_SELECT_THUMBNAIL_POSITIONS, DIFFICULTY_SELECT_POSITIONS, \
-    GAMEMODE_SELECT_POSITIONS, BloonsGamemode, Track, TRACK_THUMBNAIL_LOCATIONS
+from data.enums import BloonsDifficulty, Tower, BloonsScreen, SCREEN_TRANSITIONS, MAP_SELECT_THUMBNAIL_POSITIONS, \
+    DIFFICULTY_SELECT_POSITIONS, GAMEMODE_SELECT_POSITIONS, BloonsGamemode, Track, TRACK_THUMBNAIL_LOCATIONS
 from interaction import WindowManager, InputController
 from system_flags import vprint
-
-
-def color_close(a, b, tol=5):
-    return all(abs(a[i] - b[i]) <= tol for i in range(3))
 
 
 class BloonsBrain:
@@ -79,41 +74,6 @@ class BloonsBrain:
         if not self.difficulty:
             raise RuntimeError("Difficulty not set.")
 
-    def identify_current_screen(self) -> tuple[BloonsScreen | None, int | None]:
-        """Identify the current screen using the provided identifier points"""
-        capture = self.window_manager.capture_window(force_focus=True)
-
-        # Find the first page where all points match
-        for page_name, points in PAGE_IDENTIFIER_POINTS.items():
-            found_page = True
-            vprint(page_name.value)
-            # Check each identifier point
-            for (w_fraction, h_fraction), color in points:
-                point_color = capture.getpixel((int(capture.width * w_fraction), int(capture.height * h_fraction)))
-                vprint(point_color, color)
-                # If any point fails, the screen is not a match
-                if not color_close(point_color, color):
-                    found_page = False
-                    break
-            if found_page:
-                # For the map select page, also try to identify the tab
-                if page_name == BloonsScreen.MAP_SELECT:
-                    # Check each tab dot
-                    for i, (w_fraction, h_fraction) in enumerate(MAP_SELECT_PAGE_POINTS):
-                        point_color = capture.getpixel(
-                            (int(capture.width * w_fraction), int(capture.height * h_fraction)))
-                        # Find the selected map select tab
-                        if color_close(point_color, SELECTED_MAP_SELECT_TAB_COLOR):
-                            vprint(f"Found page: {page_name} (Tab {i + 1})")
-                            return page_name, i + 1
-                    vprint("Could not identify selected map tab.")
-                    return page_name, None
-                else:
-                    vprint(f"Found page: {page_name}")
-                    return page_name, None
-        vprint("Could not identify current screen.")
-        return None, None
-
     @staticmethod
     def _find_path(start: BloonsScreen, goal: BloonsScreen):
         """Find the shortest path between two screens (BFS)"""
@@ -174,7 +134,7 @@ class BloonsBrain:
         raise RuntimeError(f"No special handler for {src} → {dst}")
 
     def navigate_to(self, target: BloonsScreen):
-        current_screen, tab = self.identify_current_screen()
+        current_screen, tab = self.identify_screen()
         if current_screen is None:
             raise RuntimeError("Could not identify current screen.")
         if current_screen == target:
@@ -209,7 +169,7 @@ class BloonsBrain:
             start_time = time.time()
             new_screen = None
             while time.time() - start_time < timeout:
-                new_screen, _ = self.identify_current_screen()
+                new_screen, _ = self.identify_screen()
                 if new_screen == dst:
                     break
                 time.sleep(0.5)

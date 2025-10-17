@@ -1,4 +1,4 @@
-from enum import IntEnum, StrEnum, auto
+from enum import IntEnum, StrEnum
 
 
 class BloonsDifficulty(IntEnum):
@@ -9,23 +9,23 @@ class BloonsDifficulty(IntEnum):
 
 
 class BloonsGamemode(StrEnum):
-    EASY_STANDARD = auto()
-    PRIMARY_ONLY = auto()
-    DEFLATION = auto()
-    EASY_SANDBOX = auto()
-    MEDIUM_STANDARD = auto()
-    MILITARY_ONLY = auto()
-    APOPALYPSE = auto()
-    REVERSE = auto()
-    MEDIUM_SANDBOX = auto()
-    HARD_SANDBOX = auto()
-    HARD_STANDARD = auto()
-    MAGIC_MONKEYS_ONLY = auto()
-    DOUBLE_HP_MOABS = auto()
-    HALF_CASH = auto()
-    ALTERNATE_BLOONS_ROUNDS = auto()
-    IMPOPPABLE = auto()
-    CHIMPS = auto()
+    EASY_STANDARD = "Easy Standard"
+    PRIMARY_ONLY = "Primary Only"
+    DEFLATION = "Deflation"
+    EASY_SANDBOX = "Easy Sandbox"
+    MEDIUM_STANDARD = "Medium Standard"
+    MILITARY_ONLY = "Military Only"
+    APOPALYPSE = "Apopalypse"
+    REVERSE = "Reverse"
+    MEDIUM_SANDBOX = "Medium Sandbox"
+    HARD_SANDBOX = "Hard Sandbox"
+    HARD_STANDARD = "Hard Standard"
+    MAGIC_MONKEYS_ONLY = "Magic Monkeys Only"
+    DOUBLE_HP_MOABS = "Double HP MOABs"
+    HALF_CASH = "Half Cash"
+    ALTERNATE_BLOONS_ROUNDS = "Alternate Bloons Rounds"
+    IMPOPPABLE = "Impoppable"
+    CHIMPS = "CHIMPS"
 
 
 class Tower(StrEnum):
