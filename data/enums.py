@@ -57,6 +57,7 @@ class Tower(StrEnum):
 
 
 class Track(StrEnum):
+    # Beginner
     ALPINE_RUN = "Alpine Run"
     CANDY_FALLS = "Candy Falls"
     CARVED = "Carved"
@@ -82,6 +83,7 @@ class Track(StrEnum):
     TOWN_CENTER = "Town Center"
     TREE_STUMP = "Tree Stump"
     WINTER_PARK = "Winter Park"
+    # Intermediate
     ADORAS_TEMPLE = "Adora's Temple"
     BALANCE = "Balance"
     BAZAAR = "Bazaar"
@@ -107,6 +109,7 @@ class Track(StrEnum):
     STREAMBED = "Streambed"
     SULFUR_SPRINGS = "Sulfur Springs"
     WATER_PARK = "Water Park"
+    # Advanced
     ANCIENT_PORTAL = "Ancient Portal"
     ANOTHER_BRICK = "Another Brick"
     CARGO = "Cargo"
@@ -128,6 +131,7 @@ class Track(StrEnum):
     SUNSET_GULCH = "Sunset Gulch"
     UNDERGROUND = "Underground"
     X_FACTOR = "X Factor"
+    # Expert
     OUCH = "Ouch"
     BLOODY_PUDDLES = "Bloody Puddles"
     DARK_CASTLE = "Dark Castle"
@@ -150,6 +154,98 @@ class BloonsScreen(StrEnum):
     RESTART_POPUP = "Restart Popup"
 
 
+# TODO: Update this!
+TRACK_THUMBNAIL_LOCATIONS = {
+    # Beginner
+    Track.ALPINE_RUN: (None, None),
+    Track.CANDY_FALLS: (None, None),
+    Track.CARVED: (None, None),
+    Track.CUBISM: (None, None),
+    Track.END_OF_THE_ROAD: (None, None),
+    Track.FOUR_CIRCLES: (None, None),
+    Track.FROZEN_OVER: (None, None),
+    Track.HEDGE: (None, None),
+    Track.IN_THE_LOOP: (None, None),
+    Track.LOGS: (None, None),
+    Track.LOTUS_ISLAND: (None, None),
+    Track.MIDDLE_OF_THE_ROAD: (None, None),
+    Track.MONKEY_MEADOW: (0, 0),
+    Track.ONE_TWO_TREE: (None, None),
+    Track.PARK_PATH: (None, None),
+    Track.RESORT: (None, None),
+    Track.SCRAPYARD: (None, None),
+    Track.SKATES: (None, None),
+    Track.SPA_PITS: (None, None),
+    Track.THE_CABIN: (None, None),
+    Track.THREE_MINES_ROUND: (None, None),
+    Track.TINKERTON: (None, None),
+    Track.TOWN_CENTER: (None, None),
+    Track.TREE_STUMP: (None, None),
+    Track.WINTER_PARK: (None, None),
+    # Intermediate
+    Track.ADORAS_TEMPLE: (None, None),
+    Track.BALANCE: (None, None),
+    Track.BAZAAR: (None, None),
+    Track.BLOONARIUS_PRIME: (None, None),
+    Track.CHUTES: (None, None),
+    Track.COVERED_GARDEN: (None, None),
+    Track.CRACKED: (None, None),
+    Track.DOWNSTREAM: (None, None),
+    Track.ENCRYPTED: (None, None),
+    Track.FIRING_RANGE: (None, None),
+    Track.HAUNTED: (None, None),
+    Track.KARTSNDARTS: (None, None),
+    Track.LOST_CREVASSE: (None, None),
+    Track.LUMINOUS_COVE: (None, None),
+    Track.MOON_LANDING: (None, None),
+    Track.POLYPHEMUS: (None, None),
+    Track.PROTECT_THE_YACHT: (None, None),
+    Track.QUARRY: (None, None),
+    Track.QUIET_STREET: (None, None),
+    Track.RAKE: (None, None),
+    Track.SPICE_ISLANDS: (None, None),
+    Track.SPRING_SPRING: (None, None),
+    Track.STREAMBED: (None, None),
+    Track.SULFUR_SPRINGS: (None, None),
+    Track.WATER_PARK: (None, None),
+    # Advanced
+    Track.ANCIENT_PORTAL: (None, None),
+    Track.ANOTHER_BRICK: (None, None),
+    Track.CARGO: (None, None),
+    Track.CASTLE_REVENGE: (None, None),
+    Track.CORNFIELD: (None, None),
+    Track.DARK_PATH: (None, None),
+    Track.ENCHANTED_GLADE: (None, None),
+    Track.EROSION: (None, None),
+    Track.GEARED: (None, None),
+    Track.HIGH_FINANCE: (None, None),
+    Track.LAST_RESORT: (None, None),
+    Track.MESA: (None, None),
+    Track.MIDNIGHT_MANSION: (None, None),
+    Track.OFF_THE_COAST: (None, None),
+    Track.PATS_POND: (None, None),
+    Track.PENINSULA: (None, None),
+    Track.SPILLWAY: (None, None),
+    Track.SUNKEN_COLUMNS: (None, None),
+    Track.SUNSET_GULCH: (None, None),
+    Track.UNDERGROUND: (None, None),
+    Track.X_FACTOR: (None, None),
+    # Expert
+    Track.OUCH: (None, None),
+    Track.BLOODY_PUDDLES: (None, None),
+    Track.DARK_CASTLE: (None, None),
+    Track.DARK_DUNGEONS: (None, None),
+    Track.FLOODED_VALLEY: (None, None),
+    Track.GLACIAL_TRAIL: (None, None),
+    Track.INFERNAL: (None, None),
+    Track.MUDDY_PUDDLES: (None, None),
+    Track.QUAD: (None, None),
+    Track.RAVINE: (None, None),
+    Track.SANCTUARY: (None, None),
+    Track.WORKSHOP: (None, None),
+}
+
+# Unique identifier points for each screen
 PAGE_IDENTIFIER_POINTS = {
     BloonsScreen.MAIN_MENU: [((0.5, 0.875), (255, 255, 255)), ((0.957, 0.043), (255, 220, 0))],
     BloonsScreen.MAP_SELECT: [((0.298, 0.901), (255, 197, 0)), ((0.948, 0.077), (0, 195, 255))],
@@ -222,8 +318,8 @@ SCREEN_TRANSITIONS = {
         }
     },
     BloonsScreen.MAP_SELECT: {
-        BloonsScreen.IN_GAME: {  # This transition is special, position depends on selected map and map select tab
-            "action": "special"
+        BloonsScreen.IN_GAME: {
+            "action": "custom"  # This transition needs special handling
         },
         BloonsScreen.MAIN_MENU: {
             "action": "click",
@@ -236,7 +332,6 @@ SCREEN_TRANSITIONS = {
             "key": "esc",
         }
     },
-
     BloonsScreen.PAUSE_MENU: {
         BloonsScreen.MAIN_MENU: {
             "action": "click",

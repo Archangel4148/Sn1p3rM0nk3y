@@ -6,7 +6,7 @@ import cv2
 
 from data.enums import BloonsDifficulty, Tower, BloonsScreen, PAGE_IDENTIFIER_POINTS, MAP_SELECT_PAGE_POINTS, \
     SELECTED_MAP_SELECT_TAB_COLOR, SCREEN_TRANSITIONS, MAP_SELECT_THUMBNAIL_POSITIONS, DIFFICULTY_SELECT_POSITIONS, \
-    GAMEMODE_SELECT_POSITIONS, BloonsGamemode
+    GAMEMODE_SELECT_POSITIONS, BloonsGamemode, Track, TRACK_THUMBNAIL_LOCATIONS
 from interaction import WindowManager, InputController
 from system_flags import vprint
 
@@ -17,9 +17,8 @@ def color_close(a, b, tol=5):
 
 class BloonsBrain:
     def __init__(self, window_title: str = "BloonsTD6"):
-        self.window_title = window_title
-
         # Track data
+        self.selected_track: Track | None = None
         self.land_mask = None
         self.water_mask = None
         self.flow_points = None
@@ -28,7 +27,6 @@ class BloonsBrain:
         self.difficulty: BloonsDifficulty | None = None
         self.gamemode: BloonsGamemode | None = None
         self.game_running: bool = False
-        self.selected_map_index: int | None = None
 
         # Window controller
         self.window_manager = WindowManager(window_title)
@@ -36,9 +34,10 @@ class BloonsBrain:
             raise RuntimeError(f"Window '{window_title}' not found.")
         self.controller: InputController = self.window_manager.get_relative_controller()
 
-    def load_track_data(self, track_folder_path: str):
+    def select_track(self, track: Track):
         """Load track data for the specified track folder"""
         # Standard paths
+        track_folder_path = f"data/tracks/{track.value.lower().replace(' ', '_')}"
         land_mask_path = f"{track_folder_path}/land_placement_mask.png"
         water_mask_path = f"{track_folder_path}/water_placement_mask.png"
         track_json_path = f"{track_folder_path}/path_points.json"
@@ -58,6 +57,8 @@ class BloonsBrain:
         self.flow_points = data.get("flow_points", [])
         if not self.flow_points:
             raise RuntimeError(f"No flow points found in '{track_json_path}'.")
+
+        self.selected_track = track
 
     def set_gamemode(self, gamemode: BloonsGamemode):
         """Set gamemode and difficulty."""
@@ -79,22 +80,29 @@ class BloonsBrain:
             raise RuntimeError("Difficulty not set.")
 
     def identify_current_screen(self) -> tuple[BloonsScreen | None, int | None]:
-        # Find the first page where all points match
+        """Identify the current screen using the provided identifier points"""
         capture = self.window_manager.capture_window(force_focus=True)
+
+        # Find the first page where all points match
         for page_name, points in PAGE_IDENTIFIER_POINTS.items():
             found_page = True
             vprint(page_name.value)
+            # Check each identifier point
             for (w_fraction, h_fraction), color in points:
                 point_color = capture.getpixel((int(capture.width * w_fraction), int(capture.height * h_fraction)))
                 vprint(point_color, color)
+                # If any point fails, the screen is not a match
                 if not color_close(point_color, color):
                     found_page = False
-                    # break
+                    break
             if found_page:
+                # For the map select page, also try to identify the tab
                 if page_name == BloonsScreen.MAP_SELECT:
+                    # Check each tab dot
                     for i, (w_fraction, h_fraction) in enumerate(MAP_SELECT_PAGE_POINTS):
                         point_color = capture.getpixel(
                             (int(capture.width * w_fraction), int(capture.height * h_fraction)))
+                        # Find the selected map select tab
                         if color_close(point_color, SELECTED_MAP_SELECT_TAB_COLOR):
                             vprint(f"Found page: {page_name} (Tab {i + 1})")
                             return page_name, i + 1
@@ -103,13 +111,12 @@ class BloonsBrain:
                 else:
                     vprint(f"Found page: {page_name}")
                     return page_name, None
-
         vprint("Could not identify current screen.")
         return None, None
 
     @staticmethod
     def _find_path(start: BloonsScreen, goal: BloonsScreen):
-        """Find the shortest valid transition path between two screens."""
+        """Find the shortest path between two screens (BFS)"""
         visited = set()
         queue = deque([(start, [start])])
 
@@ -125,26 +132,28 @@ class BloonsBrain:
             for next_screen in SCREEN_TRANSITIONS[current]:
                 if next_screen not in visited:
                     queue.append((next_screen, path + [next_screen]))
-
-        return None  # No path found
+        return None
 
     def _handle_special_transition(self, src: BloonsScreen, dst: BloonsScreen):
-        """
-        Handle transitions that need custom logic — e.g. entering a game from the map select screen.
-        """
+        """Handle transitions that need special logic"""
+        # Transition from map select to in-game
         if src == BloonsScreen.MAP_SELECT and dst == BloonsScreen.IN_GAME:
-            if not hasattr(self, "selected_map_index") or self.selected_map_index is None:
-                raise RuntimeError("No map selected for special transition.")
             if not self.difficulty:
                 raise RuntimeError("Difficulty not set.")
 
-            # Select the correct map
-            map_index = self.selected_map_index
-            if map_index >= len(MAP_SELECT_THUMBNAIL_POSITIONS):
-                raise RuntimeError(f"Map index {map_index} out of range.")
+            # Get thumbnail position
+            page_index, thumbnail_index = TRACK_THUMBNAIL_LOCATIONS[self.selected_track]
 
-            map_pos = MAP_SELECT_THUMBNAIL_POSITIONS[map_index]
-            vprint(f"Clicking map {map_index + 1} at {map_pos}")
+            # Move to the correct map select tab
+            # TODO: Navigate to the tab
+
+            # Select the correct map thumbnail
+            if None in (page_index, thumbnail_index):
+                raise RuntimeError(f"No thumbnail location found for map: {self.selected_track}")
+            if thumbnail_index >= len(MAP_SELECT_THUMBNAIL_POSITIONS):
+                raise RuntimeError(f"Map index {thumbnail_index} out of range.")
+            map_pos = MAP_SELECT_THUMBNAIL_POSITIONS[thumbnail_index]
+            vprint(f"Clicking map at position {thumbnail_index + 1} ({map_pos})")
             self.controller.click(*map_pos)
             time.sleep(0.7)
 
@@ -162,7 +171,6 @@ class BloonsBrain:
             self.controller.click(*gm_pos)
             time.sleep(0.7)
             return True
-
         raise RuntimeError(f"No special handler for {src} → {dst}")
 
     def navigate_to(self, target: BloonsScreen):
@@ -170,7 +178,7 @@ class BloonsBrain:
         if current_screen is None:
             raise RuntimeError("Could not identify current screen.")
         if current_screen == target:
-            return
+            return False
 
         path = self._find_path(current_screen, target)
         if not path:
@@ -190,7 +198,7 @@ class BloonsBrain:
             elif action == "key":
                 self.controller.press_key(transition["key"])
 
-            elif action == "special":
+            elif action == "custom":
                 self._handle_special_transition(src, dst)
 
             else:
@@ -217,14 +225,12 @@ class BloonsBrain:
 def main():
     brain = BloonsBrain()
 
-    # Load data for Monkey Meadow
-    brain.load_track_data("data/tracks/monkey_meadow")
-
-    # Update gamemode
+    # Select game settings
+    brain.select_track(Track.MONKEY_MEADOW)
     brain.set_gamemode(BloonsGamemode.DOUBLE_HP_MOABS)
-    brain.selected_map_index = 0
 
-    brain.navigate_to(BloonsScreen.RESTART_POPUP)
+    # Get into the game
+    brain.navigate_to(BloonsScreen.IN_GAME)
 
 
 if __name__ == "__main__":
