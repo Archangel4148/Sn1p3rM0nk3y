@@ -4,6 +4,8 @@ import time
 import pyautogui as pgui
 import pygetwindow as gw
 
+from system_flags import vprint
+
 
 class MouseButtons(enum.StrEnum):
     LEFT_MOUSE = "left"
@@ -22,7 +24,7 @@ class InputController:
             win = self.window_ref
             if win:
                 self.window_geometry = (win.left, win.top, win.width, win.height)
-                print(f"Refreshed window geometry: {self.window_geometry}")
+                vprint(f"Refreshed window geometry: {self.window_geometry}")
 
     def screen_coords(self, x: float, y: float) -> tuple[float, float]:
         """Get the absolute screen coordinates of a relative window position
@@ -56,8 +58,12 @@ class InputController:
         except Exception:
             return False
 
-    def _validate_position(self, x: float, y: float) -> tuple[float, float] | None:
+    def _validate_position(self, x: float, y: float, force_focus: bool = False) -> tuple[float, float] | None:
         """Ensure the window is focused and coords are within bounds."""
+        if force_focus:
+            self.window_ref.activate()
+            time.sleep(0.1)
+
         if not self._is_window_focused():
             print("Action aborted: target window is not focused.")
             return None
@@ -73,9 +79,9 @@ class InputController:
     def screen_size(self):
         return pgui.size()
 
-    def move(self, x: float, y: float, duration: float = 0.2, tween=pgui.easeOutQuad):
+    def move(self, x: float, y: float, duration: float = 0.2, tween=pgui.easeOutQuad, force_focus: bool = False):
         """Move mouse to (x, y) without clicking."""
-        x, y = self._validate_position(x, y)
+        x, y = self._validate_position(x, y, force_focus)
         pgui.moveTo(x, y, duration, tween=tween)
 
     def click(
@@ -84,10 +90,11 @@ class InputController:
             y: float,
             button: MouseButtons = MouseButtons.LEFT_MOUSE,
             duration: float = 0.2,
-            tween=pgui.easeOutQuad
+            tween=pgui.easeOutQuad,
+            force_focus: bool = False
     ):
         """Click at position x, y (optional duration/tween)"""
-        x, y = self._validate_position(x, y)
+        x, y = self._validate_position(x, y, force_focus)
         pgui.moveTo(x, y, duration, tween=tween)
         pgui.click(button=button)
 
@@ -109,11 +116,12 @@ class InputController:
             end_pos: tuple[float, float],
             key: MouseButtons | str = MouseButtons.LEFT_MOUSE,
             duration: float = 0.2,
-            tween=pgui.easeOutQuad
+            tween=pgui.easeOutQuad,
+            force_focus: bool = False
     ):
         """Drag from start_pos to end_pos using either a click or a pressed key (optional duration/tween)"""
-        start_pos = self._validate_position(*start_pos)
-        end_pos = self._validate_position(*end_pos)
+        start_pos = self._validate_position(*start_pos, force_focus)
+        end_pos = self._validate_position(*end_pos, force_focus)
         if not start_pos or not end_pos:
             print("Drag aborted: invalid window state or coordinates.")
             return
@@ -136,7 +144,7 @@ class WindowManager:
     def find_window_by_title(title: str):
         """Return the window object if found, else None."""
         for window in gw.getWindowsWithTitle(title):
-            print(f"Found window: {window.title}")
+            vprint(f"Found window: {window.title}")
             return window
         return None
 
@@ -146,7 +154,7 @@ class WindowManager:
         while time.time() - start < timeout:
             self.recapture_window()
             if self.window:
-                print(f"Window '{self.window_title}' detected.")
+                vprint(f"Window '{self.window_title}' detected.")
                 return True
             time.sleep(interval)
         print(f"Timeout waiting for window '{self.window_title}'.")
@@ -168,13 +176,13 @@ class WindowManager:
 
         try:
             if self.window.isMinimized:
-                print(f"{self.window.title} is minimized, restoring window.")
+                vprint(f"{self.window.title} is minimized, restoring window.")
                 self.window.restore()
                 pgui.sleep(0.5)  # Give it time to un-minimize
 
             self.window.activate()
             time.sleep(0.1)
-            print(f"{self.window.title} focused successfully.")
+            vprint(f"{self.window.title} focused successfully.")
             return True
         except Exception as e:
             print(f"Failed to focus window: {e}")
@@ -194,8 +202,10 @@ class WindowManager:
         width, height = win.width, win.height
         return win.left, win.top, width, height
 
-    def capture_window(self, filename: str | None = None):
+    def capture_window(self, filename: str | None = None, force_focus: bool = False):
         """Capture a screenshot of the window region and return it as a PIL image (optionally save it)"""
+        if force_focus:
+            self.focus_window()
         geometry = self.get_window_geometry()
         if not geometry:
             print("Cannot capture screenshot — window not visible.")
@@ -206,7 +216,7 @@ class WindowManager:
 
         if filename:
             screenshot.save(filename)
-            print(f"Saved screenshot to {filename}")
+            vprint(f"Saved screenshot to {filename}")
 
         return screenshot
 
@@ -217,7 +227,7 @@ def main():
     window_manager.focus_window()
     window_manager.capture_window("screenshot.png")
     controller = window_manager.get_relative_controller()
-    # controller.click(0.5, 0.9)
+    controller.click(0.5, 0.9)
 
 
 if __name__ == '__main__':
