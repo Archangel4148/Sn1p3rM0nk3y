@@ -5,9 +5,11 @@ from collections import deque
 import cv2
 
 from data.enums import BloonsDifficulty, Tower, BloonsScreen, SCREEN_TRANSITIONS, MAP_SELECT_THUMBNAIL_POSITIONS, \
-    DIFFICULTY_SELECT_POSITIONS, GAMEMODE_SELECT_POSITIONS, BloonsGamemode, Track, TRACK_THUMBNAIL_LOCATIONS
+    DIFFICULTY_SELECT_POSITIONS, GAMEMODE_SELECT_POSITIONS, BloonsGamemode, Track, TRACK_THUMBNAIL_LOCATIONS, \
+    MAP_SELECT_RIGHT_ARROW_POSITION, MAP_SELECT_LEFT_ARROW_POSITION
 from interaction import WindowManager, InputController
 from system_flags import vprint
+from vision import identify_screen, get_current_tab
 
 
 class BloonsBrain:
@@ -98,17 +100,25 @@ class BloonsBrain:
         """Handle transitions that need special logic"""
         # Transition from map select to in-game
         if src == BloonsScreen.MAP_SELECT and dst == BloonsScreen.IN_GAME:
-            if not self.difficulty:
+            if self.difficulty is None:
                 raise RuntimeError("Difficulty not set.")
 
+            current_tab_idx = get_current_tab(self.window_manager.capture_window(force_focus=True)) - 1
+            if current_tab_idx is None:
+                raise RuntimeError("Current tab index not provided.")
+
             # Get thumbnail position
-            page_index, thumbnail_index = TRACK_THUMBNAIL_LOCATIONS[self.selected_track]
+            target_page_idx, thumbnail_index = TRACK_THUMBNAIL_LOCATIONS[self.selected_track]
 
             # Move to the correct map select tab
-            # TODO: Navigate to the tab
+            for _ in range(abs(target_page_idx - current_tab_idx)):
+                if target_page_idx > current_tab_idx:
+                    self.controller.click(*MAP_SELECT_RIGHT_ARROW_POSITION, duration=0.05)
+                else:
+                    self.controller.click(*MAP_SELECT_LEFT_ARROW_POSITION, duration=0.05)
 
             # Select the correct map thumbnail
-            if None in (page_index, thumbnail_index):
+            if None in (target_page_idx, thumbnail_index):
                 raise RuntimeError(f"No thumbnail location found for map: {self.selected_track}")
             if thumbnail_index >= len(MAP_SELECT_THUMBNAIL_POSITIONS):
                 raise RuntimeError(f"Map index {thumbnail_index} out of range.")
@@ -134,7 +144,7 @@ class BloonsBrain:
         raise RuntimeError(f"No special handler for {src} → {dst}")
 
     def navigate_to(self, target: BloonsScreen):
-        current_screen, tab = self.identify_screen()
+        current_screen, tab = identify_screen(self.window_manager.capture_window(force_focus=True))
         if current_screen is None:
             raise RuntimeError("Could not identify current screen.")
         if current_screen == target:
@@ -169,7 +179,7 @@ class BloonsBrain:
             start_time = time.time()
             new_screen = None
             while time.time() - start_time < timeout:
-                new_screen, _ = self.identify_screen()
+                new_screen, _ = identify_screen(self.window_manager.capture_window(force_focus=True))
                 if new_screen == dst:
                     break
                 time.sleep(0.5)
@@ -187,7 +197,7 @@ def main():
 
     # Select game settings
     brain.select_track(Track.MONKEY_MEADOW)
-    brain.set_gamemode(BloonsGamemode.DOUBLE_HP_MOABS)
+    brain.set_gamemode(BloonsGamemode.MEDIUM_STANDARD)
 
     # Get into the game
     brain.navigate_to(BloonsScreen.IN_GAME)

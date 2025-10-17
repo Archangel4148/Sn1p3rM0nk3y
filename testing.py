@@ -4,6 +4,8 @@ import time
 import cv2
 import pyautogui as pgui
 
+from bloons import BloonsBrain
+from data.enums import Track, BloonsGamemode, BloonsScreen
 from interaction import WindowManager, InputController
 
 
@@ -122,13 +124,23 @@ def click_window_center(window_title: str = "BloonsTD6", repeat: int = 5, interv
 def main():
     # Example track test
     track_json = "data/tracks/monkey_meadow/path_points.json"
-    follow_track(track_json, move_time=0.01, delay=0.01)
+    # follow_track(track_json, move_time=0.01, delay=0.01)
 
     # Example hover test
     valid_land_mask_path = "data/tracks/monkey_meadow/land_placement_mask.png"
-    test_valid_land_hover(valid_land_mask_path)
+    # test_valid_land_hover(valid_land_mask_path)
 
     # click_window_center(repeat=5, interval=3)
+
+    # Check each track position and test the navigation.
+    brain = BloonsBrain()
+    brain.set_gamemode(BloonsGamemode.EASY_STANDARD)
+    for track in Track:
+        print("Navigating to", track.value)
+        brain.navigate_to(BloonsScreen.MAP_SELECT)
+        brain.select_track(track)
+        brain.navigate_to(BloonsScreen.IN_GAME)
+        time.sleep(1)
 
 
 if __name__ == "__main__":
