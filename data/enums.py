@@ -151,6 +151,9 @@ class BloonsScreen(StrEnum):
     IN_GAME = "In Game"
     PAUSE_MENU = "Pause Menu"
     RESTART_POPUP = "Restart Popup"
+    SANDBOX_START_POPUP = "Sandbox Start Popup"
+    SANDBOX_BLOON_SCREEN = "In Game Sandbox (Bloon Screen)"
+    SANDBOX_MONKEY_SCREEN = "In Game Sandbox (Monkey Screen)"
 
 
 class BloonsMapLevel(StrEnum):
@@ -159,6 +162,34 @@ class BloonsMapLevel(StrEnum):
     ADVANCED = "Advanced"
     EXPERT = "Expert"
 
+
+TOWER_HOTKEYS = {
+    Tower.ALCHEMIST: "f",
+    Tower.BANANA_FARM: "j",
+    Tower.BEAST_HANDLER: "o",
+    Tower.BOMB_SHOOTER: "e",
+    Tower.BOOMERANG_MONKEY: "w",
+    Tower.DART_MONKEY: "q",
+    Tower.DARTLING_GUNNER: "m",
+    Tower.DESPERADO: "u",
+    Tower.DRUID: "g",
+    Tower.ENGINEER_MONKEY: "i",
+    Tower.GLUE_GUNNER: "y",
+    Tower.HELI_PILOT: "b",
+    Tower.ICE_MONKEY: "t",
+    Tower.MERMONKEY: "h",
+    Tower.MONKEY_ACE: "v",
+    Tower.MONKEY_BUCCANEER: "c",
+    Tower.MONKEY_SUB: "x",
+    Tower.MONKEY_VILLAGE: "l",
+    Tower.MORTAR_MONKEY: "n",
+    Tower.NINJA_MONKEY: "d",
+    Tower.SNIPER_MONKEY: "z",
+    Tower.SPIKE_FACTORY: "k",
+    Tower.SUPER_MONKEY: "s",
+    Tower.TACK_SHOOTER: "r",
+    Tower.WIZARD_MONKEY: "a",
+}
 
 TRACK_THUMBNAIL_LOCATIONS = {
     # Beginner
@@ -251,11 +282,32 @@ TRACK_THUMBNAIL_LOCATIONS = {
 
 # Unique identifier points for each screen
 PAGE_IDENTIFIER_POINTS = {
-    BloonsScreen.MAIN_MENU: [((0.5, 0.875), (255, 255, 255)), ((0.957, 0.043), (255, 220, 0))],
-    BloonsScreen.MAP_SELECT: [((0.298, 0.901), (255, 197, 0)), ((0.948, 0.077), (0, 195, 255))],
-    BloonsScreen.IN_GAME: [((0.969, 0.916), (113, 232, 0)), ((0.982, 0.023), (193, 153, 96))],
-    BloonsScreen.PAUSE_MENU: [((0.341, 0.747), (0, 221, 255))],
-    BloonsScreen.RESTART_POPUP: [((0.264, 0.331), (255, 195, 0)), ((0.588, 0.371), (113, 232, 0))],
+    BloonsScreen.MAIN_MENU: [[((0.5, 0.875), (255, 255, 255)), ((0.957, 0.043), (255, 220, 0))]],
+    BloonsScreen.MAP_SELECT: [[((0.298, 0.901), (255, 197, 0)), ((0.948, 0.077), (0, 195, 255))]],
+    BloonsScreen.IN_GAME: [[((0.878, 0.919), (255, 222, 0)), ((0.880, 0.960), (255, 207, 0)),
+                            ((0.904, 0.935), (255, 217, 0)), ((0.897, 0.968), (255, 196, 0)),
+                            ((0.892, 0.952), (255, 255, 255)), ((0.890, 0.925), (255, 255, 255)),
+                            ((0.149, 0.038), (255, 187, 0)), ((0.881, 0.056), (59, 214, 0))]],
+    BloonsScreen.PAUSE_MENU: [[((0.341, 0.747), (0, 221, 255))]],
+    BloonsScreen.RESTART_POPUP: [[((0.264, 0.331), (255, 195, 0)), ((0.588, 0.371), (113, 232, 0))]],
+    BloonsScreen.SANDBOX_START_POPUP: [[((0.468, 0.705), (93, 225, 0)), ((0.501, 0.255), (255, 204, 68)),
+                                        ((0.164, 0.017), (255, 199, 0))]],
+    BloonsScreen.SANDBOX_BLOON_SCREEN: [[((0.823, 0.697), (0, 221, 255)), ((0.822, 0.806), (255, 196, 0)),
+                                         ((0.823, 0.858), (255, 121, 0)), ((0.822, 0.947), (255, 116, 0)),
+                                         ((0.148, 0.047), (255, 162, 0)), ((0.943, 0.104), (84, 222, 0))],
+                                        [((0.872, 0.914), (0, 212, 245)), ((0.871, 0.967), (0, 190, 245)),
+                                         ((0.909, 0.909), (0, 212, 245)), ((0.911, 0.968), (0, 188, 245)),
+                                         ((0.899, 0.931), (245, 245, 245)), ((0.883, 0.922), (245, 245, 245)),
+                                         ((0.877, 0.956), (245, 245, 245))]],
+    BloonsScreen.SANDBOX_MONKEY_SCREEN: [[((0.874, 0.915), (245, 212, 0)), ((0.907, 0.914), (245, 212, 0)),
+                                          ((0.873, 0.944), (245, 203, 0)), ((0.909, 0.944), (245, 203, 0)),
+                                          ((0.902, 0.944), (244, 244, 244)), ((0.880, 0.942), (245, 245, 245)),
+                                          ((0.891, 0.914), (245, 245, 245))],
+                                         [((0.875, 0.913), (255, 221, 0)), ((0.882, 0.924), (255, 255, 255)),
+                                          ((0.874, 0.961), (255, 201, 0)), ((0.882, 0.947), (255, 255, 255)),
+                                          ((0.901, 0.925), (254, 254, 254)), ((0.908, 0.910), (255, 221, 0)),
+                                          ((0.148, 0.037), (255, 187, 0)), ((0.881, 0.048), (77, 220, 0))]
+                                         ],
 }
 SELECTED_MAP_SELECT_TAB_COLOR = (64, 159, 255)
 MAP_SELECT_PAGE_POINTS = [
@@ -333,6 +385,9 @@ SCREEN_TRANSITIONS = {
         BloonsScreen.IN_GAME: {
             "action": "custom"
         },
+        BloonsScreen.SANDBOX_START_POPUP: {
+            "action": "custom"
+        },
         BloonsScreen.MAIN_MENU: {
             "action": "click",
             "pos": (0.040, 0.052),
@@ -342,7 +397,7 @@ SCREEN_TRANSITIONS = {
         BloonsScreen.PAUSE_MENU: {
             "action": "key",
             "key": "esc",
-        }
+        },
     },
     BloonsScreen.PAUSE_MENU: {
         BloonsScreen.MAIN_MENU: {
@@ -363,5 +418,24 @@ SCREEN_TRANSITIONS = {
             "action": "click",
             "pos": (0.409, 0.677),
         }
-    }
+    },
+    BloonsScreen.SANDBOX_START_POPUP: {
+        BloonsScreen.SANDBOX_BLOON_SCREEN: {
+            "action": "click",
+            "pos": (0.502, 0.704),
+            "post_delay": 1,
+        }
+    },
+    BloonsScreen.SANDBOX_BLOON_SCREEN: {
+        BloonsScreen.SANDBOX_MONKEY_SCREEN: {
+            "action": "click",
+            "pos": (0.892, 0.946),
+        }
+    },
+    BloonsScreen.SANDBOX_MONKEY_SCREEN: {
+        BloonsScreen.SANDBOX_BLOON_SCREEN: {
+            "action": "click",
+            "pos": (0.892, 0.946),
+        }
+    },
 }

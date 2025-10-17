@@ -1,5 +1,5 @@
 from data.enums import BloonsScreen, PAGE_IDENTIFIER_POINTS, MAP_SELECT_PAGE_POINTS, SELECTED_MAP_SELECT_TAB_COLOR
-from system_flags import vprint
+from system_flags import vprint, VERBOSE
 
 
 def color_close(a, b, tol=5):
@@ -7,22 +7,35 @@ def color_close(a, b, tol=5):
 
 
 def identify_screen(capture) -> tuple[BloonsScreen | None, int | None]:
-    """Identify the screen using constant identifier points"""
-    # Find the first page where all points match
-    for page_name, points in PAGE_IDENTIFIER_POINTS.items():
-        found_page = True
-        vprint(page_name.value)
-        # Check each identifier point
-        for (w_fraction, h_fraction), color in points:
-            point_color = capture.getpixel((int(capture.width * w_fraction), int(capture.height * h_fraction)))
-            vprint(point_color, color)
-            # If any point fails, the screen is not a match
-            if not color_close(point_color, color):
-                found_page = False
-                break
-        if found_page:
-            vprint(f"Found page: {page_name}")
-            return page_name, None
+    """Identify the screen using sets of pixel identifiers.
+    Each screen can have multiple valid match sets — if any set matches fully, the screen is identified.
+    """
+
+    for screen, match_sets in PAGE_IDENTIFIER_POINTS.items():
+        # Each screen can have several possible match configurations
+        for match_set in match_sets:
+            all_points_match = True
+
+            for (w_frac, h_frac), expected_color in match_set:
+                px = int(capture.width * w_frac)
+                py = int(capture.height * h_frac)
+                actual_color = capture.getpixel((px, py))
+
+                if not color_close(actual_color, expected_color):
+                    all_points_match = False
+                    if not VERBOSE:
+                        break  # Skip early if mismatch and not debugging
+                    vprint(f"{screen.name} point mismatch {actual_color} != {expected_color}")
+
+                else:
+                    if VERBOSE:
+                        vprint(f"{screen.name} point OK {actual_color} ≈ {expected_color}")
+
+            # If all points in this match set matched, the screen is identified
+            if all_points_match:
+                vprint(f"Matched screen: {screen.name}")
+                return screen, None
+
     vprint("Could not identify current screen.")
     return None, None
 

@@ -2,6 +2,7 @@ import enum
 import time
 
 import pyautogui as pgui
+import pydirectinput
 import pygetwindow as gw
 
 from system_flags import vprint
@@ -101,9 +102,10 @@ class InputController:
     @staticmethod
     def press_key(key: str, hold_time: float = 0.05):
         """Press and release a keyboard key."""
-        pgui.keyDown(key)
+        pydirectinput.keyDown(key)
         time.sleep(hold_time)
-        pgui.keyUp(key)
+        pydirectinput.keyUp(key)
+
 
     @staticmethod
     def scroll(amount: int):

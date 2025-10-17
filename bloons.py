@@ -3,12 +3,13 @@ import time
 from collections import deque
 
 import cv2
+import numpy as np
 
-from data.enums import BloonsDifficulty, Tower, BloonsScreen, SCREEN_TRANSITIONS, MAP_SELECT_THUMBNAIL_POSITIONS, \
+from data.enums import BloonsDifficulty, BloonsScreen, SCREEN_TRANSITIONS, MAP_SELECT_THUMBNAIL_POSITIONS, \
     DIFFICULTY_SELECT_POSITIONS, GAMEMODE_SELECT_POSITIONS, BloonsGamemode, Track, TRACK_THUMBNAIL_LOCATIONS, \
-    MAP_SELECT_RIGHT_ARROW_POSITION, MAP_SELECT_LEFT_ARROW_POSITION
+    MAP_SELECT_RIGHT_ARROW_POSITION, MAP_SELECT_LEFT_ARROW_POSITION, Tower, TOWER_HOTKEYS
 from interaction import WindowManager, InputController
-from system_flags import vprint
+from system_flags import vprint, PIXELS_PER_BLOONS_UNIT
 from vision import identify_screen, get_current_tab
 
 
@@ -16,6 +17,7 @@ class BloonsBrain:
     def __init__(self, window_title: str = "BloonsTD6"):
         # Track data
         self.selected_track: Track | None = None
+        self.track_mask = None
         self.land_mask = None
         self.water_mask = None
         self.flow_points = None
@@ -23,7 +25,8 @@ class BloonsBrain:
         # Game data
         self.difficulty: BloonsDifficulty | None = None
         self.gamemode: BloonsGamemode | None = None
-        self.game_running: bool = False
+        self.placed_towers = []  # (x, y, radius_px)
+        self.occupied_mask = None
 
         # Window controller
         self.window_manager = WindowManager(window_title)
@@ -31,13 +34,41 @@ class BloonsBrain:
             raise RuntimeError(f"Window '{window_title}' not found.")
         self.controller: InputController = self.window_manager.get_relative_controller()
 
+        # Tower data
+        with open("data/tower_properties.json", "r", encoding="utf-8") as f:
+            self.tower_data = json.load(f)
+        with open("data/btd6_upgrades.json", "r", encoding="utf-8") as f:
+            self.upgrade_data = json.load(f)
+
+    def get_tower_info(self, tower: Tower) -> dict:
+        return self.tower_data[tower.value]
+
+    def get_tower_range_px(self, tower: Tower) -> int:
+        return int(self.get_tower_info(tower)["base_range"] * PIXELS_PER_BLOONS_UNIT)
+
+    def get_tower_radius_px(self, tower: Tower) -> int:
+        return int(self.get_tower_info(tower)["footprint_radius"] * PIXELS_PER_BLOONS_UNIT)
+
+    def get_upgrade_info(self, tower: Tower, path: int, tier: int) -> dict | None:
+        upgrades = self.upgrade_data.get(tower.value, [])
+        for up in upgrades:
+            if up["path"] == path and up["tier"] == tier:
+                return up
+        return None
+
     def select_track(self, track: Track):
         """Load track data for the specified track folder"""
         # Standard paths
         track_folder_path = f"data/tracks/{track.value.lower().replace(' ', '_')}"
+        track_mask_path = f"{track_folder_path}/track_mask.png"
         land_mask_path = f"{track_folder_path}/land_placement_mask.png"
         water_mask_path = f"{track_folder_path}/water_placement_mask.png"
         track_json_path = f"{track_folder_path}/path_points.json"
+
+        # Track mask
+        self.track_mask = cv2.imread(track_mask_path)
+        if self.track_mask is None:
+            raise RuntimeError(f"Could not load track mask: '{track_mask_path}'")
 
         # Placement masks
         self.land_mask = cv2.imread(land_mask_path)
@@ -47,6 +78,9 @@ class BloonsBrain:
         self.water_mask = cv2.imread(water_mask_path)
         if self.water_mask is None:
             raise RuntimeError(f"Could not load water placement mask: '{water_mask_path}'")
+
+        # Occupied spaces mask
+        self.occupied_mask = np.zeros_like(self.land_mask[:, :, 0], dtype=np.uint8)
 
         # Flow points
         with open(track_json_path, "r", encoding="utf-8") as f:
@@ -69,12 +103,18 @@ class BloonsBrain:
 
         raise ValueError(f"Could not derive difficulty for gamemode: {gamemode}")
 
-    def place_tower(self, tower: Tower):
-        if not self.game_running:
-            raise RuntimeError("Game is not running.")
-
-        if not self.difficulty:
-            raise RuntimeError("Difficulty not set.")
+    def wait_for_screen(self, target: BloonsScreen, timeout: float = 10.0, interval: float = 0.5) -> bool:
+        """
+        Wait until the game reaches the given screen, or timeout.
+        Returns True if successful, False if timeout reached.
+        """
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            current_screen, _ = identify_screen(self.window_manager.capture_window(force_focus=True))
+            if current_screen == target:
+                return True
+            time.sleep(interval)
+        return False
 
     @staticmethod
     def _find_path(start: BloonsScreen, goal: BloonsScreen):
@@ -99,7 +139,7 @@ class BloonsBrain:
     def _handle_special_transition(self, src: BloonsScreen, dst: BloonsScreen):
         """Handle transitions that need special logic"""
         # Transition from map select to in-game
-        if src == BloonsScreen.MAP_SELECT and dst == BloonsScreen.IN_GAME:
+        if src == BloonsScreen.MAP_SELECT and dst in (BloonsScreen.IN_GAME, BloonsScreen.SANDBOX_START_POPUP):
             if self.difficulty is None:
                 raise RuntimeError("Difficulty not set.")
 
@@ -140,6 +180,7 @@ class BloonsBrain:
             vprint(f"Selecting gamemode {self.gamemode} at {gm_pos}")
             self.controller.click(*gm_pos)
             time.sleep(0.7)
+
             return True
         raise RuntimeError(f"No special handler for {src} → {dst}")
 
@@ -158,7 +199,9 @@ class BloonsBrain:
             src, dst = path[i], path[i + 1]
             transition = SCREEN_TRANSITIONS[src][dst]
             action = transition["action"]
-
+            delay = transition.get("delay", 0)
+            post_delay = transition.get("post_delay", 0)
+            time.sleep(delay)
             vprint(f"{src.name} → {dst.name}")
 
             if action == "click":
@@ -174,22 +217,116 @@ class BloonsBrain:
             else:
                 raise ValueError(f"Unknown action type: {action}")
 
-            # Wait for the next screen to appear (10 second timeout)
-            timeout = 10
-            start_time = time.time()
-            new_screen = None
-            while time.time() - start_time < timeout:
-                new_screen, _ = identify_screen(self.window_manager.capture_window(force_focus=True))
-                if new_screen == dst:
-                    break
-                time.sleep(0.5)
+            time.sleep(post_delay)
 
-            if new_screen != dst:
-                print(f"Timeout: Expected {dst.name}, but got {new_screen}")
+            if not self.wait_for_screen(dst):
+                current_screen, _ = identify_screen(self.window_manager.capture_window(force_focus=True))
+                print(f"Timeout: Expected {dst.name}, but got {current_screen}")
                 return False
 
         vprint(f"Reached {target.name}")
         return True
+
+    def place_tower(self, tower: Tower, position: tuple[float, float]):
+        current_screen, _ = identify_screen(self.window_manager.capture_window(force_focus=True))
+        if current_screen not in (BloonsScreen.IN_GAME, BloonsScreen.SANDBOX_MONKEY_SCREEN):
+            raise RuntimeError("Game is not running.")
+
+        # Convert normalized position → pixel coordinates
+        h, w = self.land_mask.shape[:2]
+        px = int(position[0] * w)
+        py = int(position[1] * h)
+        radius_px = self.get_tower_radius_px(tower)
+
+        # Select and place
+        time.sleep(0.2)
+        self.controller.press_key(TOWER_HOTKEYS[tower])
+        self.controller.click(*position)
+
+        # Log tower and mark occupied region
+        self.placed_towers.append((px, py, radius_px))
+        cv2.circle(self.occupied_mask, (px, py), radius_px, 255, -1)
+
+    def find_best_placement(self, tower: Tower, sample_step: int = 5) -> tuple[float, float]:
+        """
+        Find a good placement position for the tower:
+        - Must be on valid terrain (land/water)
+        - Must not overlap the track (tower radius clearance)
+        - Should maximize coverage of flow points
+        - Returns normalized (x, y) coordinates in [0, 1]
+        """
+
+        if self.selected_track is None or self.flow_points is None:
+            raise RuntimeError("No track selected or flow points not loaded.")
+
+        tower_info = self.get_tower_info(tower)
+        placement_type = tower_info["placement_type"]
+        base_range = self.get_tower_range_px(tower)
+        tower_radius = self.get_tower_radius_px(tower)  # new helper, explained below
+
+        # Pick placement mask (land/water)
+        if placement_type == "land":
+            mask = self.land_mask
+        elif placement_type == "water":
+            mask = self.water_mask
+        else:
+            raise ValueError(f"Unknown placement type: {placement_type}")
+
+        if mask is None:
+            raise RuntimeError(f"No mask loaded for {placement_type} placement.")
+
+        # Track mask should be loaded already
+        if self.track_mask is None:
+            raise RuntimeError("Track mask not loaded.")
+
+        flow_pts = np.array(self.flow_points)
+        if flow_pts.shape[1] != 2:
+            raise ValueError("Flow points must be (x, y) pairs.")
+
+        h, w = mask.shape[:2]
+        best_score = -1
+        best_pos = None
+
+        # Precompute squared range and tower radius
+        range_sq = base_range ** 2
+        tower_r = int(np.ceil(tower_radius))
+
+        for y in range(0, h, sample_step):
+            for x in range(0, w, sample_step):
+                # Check terrain
+                if mask[y, x, 0] < 128:
+                    continue
+
+                # Skip placements too close to the track
+                y0 = max(y - tower_r, 0)
+                y1 = min(y + tower_r, h)
+                x0 = max(x - tower_r, 0)
+                x1 = min(x + tower_r, w)
+                sub_track = self.track_mask[y0:y1, x0:x1, 0]
+
+                if np.any(sub_track > 128):  # track present inside radius
+                    continue
+
+                # Skip placements too close to other towers
+                if np.any(self.occupied_mask[y0:y1, x0:x1] > 0):
+                    continue
+
+                # Score based on nearby flow points
+                dist2 = (flow_pts[:, 0] - x) ** 2 + (flow_pts[:, 1] - y) ** 2
+                score = np.sum(dist2 < range_sq)
+
+                if score > best_score:
+                    best_score = score
+                    best_pos = (x, y)
+
+        if best_pos is None:
+            raise RuntimeError(f"No valid placement found for {tower.value} on {self.selected_track}.")
+
+        norm_x = best_pos[0] / w
+        norm_y = best_pos[1] / h
+        vprint(f"Best {tower.value} placement: ({norm_x:.3f}, {norm_y:.3f}) — covers {best_score} flow points")
+
+        return norm_x, norm_y
 
 
 def main():
@@ -197,10 +334,22 @@ def main():
 
     # Select game settings
     brain.select_track(Track.MONKEY_MEADOW)
-    brain.set_gamemode(BloonsGamemode.MEDIUM_STANDARD)
+    brain.set_gamemode(BloonsGamemode.MEDIUM_SANDBOX)
+
+    if brain.gamemode in (BloonsGamemode.EASY_SANDBOX, BloonsGamemode.MEDIUM_SANDBOX, BloonsGamemode.HARD_SANDBOX):
+        target_screen = BloonsScreen.SANDBOX_MONKEY_SCREEN
+    else:
+        target_screen = BloonsScreen.IN_GAME
 
     # Get into the game
-    brain.navigate_to(BloonsScreen.IN_GAME)
+    brain.navigate_to(target_screen)
+
+    # Place a tower
+    tower = Tower.DART_MONKEY
+    for _ in range(10):
+        position = brain.find_best_placement(tower)
+        # brain.controller.move(*position)
+        brain.place_tower(tower, position)
 
 
 if __name__ == "__main__":
