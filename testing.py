@@ -98,7 +98,7 @@ def test_valid_land_hover(valid_land_mask_path: str, window_title: str = "Bloons
 
 
 def click_window_center(window_title: str = "BloonsTD6", repeat: int = 5, interval: float = 3.0):
-    """Click in the center of the specified window every `interval` seconds."""
+    """Click in the center of the specified window every 'interval' seconds."""
     window_manager = WindowManager(window_title)
     if not window_manager.wait_for_window():
         print(f"❌ Could not find window titled '{window_title}'")

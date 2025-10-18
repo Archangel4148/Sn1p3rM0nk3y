@@ -191,6 +191,12 @@ TOWER_HOTKEYS = {
     Tower.WIZARD_MONKEY: "a",
 }
 
+UPGRADE_HOTKEYS = {
+    "top": ",",
+    "middle": ".",
+    "bottom": "/",
+}
+
 TRACK_THUMBNAIL_LOCATIONS = {
     # Beginner
     Track.ALPINE_RUN: (3, 0),

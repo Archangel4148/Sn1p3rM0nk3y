@@ -204,7 +204,7 @@ class WindowManager:
         width, height = win.width, win.height
         return win.left, win.top, width, height
 
-    def capture_window(self, filename: str | None = None, force_focus: bool = False):
+    def capture_window(self, filename: str | None = None, force_focus: bool = False, region: tuple[float, float, float, float] | None = None):
         """Capture a screenshot of the window region and return it as a PIL image (optionally save it)"""
         if force_focus:
             self.focus_window()
@@ -213,7 +213,25 @@ class WindowManager:
             print("Cannot capture screenshot — window not visible.")
             return None
 
-        left, top, width, height = geometry
+        win_left, win_top, win_width, win_height = geometry
+
+        if region:
+            # Unpack region
+            rx, ry, rwidth, rheight = region
+
+            # If values are fractions (0 <= x <= 1), convert to pixels
+            if 0 <= rx <= 1: rx = int(rx * win_width)
+            if 0 <= ry <= 1: ry = int(ry * win_height)
+            if 0 <= rwidth <= 1: rwidth = int(rwidth * win_width)
+            if 0 <= rheight <= 1: rheight = int(rheight * win_height)
+
+            left = win_left + rx
+            top = win_top + ry
+            width = rwidth
+            height = rheight
+        else:
+            left, top, width, height = win_left, win_top, win_width, win_height
+
         screenshot = pgui.screenshot(region=(left, top, width, height))
 
         if filename:

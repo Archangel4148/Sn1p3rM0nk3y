@@ -111,7 +111,7 @@
     "base_range": 60,
     "placement_type": "land",
     "footprint_shape": "circular",
-    "footprint_radius": 7,
+    "footprint_radius": 8,
     "base_costs": [
       255,
       300,

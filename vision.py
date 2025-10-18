@@ -1,3 +1,7 @@
+import easyocr
+import numpy as np
+from PIL import ImageOps, Image
+
 from data.enums import BloonsScreen, PAGE_IDENTIFIER_POINTS, MAP_SELECT_PAGE_POINTS, SELECTED_MAP_SELECT_TAB_COLOR
 from system_flags import vprint, VERBOSE
 
@@ -6,7 +10,7 @@ def color_close(a, b, tol=5):
     return all(abs(a[i] - b[i]) <= tol for i in range(3))
 
 
-def identify_screen(capture) -> tuple[BloonsScreen | None, int | None]:
+def identify_screen(capture) -> BloonsScreen | None:
     """Identify the screen using sets of pixel identifiers.
     Each screen can have multiple valid match sets — if any set matches fully, the screen is identified.
     """
@@ -34,10 +38,11 @@ def identify_screen(capture) -> tuple[BloonsScreen | None, int | None]:
             # If all points in this match set matched, the screen is identified
             if all_points_match:
                 vprint(f"Matched screen: {screen.name}")
-                return screen, None
+                return screen
 
     vprint("Could not identify current screen.")
-    return None, None
+    return None
+
 
 def get_current_tab(capture):
     # Check each tab dot
@@ -51,3 +56,23 @@ def get_current_tab(capture):
 
     vprint("Could not identify selected map tab.")
     return None
+
+
+def ocr_number_from_image(pil_img: Image.Image) -> int | None:
+    # Convert to grayscale
+    gray = ImageOps.grayscale(pil_img)
+
+    # Convert PIL image to NumPy array
+    img_array = np.array(gray)
+
+    # OCR
+    reader = easyocr.Reader(["en"])
+    results = reader.readtext(img_array)
+
+    if not results:
+        return None
+
+    # Take the first detected text and filter digits
+    text = ''.join(filter(str.isdigit, results[0][1]))
+
+    return int(text) if text else None
