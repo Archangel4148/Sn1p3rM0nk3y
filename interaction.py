@@ -5,7 +5,7 @@ import pyautogui as pgui
 import pydirectinput
 import pygetwindow as gw
 
-from system_flags import vprint
+from system_flags import vprint, SUPPRESS_FOCUS_OUTPUT
 
 
 class MouseButtons(enum.StrEnum):
@@ -184,7 +184,8 @@ class WindowManager:
 
             self.window.activate()
             time.sleep(0.1)
-            vprint(f"{self.window.title} focused successfully.")
+            if not SUPPRESS_FOCUS_OUTPUT:
+                vprint(f"{self.window.title} focused successfully.")
             return True
         except Exception as e:
             print(f"Failed to focus window: {e}")

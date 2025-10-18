@@ -11,8 +11,9 @@ from data.enums import BloonsDifficulty, BloonsScreen, SCREEN_TRANSITIONS, MAP_S
     DIFFICULTY_SELECT_POSITIONS, GAMEMODE_SELECT_POSITIONS, BloonsGamemode, Track, TRACK_THUMBNAIL_LOCATIONS, \
     MAP_SELECT_RIGHT_ARROW_POSITION, MAP_SELECT_LEFT_ARROW_POSITION, Tower, TOWER_HOTKEYS, UPGRADE_HOTKEYS
 from interaction import WindowManager, InputController
+from money_reader import MoneyReader
 from system_flags import vprint, PIXELS_PER_BLOONS_UNIT
-from vision import identify_screen, get_current_tab, ocr_number_from_image
+from vision import identify_screen, get_current_tab
 
 
 @dataclass
@@ -39,6 +40,8 @@ class BloonsBrain:
         self.gamemode: BloonsGamemode | None = None
         self.placed_towers: list[PlacedTower] = []
         self.occupied_mask = None
+        self._estimated_money: int = 0
+        self._last_money_estimate_time: float | None = None
 
         # Window controller
         self.window_manager = WindowManager(window_title)
@@ -46,11 +49,31 @@ class BloonsBrain:
             raise RuntimeError(f"Window '{window_title}' not found.")
         self.controller: InputController = self.window_manager.get_relative_controller()
 
+        # Money reader thread
+        self.money_reader = MoneyReader(self.window_manager, interval=3)
+
         # Tower data
         with open("data/tower_properties.json", "r", encoding="utf-8") as f:
             self.tower_data = json.load(f)
         with open("data/btd6_upgrades.json", "r", encoding="utf-8") as f:
             self.upgrade_data = json.load(f)
+
+    @property
+    def money(self) -> int | None:
+        """Return the most recent know money value (either from reader or estimate)"""
+        ocr_money, ocr_time = self.money_reader.get_money()
+        if self._last_money_estimate_time is None:
+            self._estimated_money = ocr_money
+            return ocr_money
+        if ocr_time is None:
+            return self._estimated_money
+        return ocr_money if ocr_time >= self._last_money_estimate_time else self._estimated_money
+
+    def update_money_estimate(self, change: int):
+        if self._estimated_money is None:
+            self._estimated_money = 0
+        self._estimated_money = max(self._estimated_money + change, 0)
+        self._last_money_estimate_time = time.time()
 
     def get_tower_info(self, tower: Tower) -> dict:
         return self.tower_data[tower.value]
@@ -215,13 +238,13 @@ class BloonsBrain:
             map_pos = MAP_SELECT_THUMBNAIL_POSITIONS[thumbnail_index]
             vprint(f"Clicking map at position {thumbnail_index + 1} ({map_pos})")
             self.controller.click(*map_pos)
-            time.sleep(0.7)
+            time.sleep(0.2)
 
             # Select difficulty
             diff_pos = DIFFICULTY_SELECT_POSITIONS[self.difficulty]
             vprint(f"Selecting difficulty {self.difficulty.name} at {diff_pos}")
             self.controller.click(*diff_pos)
-            time.sleep(0.7)
+            time.sleep(0.2)
 
             # Select gamemode
             gm_pos = GAMEMODE_SELECT_POSITIONS[self.difficulty].get(self.gamemode)
@@ -229,7 +252,6 @@ class BloonsBrain:
                 raise RuntimeError(f"Gamemode {self.gamemode} not valid for {self.difficulty.name}.")
             vprint(f"Selecting gamemode {self.gamemode} at {gm_pos}")
             self.controller.click(*gm_pos)
-            time.sleep(0.7)
 
             return True
         raise RuntimeError(f"No special handler for {src} → {dst}")
@@ -289,9 +311,12 @@ class BloonsBrain:
         radius_px = self.get_tower_radius_px(tower)
 
         # Select and place
-        time.sleep(0.2)
         self.controller.press_key(TOWER_HOTKEYS[tower])
         self.controller.click(*position)
+
+        cost = self.get_tower_cost(tower)
+        vprint(f"Placed tower {len(self.placed_towers)}: {tower.value} at {position} for ${cost}/{self.money}")
+        self.update_money_estimate(-cost)
 
         # Record tower info and mark occupied region
         placed = PlacedTower(
@@ -301,7 +326,7 @@ class BloonsBrain:
             priority_paths=[random.choice(["top", "middle", "bottom"]) for _ in range(2)],
         )
         self.placed_towers.append(placed)
-        cv2.circle(self.occupied_mask, (px, py), radius_px, 255, -1)
+        cv2.circle(self.occupied_mask, (px, py), int(radius_px * 1.1), 255, -1)
 
     def _get_upgrade(self, tower: Tower, path: str, tier: int):
         upgrades = self.upgrade_data[tower]
@@ -312,32 +337,36 @@ class BloonsBrain:
         raise ValueError(f"Upgrade not found for {tower.value} at tier {tier} on path {path}.")
 
     def get_next_upgrade(self, tower: PlacedTower, path: str):
+        """Get the next upgrade for a tower in the provided path"""
         next_tier = tower.upgrades[path] + 1
         return self._get_upgrade(tower.tower, path, next_tier)
 
     def upgrade_tower(self, tower_obj: PlacedTower, path: str):
+        """Upgrade a tower to the next tier in the provided path"""
         if path not in tower_obj.upgrades:
             raise ValueError(f"Invalid path '{path}', must be 'top', 'middle', or 'bottom'.")
 
-        target_tier = tower_obj.upgrades[path] + 1
-        upgrade = self._get_upgrade(tower_obj.tower, path, target_tier)
+        upgrade = self.get_next_upgrade(tower_obj, path)
         cost = upgrade["cost"][self.difficulty.value]
-
-        if self.read_money() < cost:
+        if self.money < cost:
             raise RuntimeError(
                 f"Not enough money to upgrade {tower_obj.tower.value} at {tower_obj.position} ({path} → {tower_obj.upgrades[path]})")
 
         self.controller.click(*tower_obj.position)
         self.controller.press_key(UPGRADE_HOTKEYS[path])
-        time.sleep(0.2)
+        time.sleep(0.1)
         self.controller.click(*tower_obj.position)
+
+        vprint(f"Upgraded {tower_obj.value} at {tower_obj.position} for ${cost}/{self.money}")
+
+        self.update_money_estimate(-cost)
 
         # Increment internal tracking
         tower_obj.upgrades[path] += 1
         vprint(f"Upgraded {tower_obj.tower.value} at {tower_obj.position} ({path} → {tower_obj.upgrades[path]})")
 
     def can_place_tower_on_map(self, tower: Tower, sample_step: int = 20) -> bool:
-        """Quickly check if the tower has at least one valid placement spot."""
+        """Check if the tower can be placed anywhere"""
         tower_info = self.get_tower_info(tower)
         placement_type = tower_info["placement_type"]
 
@@ -377,10 +406,9 @@ class BloonsBrain:
     def find_best_placement(self, tower: Tower, sample_step: int = 15) -> tuple[float, float]:
         """
         Find a good placement position for the tower:
-        - Must be on valid terrain (land/water)
-        - Must not overlap the track (tower radius clearance)
-        - Should maximize coverage of flow points
-        - Returns normalized (x, y) coordinates in [0, 1]
+        - Valid terrain (land/water)
+        - Doesn't overlap the track (tower radius clearance)
+        - Maximizes coverage of flow points
         """
 
         if self.selected_track is None or self.flow_points is None:
@@ -389,9 +417,9 @@ class BloonsBrain:
         tower_info = self.get_tower_info(tower)
         placement_type = tower_info["placement_type"]
         base_range = self.get_tower_range_px(tower)
-        tower_radius = self.get_tower_radius_px(tower)  # new helper, explained below
+        tower_radius = self.get_tower_radius_px(tower)
 
-        # Pick placement mask (land/water)
+        # Placement mask
         if placement_type == "land":
             mask = self.land_mask
         elif placement_type == "water":
@@ -404,7 +432,7 @@ class BloonsBrain:
         if mask is None:
             raise RuntimeError(f"No mask loaded for {placement_type} placement.")
 
-        # Track mask should be loaded already
+        # Track mask should be loaded
         if self.track_mask is None:
             raise RuntimeError("Track mask not loaded.")
 
@@ -416,10 +444,9 @@ class BloonsBrain:
         best_score = -1
         best_pos = None
 
-        # Precompute squared range and tower radius
+        # Scan the whole screen for the best placement
         range_sq = base_range ** 2
         tower_r = int(np.ceil(tower_radius))
-
         for y in range(0, h, sample_step):
             for x in range(0, w, sample_step):
                 # Check terrain
@@ -457,16 +484,10 @@ class BloonsBrain:
 
         return norm_x, norm_y
 
-    def read_money(self):
-        money_region = (0.192, 0.015, 0.156, 0.049)
-        capture = self.window_manager.capture_window(region=money_region)
-        value = ocr_number_from_image(capture)
-        vprint(f"Money value: ${value}")
-        return value
-
     ############### STRATEGY/HEURISTICS ###############
 
     def evaluate_tower_placement(self, tower, pos):
+        # Reward towers that cover more flow points
         range_px = self.get_tower_range_px(tower)
         h, w = self.land_mask.shape[:2]
         x, y = int(pos[0] * w), int(pos[1] * h)
@@ -478,26 +499,54 @@ class BloonsBrain:
         same_type_count = sum(1 for t in self.placed_towers if t.tower == tower)
         penalty = same_type_count * 0.3  # tune this weight
 
-        return coverage_score * (1 - penalty)
+        # Reward diversity
+        unique_towers = len({t.tower for t in self.placed_towers})
+        diversity_bonus = 1 + 0.05 * unique_towers
+
+        score = coverage_score * (1 - penalty) * diversity_bonus
+
+        return score
 
     def evaluate_upgrade(self, tower_obj, path):
-        # Simple heuristic: prefer upgrading lower-tier paths first
-        tier = tower_obj.upgrades[path]
-        return 10 - tier  # higher score for lower-tier upgrades
+        next_tier = tower_obj.upgrades[path] + 1
+        upgrade = self.get_next_upgrade(tower_obj, path)
+        score = 1.0
+
+        # Reward higher tier upgrades
+        score += next_tier * 0.5
+
+        # Slightly reward upgrades that grant coverage (regardless of global coverage)
+        if upgrade.get("grants_camo") or upgrade.get("grants_lead"):
+            score *= 1.2
+
+        # Reward upgrades that grant missing coverage
+        global_coverage = self.get_global_coverage()
+        if not global_coverage["camo"] and upgrade.get("grants_camo"):
+            score *= 2.0
+        if not global_coverage["lead"] and upgrade.get("grants_lead"):
+            score *= 2.0
+
+        # Special coverage for camo leads
+        tower_coverage = self.get_tower_coverage(tower_obj)
+        if tower_coverage["camo"] and upgrade.get("grants_lead"):
+            score *= 2.0
+        elif tower_coverage["lead"] and upgrade.get("grants_camo"):
+            score *= 2.0
+
+        return score
 
     def find_best_action(self):
         actions = []
-        money = self.read_money()
         global_cov = self.get_global_coverage()
         tower_count = len(self.placed_towers)
 
         # Punish tower placements more as more towers are placed
-        placement_bias = max(0.2, 1.0 - tower_count * 0.05)  # fade to 20% at 16+ towers
+        placement_bias = max(0.05, 1.0 - tower_count * 0.1)
 
         # Tower placements
         for tower in Tower:
             cost = self.get_tower_cost(tower)
-            if money < cost:
+            if self.money < cost:
                 continue
 
             # Skip towers that cannot be placed anywhere on this map
@@ -517,29 +566,36 @@ class BloonsBrain:
 
             actions.append(("place", tower, pos, score))
 
-            # Tower upgrades
-            for placed in self.placed_towers:
-                active_paths = sum(1 for t in placed.upgrades.values() if t > 0)
-                for path in ("top", "middle", "bottom"):
-                    # Don't check paths if the other two are already active
-                    if active_paths == 2 and placed.upgrades[path] == 0:
-                        continue
-                    try:
-                        upgrade = self.get_next_upgrade(placed, path)
-                        if upgrade:
-                            cost = upgrade["cost"][self.difficulty.value]
-                            if money >= cost:
-                                score = self.evaluate_upgrade(placed, path)
+        # Tower upgrades
+        for placed in self.placed_towers:
+            for path in ("top", "middle", "bottom"):
+                current_tier = placed.upgrades[path]
 
-                                # Boost upgrades that grant missing coverage
-                                if not global_cov["camo"] and upgrade.get("grants_camo"):
-                                    score *= 2.0
-                                if not global_cov["lead"] and upgrade.get("grants_lead"):
-                                    score *= 2.0
+                # Skip if this path is already maxed
+                if current_tier >= 5:
+                    continue
+                other_paths = [p for p in ("top", "middle", "bottom") if p != path]
+                other_tiers = [placed.upgrades[p] for p in other_paths]
 
-                                actions.append(("upgrade", placed, path, score))
-                    except Exception:
-                        continue
+                # If both other paths are already upgraded, skip this path
+                if all(t > 0 for t in other_tiers):
+                    continue
+
+                # If another tier is already >2, this path can't go higher than 2
+                if max(other_tiers) >= 3 and current_tier == 2:
+                    continue
+
+                try:
+                    upgrade = self.get_next_upgrade(placed, path)
+                    if upgrade:
+                        cost = upgrade["cost"][self.difficulty.value]
+                        if self.money < cost:
+                            continue
+                        score = self.evaluate_upgrade(placed, path)
+
+                        actions.append(("upgrade", placed, path, score))
+                except Exception:
+                    continue
 
         if not actions:
             return None  # nothing to do
@@ -564,13 +620,16 @@ def main():
     # Get into the game
     brain.navigate_to(target_screen)
 
+    # Start the money reader
+    brain.money_reader.start()
+
     while True:
         current_screen = identify_screen(brain.window_manager.capture_window(force_focus=True))
         if current_screen != BloonsScreen.IN_GAME:
             print(f"Detected screen change ({current_screen}), waiting 5 seconds to confirm...")
             time.sleep(5)
 
-            recheck_screen = identify_screen(brain.window_manager.capture_window(force_focus=True))
+            recheck_screen = identify_screen(brain.window_manager.capture_window(force_focus=False))
             if recheck_screen != BloonsScreen.IN_GAME:
                 print(f"Still not in-game after wait ({recheck_screen}), exiting loop.")
                 break
@@ -591,10 +650,14 @@ def main():
                 _, tower_obj, path, _ = action
                 brain.upgrade_tower(tower_obj, path)
 
+            # Collect any bananas from the map
+            for farm in [t for t in brain.placed_towers if t.tower == Tower.BANANA_FARM]:
+                brain.controller.move(**farm.position)
+
         except Exception as e:
             print(f"Action failed: {e}")
 
-        time.sleep(1)
+        time.sleep(0.2)
 
 
 if __name__ == "__main__":

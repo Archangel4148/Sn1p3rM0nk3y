@@ -1,9 +1,10 @@
+import cv2
 import easyocr
 import numpy as np
 from PIL import ImageOps, Image
 
 from data.enums import BloonsScreen, PAGE_IDENTIFIER_POINTS, MAP_SELECT_PAGE_POINTS, SELECTED_MAP_SELECT_TAB_COLOR
-from system_flags import vprint, VERBOSE
+from system_flags import vprint, VERBOSE, SUPPRESS_SCREEN_MATCHING_OUTPUT
 
 
 def color_close(a, b, tol=5):
@@ -29,18 +30,20 @@ def identify_screen(capture) -> BloonsScreen | None:
                     all_points_match = False
                     if not VERBOSE:
                         break  # Skip early if mismatch and not debugging
-                    vprint(f"{screen.name} point mismatch {actual_color} != {expected_color}")
+                    if not SUPPRESS_SCREEN_MATCHING_OUTPUT:
+                        vprint(f"{screen.name} point mismatch {actual_color} != {expected_color}")
 
                 else:
-                    if VERBOSE:
+                    if not SUPPRESS_SCREEN_MATCHING_OUTPUT:
                         vprint(f"{screen.name} point OK {actual_color} ≈ {expected_color}")
 
             # If all points in this match set matched, the screen is identified
             if all_points_match:
-                vprint(f"Matched screen: {screen.name}")
+                if not SUPPRESS_SCREEN_MATCHING_OUTPUT:
+                    vprint(f"Matched screen: {screen.name}")
                 return screen
-
-    vprint("Could not identify current screen.")
+    if not SUPPRESS_SCREEN_MATCHING_OUTPUT:
+        vprint("Could not identify current screen.")
     return None
 
 
@@ -61,13 +64,12 @@ def get_current_tab(capture):
 def ocr_number_from_image(pil_img: Image.Image) -> int | None:
     # Convert to grayscale
     gray = ImageOps.grayscale(pil_img)
-
-    # Convert PIL image to NumPy array
     img_array = np.array(gray)
+    _, img_bin = cv2.threshold(img_array, 180, 255, cv2.THRESH_BINARY)
 
     # OCR
-    reader = easyocr.Reader(["en"])
-    results = reader.readtext(img_array)
+    reader = easyocr.Reader(["en"], gpu=True)
+    results = reader.readtext(img_bin)
 
     if not results:
         return None
@@ -76,3 +78,7 @@ def ocr_number_from_image(pil_img: Image.Image) -> int | None:
     text = ''.join(filter(str.isdigit, results[0][1]))
 
     return int(text) if text else None
+
+import torch
+print(torch.cuda.is_available())
+print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else "No GPU detected")
