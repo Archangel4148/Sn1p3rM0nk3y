@@ -22,5 +22,181 @@
     "Damage": 1,
     "Damage Type": "Explosion",
     "Projectiles": 1
+  },
+  "Tack Shooter": {
+    "Cooldown": 1.12,
+    "Range": 23,
+    "Pierce": 1,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 8
+  },
+  "Ice Monkey": {
+    "Cooldown": 2.4,
+    "Range": 20,
+    "Pierce": 40,
+    "Damage": 1,
+    "Damage Type": "Cold",
+    "Projectiles": 1
+  },
+  "Glue Gunner": {
+    "Cooldown": 1,
+    "Range": 46,
+    "Pierce": 1,
+    "Damage": 0,
+    "Damage Type": null,
+    "Projectiles": 1
+  },
+  "Desperado": {
+    "Cooldown": 1.2,
+    "Range": 60,
+    "Pierce": 1,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 2
+  },
+  "Sniper Monkey": {
+    "Cooldown": 1.59,
+    "Range": 1000000,
+    "Pierce": 1,
+    "Damage": 2,
+    "Damage Type": "Sharp",
+    "Projectiles": 1
+  },
+  "Monkey Sub": {
+    "Cooldown": 0.75,
+    "Range": 42,
+    "Pierce": 2,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 1
+  },
+  "Monkey Buccaneer": {
+    "Cooldown": 1,
+    "Range": 60,
+    "Pierce": 4,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 1
+  },
+  "Monkey Ace": {
+    "Cooldown": 1.68,
+    "Range": 22,
+    "Pierce": 5,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 8
+  },
+  "Heli Pilot": {
+    "Cooldown": 0.57,
+    "Range": 42,
+    "Pierce": 3,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 2
+  },
+  "Mortar Monkey": {
+    "Cooldown": 2,
+    "Range": 1000000,
+    "Pierce": 25,
+    "Damage": 2,
+    "Damage Type": "Explosion",
+    "Projectiles": 1
+  },
+  "Dartling Gunner": {
+    "Cooldown": 0.2,
+    "Range": 1000000,
+    "Pierce": 1,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 1
+  },
+  "Wizard Monkey": {
+    "Cooldown": 1.1,
+    "Range": 40,
+    "Pierce": 3,
+    "Damage": 1,
+    "Damage Type": "Energy",
+    "Projectiles": 1
+  },
+  "Super Monkey": {
+    "Cooldown": 0.045,
+    "Range": 50,
+    "Pierce": 1,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 1
+  },
+  "Ninja Monkey": {
+    "Cooldown": 0.62,
+    "Range": 40,
+    "Pierce": 2,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 1
+  },
+  "Alchemist": {
+    "Cooldown": 2,
+    "Range": 45,
+    "Pierce": 15,
+    "Damage": 1,
+    "Damage Type": "Normal",
+    "Projectiles": 1
+  },
+  "Druid": {
+    "Cooldown": 1.1,
+    "Range": 35,
+    "Pierce": 1,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 1
+  },
+  "Mermonkey": {
+    "Cooldown": 1.2,
+    "Range": 28,
+    "Pierce": 3,
+    "Damage": 2,
+    "Damage Type": "Shatter",
+    "Projectiles": 1
+  },
+  "Banana Farm": {
+    "Cooldown": null,
+    "Range": null,
+    "Pierce": null,
+    "Damage": null,
+    "Damage Type": null,
+    "Projectiles": 1
+  },
+  "Spike Factory": {
+    "Cooldown": 1.75,
+    "Range": 34,
+    "Pierce": 5,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 1
+  },
+  "Monkey Village": {
+    "Cooldown": null,
+    "Range": null,
+    "Pierce": null,
+    "Damage": null,
+    "Damage Type": null,
+    "Projectiles": 1
+  },
+  "Engineer Monkey": {
+    "Cooldown": 0.7,
+    "Range": 40,
+    "Pierce": 3,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 1
+  },
+  "Beast Handler": {
+    "Cooldown": 1.4,
+    "Range": 20,
+    "Pierce": 4,
+    "Damage": 1,
+    "Damage Type": "Energy",
+    "Projectiles": 1
   }
 }

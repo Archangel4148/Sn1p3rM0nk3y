@@ -11,22 +11,24 @@ BASE_URL = "https://www.bloonswiki.com"
 TOWER_LIST_URL = f"{BASE_URL}/Tower"
 OUTPUT_DIR = Path("../data/scraped_bloons")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-SAVE_HTML = False  # set True if you want local HTML copies
+SAVE_HTML = False  # Saves HTML locally
 CRAWL_DELAY = 5
-TOWERS_TO_PROCESS = 3
+TOWERS_TO_PROCESS = 50
 
-def clean_stat(value, is_numeric=False, is_damage_type=False):
+def clean_stat(value, is_numeric=False, is_damage_type=False, default=None):
     """Clean a stat value according to the rules."""
     if not value:
-        return None
+        return default
 
     # Use only the upgraded value after the arrow if present
     if "→" in value:
         value = value.split("→")[-1].strip()
+    if "∞" in value:
+        value = "1000000"
 
     # Simplify Damage Type
-    if is_damage_type and "Normal" in value:
-        return "Normal"
+    if is_damage_type:
+        return value.split()[0].strip()
 
     # Convert numeric values
     if is_numeric:
@@ -56,20 +58,25 @@ async def get_html(page, url: str) -> str:
 
 
 def parse_tower_links(html: str):
-    """Parse tower links from the /Tower page."""
+    """Parse tower links from the /Tower page across all categories."""
     soup = BeautifulSoup(html, "html.parser")
     header = soup.find("span", {"id": "Bloons_TD_6"})
-    gallery = header.find_next("ul", {"class": "gallery"}) if header else None
     towers = {}
-    if not gallery:
-        print("[-] Could not find tower gallery.")
+
+    if not header:
+        print("[-] Could not find Bloons TD 6 section.")
         return towers
 
-    for a in gallery.find_all("a", href=True, title=True):
-        title = a["title"].replace(" (BTD6)", "")
-        link = BASE_URL + a["href"]
-        towers[title] = link
+    # Loop through all <ul class="gallery mw-gallery-traditional"> after the header
+    for gallery in header.find_all_next("ul", class_="gallery mw-gallery-traditional"):
+        for a in gallery.find_all("a", href=True, title=True):
+            if "(BTD6)" not in a["title"]:
+                continue
+            title = a["title"].replace(" (BTD6)", "")
+            link = BASE_URL + a["href"]
+            towers[title] = link
 
+    # Limit to the first N towers if desired
     trim_towers = {key: towers[key] for key in list(towers.keys())[:TOWERS_TO_PROCESS]}
     print(f"[+] Found {len(trim_towers)} towers")
     return trim_towers
@@ -114,7 +121,7 @@ def parse_stats_table(html: str):
                     elif "pierce" in key:
                         stats["Pierce"] = clean_stat(val, is_numeric=True)
                     elif "damage" == key:
-                        stats["Damage"] = clean_stat(val, is_numeric=True)
+                        stats["Damage"] = clean_stat(val, is_numeric=True, default=0)
                     elif "damage type" in key:
                         stats["Damage Type"] = clean_stat(val, is_damage_type=True)
                     elif "count" in key or "projectiles" in key:

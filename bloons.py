@@ -51,9 +51,9 @@ class BloonsBrain:
         self.money_reader = MoneyReader(self.window_manager, interval=3)
 
         # Tower data
-        with open("data/tower_properties.json", "r", encoding="utf-8") as f:
+        with open("data/combined_towers.json", "r", encoding="utf-8") as f:
             self.tower_data = json.load(f)
-        with open("data/btd6_upgrades.json", "r", encoding="utf-8") as f:
+        with open("data/merged_upgrades.json", "r", encoding="utf-8") as f:
             self.upgrade_data = json.load(f)
 
     @property
@@ -87,7 +87,7 @@ class BloonsBrain:
         tower_info = self.get_tower_info(tower.tower)
         coverage = {"camo": tower_info["base_sees_camo"], "lead": tower_info["base_pops_lead"]}
         for path in tower.upgrades:
-            for tier in range(tower.upgrades[path]):
+            for tier in range(1, tower.upgrades[path] + 1):
                 upgrade = self._get_upgrade(tower.tower, path, tier)
                 if upgrade:
                     if upgrade["grants_camo"]:
@@ -316,7 +316,7 @@ class BloonsBrain:
             radius_px=radius_px,
         )
         self.placed_towers.append(placed)
-        cv2.circle(self.occupied_mask, (px, py), int(radius_px * 1.2), 255, -1)
+        cv2.circle(self.occupied_mask, (px, py), int(radius_px * 1.5), 255, -1)
 
     def _get_upgrade(self, tower: Tower, path: str, tier: int):
         upgrades = self.upgrade_data[tower]
@@ -393,6 +393,94 @@ class BloonsBrain:
                 return True
 
         return False
+
+    def calculate_tower_dps(self, tower_obj: PlacedTower) -> float:
+        """
+        Calculate an estimated DPS for the given placed tower, including upgrades.
+        Only considers basic damage, pierce, and cooldown. Effects like abilities,
+        special attacks, or area-of-effect multipliers are not included here.
+        """
+        info = self.get_tower_info(tower_obj.tower)
+
+        # Start with base stats
+        cooldown = info.get("cooldown", 1.0)
+        damage = info.get("damage", 0)
+        pierce = info.get("pierce", 1)
+        projectiles = info.get("projectiles", 1)
+
+        # Apply upgrades
+        for path_name, tier in tower_obj.upgrades.items():
+            for t in range(1, tier + 1):
+                try:
+                    upgrade = self._get_upgrade(tower_obj.tower, path_name, t)
+                except ValueError:
+                    continue
+                damage = upgrade.get("Damage", damage)
+                cooldown = upgrade.get("Cooldown", cooldown)
+                pierce = upgrade.get("Pierce", pierce)
+                projectiles = upgrade.get("Projectiles", projectiles)
+
+        if cooldown <= 0:
+            return 0.0  # avoid division by zero
+        dps = (damage * pierce * projectiles) / cooldown
+        return dps
+
+    def calculate_global_dps(self) -> dict:
+        """
+        Calculate total DPS across all placed towers.
+        Also return total DPS for towers that can pop leads and detect camos.
+        """
+        total_dps = 0.0
+        total_lead_dps = 0.0
+        total_camo_dps = 0.0
+
+        for tower_obj in self.placed_towers:
+            dps = self.calculate_tower_dps(tower_obj)
+            total_dps += dps
+
+            coverage = self.get_tower_coverage(tower_obj)
+            if coverage.get("lead"):
+                total_lead_dps += dps
+            if coverage.get("camo"):
+                total_camo_dps += dps
+
+        return {
+            "total_dps": total_dps,
+            "lead_dps": total_lead_dps,
+            "camo_dps": total_camo_dps,
+        }
+
+    def evaluate_tower_dps_efficiency(self, tower: Tower) -> float:
+        """Estimate DPS per dollar for a tower with no upgrades."""
+        try:
+            dummy = PlacedTower(tower=tower, position=(0, 0))
+            dps = self.calculate_tower_dps(dummy)
+            cost = self.get_tower_cost(tower)
+            return dps / cost if cost > 0 else 0
+        except Exception:
+            return 0.0
+
+    def evaluate_upgrade_dps_efficiency(self, tower_obj: PlacedTower, path: str) -> float:
+        """Estimate DPS gain per dollar for the next upgrade."""
+        try:
+            current_dps = self.calculate_tower_dps(tower_obj)
+            next_tier = tower_obj.upgrades[path] + 1
+            upgrade = self._get_upgrade(tower_obj.tower, path, next_tier)
+            cost = upgrade["cost"][self.difficulty.value]
+            if cost <= 0:
+                return 0.0
+
+            # Simulate DPS after upgrade
+            simulated = PlacedTower(
+                tower=tower_obj.tower,
+                position=tower_obj.position,
+                upgrades={**tower_obj.upgrades, path: next_tier},
+            )
+            new_dps = self.calculate_tower_dps(simulated)
+            gain = new_dps - current_dps
+            return gain / cost if gain > 0 else 0.0
+        except Exception:
+            return 0.0
 
     def find_best_placement(self, tower: Tower, sample_step: int = 15) -> tuple[float, float]:
         """
@@ -477,6 +565,37 @@ class BloonsBrain:
 
     ############### STRATEGY/HEURISTICS ###############
 
+    def evaluate_tower_future_value(self, tower: Tower, discount: float = 0.7) -> float:
+        """
+        Estimate a tower's overall upgrade potential.
+        Weighted sum of DPS/cost improvements for all upgrades,
+        discounted by how deep they are in the path.
+        """
+        try:
+            upgrades = self.upgrade_data[tower]
+        except KeyError:
+            return 0.0
+
+        total_value = 0.0
+        for upgrade in upgrades:
+            # Ignore crosspath-locked tiers above 2 unless they're pure
+            if upgrade["tier"] > 5 or upgrade["cost"][self.difficulty.value] <= 0:
+                continue
+
+            cost = upgrade["cost"][self.difficulty.value]
+            dmg = upgrade.get("Damage", 0)
+            pierce = upgrade.get("Pierce", 1)
+            proj = upgrade.get("Projectiles", 1)
+            cd = upgrade.get("Cooldown", 1.0)
+
+            # Simple DPS estimate
+            dps = (dmg * pierce * proj) / cd if cd > 0 else 0
+            value = (dps / cost) * (discount ** (upgrade["tier"] - 1))
+
+            total_value += value
+
+        return total_value
+
     def evaluate_tower_placement(self, tower, pos):
         # Reward towers that cover more flow points
         range_px = self.get_tower_range_px(tower)
@@ -546,7 +665,10 @@ class BloonsBrain:
                 continue
 
             pos = self.find_best_placement(tower)
-            score = self.evaluate_tower_placement(tower, pos) * placement_bias
+            dps_eff = self.evaluate_tower_dps_efficiency(tower)
+            future_value = self.evaluate_tower_future_value(tower)
+            score = self.evaluate_tower_placement(tower, pos) * placement_bias * (
+                    1 + (dps_eff + 0.2 * future_value) * 100)
 
             # Favor towers that add missing coverage
             tower_info = self.get_tower_info(tower)
@@ -582,7 +704,8 @@ class BloonsBrain:
                         cost = upgrade["cost"][self.difficulty.value]
                         if self.money < cost:
                             continue
-                        score = self.evaluate_upgrade(placed, path)
+                        dps_eff = self.evaluate_upgrade_dps_efficiency(placed, path)
+                        score = self.evaluate_upgrade(placed, path) * (1 + dps_eff * 100)
 
                         actions.append(("upgrade", placed, path, score))
                 except Exception:
@@ -630,26 +753,26 @@ def main():
             else:
                 print("Screen recovered — resuming automation.")
 
-        try:
-            action = brain.find_best_action(tower_list)
-            if not action:
-                time.sleep(1)
-                continue
+        # try:
+        action = brain.find_best_action(tower_list)
+        if not action:
+            time.sleep(1)
+            continue
 
-            kind = action[0]
-            if kind == "place":
-                _, tower, pos, _ = action
-                brain.place_tower(tower, pos)
-            elif kind == "upgrade":
-                _, tower_obj, path, _ = action
-                brain.upgrade_tower(tower_obj, path)
+        kind = action[0]
+        if kind == "place":
+            _, tower, pos, _ = action
+            brain.place_tower(tower, pos)
+        elif kind == "upgrade":
+            _, tower_obj, path, _ = action
+            brain.upgrade_tower(tower_obj, path)
 
-            # Collect any bananas from the map
-            for farm in [t for t in brain.placed_towers if t.tower == Tower.BANANA_FARM]:
-                brain.controller.move(*farm.position)
+        # Collect any bananas from the map
+        for farm in [t for t in brain.placed_towers if t.tower == Tower.BANANA_FARM]:
+            brain.controller.move(*farm.position)
 
-        except Exception as e:
-            print(f"Action failed: {e}")
+        # except Exception as e:
+        #     print(f"Action failed: {e}")
 
         time.sleep(0.2)
 

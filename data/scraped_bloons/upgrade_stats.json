@@ -364,5 +364,2689 @@
       "Damage Type": "Explosion",
       "Projectiles": 8
     }
+  },
+  "Tack Shooter": {
+    "Faster Shooting (Tack Shooter)": {
+      "Cooldown": 0.84,
+      "Range": 23,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Even Faster Shooting": {
+      "Cooldown": 0.63,
+      "Range": 23,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Hot Shots": {
+      "Cooldown": 0.63,
+      "Range": 23,
+      "Pierce": 1,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 8
+    },
+    "Ring of Fire": {
+      "Cooldown": 0.315,
+      "Range": 23,
+      "Pierce": 30,
+      "Damage": 5,
+      "Damage Type": "Plasma",
+      "Projectiles": 1
+    },
+    "Inferno Ring": {
+      "Cooldown": 0.1,
+      "Range": 34.5,
+      "Pierce": 45,
+      "Damage": 8,
+      "Damage Type": "Plasma",
+      "Projectiles": 1
+    },
+    "Long Range Tacks": {
+      "Cooldown": 1.12,
+      "Range": 26.91,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Super Range Tacks": {
+      "Cooldown": 1.12,
+      "Range": 30.82,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Blade Shooter": {
+      "Cooldown": 1.12,
+      "Range": 46,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Shatter",
+      "Projectiles": 8
+    },
+    "Blade Maelstrom": {
+      "Cooldown": 1.12,
+      "Range": 46,
+      "Pierce": 8,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 8
+    },
+    "Super Maelstrom": {
+      "Cooldown": 1.12,
+      "Range": 46,
+      "Pierce": 8,
+      "Damage": 5,
+      "Damage Type": "Normal",
+      "Projectiles": 8
+    },
+    "More Tacks": {
+      "Cooldown": 1.12,
+      "Range": 23,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 10
+    },
+    "Even More Tacks": {
+      "Cooldown": 1.12,
+      "Range": 23,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 12
+    },
+    "Tack Sprayer": {
+      "Cooldown": 1.12,
+      "Range": 23,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 16
+    },
+    "Overdrive": {
+      "Cooldown": 0.3733,
+      "Range": 23,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 16
+    },
+    "The Tack Zone": {
+      "Cooldown": 0.224,
+      "Range": 30,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 32
+    }
+  },
+  "Ice Monkey": {
+    "Permafrost": {
+      "Cooldown": 2.4,
+      "Range": 20,
+      "Pierce": 40,
+      "Damage": 1,
+      "Damage Type": "Cold",
+      "Projectiles": 1
+    },
+    "Cold Snap": {
+      "Cooldown": 2.4,
+      "Range": 20,
+      "Pierce": 40,
+      "Damage": 1,
+      "Damage Type": "Glacier",
+      "Projectiles": 1
+    },
+    "Ice Shards": {
+      "Cooldown": 2.4,
+      "Range": 25,
+      "Pierce": 3,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 3
+    },
+    "Embrittlement": {
+      "Cooldown": 2.4,
+      "Range": 25,
+      "Pierce": 3,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 3
+    },
+    "Super Brittle": {
+      "Cooldown": 1.2,
+      "Range": 25,
+      "Pierce": 3,
+      "Damage": 10,
+      "Damage Type": "Shatter",
+      "Projectiles": 6
+    },
+    "Enhanced Freeze": {
+      "Cooldown": 1.8,
+      "Range": 20,
+      "Pierce": 40,
+      "Damage": 1,
+      "Damage Type": "Cold",
+      "Projectiles": 1
+    },
+    "Deep Freeze": {
+      "Cooldown": 1.8,
+      "Range": 20,
+      "Pierce": 45,
+      "Damage": 1,
+      "Damage Type": "Cold",
+      "Projectiles": 1
+    },
+    "Arctic Wind": {
+      "Cooldown": 1.8,
+      "Range": 20,
+      "Pierce": 45,
+      "Damage": 1,
+      "Damage Type": "Cold",
+      "Projectiles": 1
+    },
+    "Snowstorm": {
+      "Cooldown": 1.8,
+      "Range": 30,
+      "Pierce": 45,
+      "Damage": 1,
+      "Damage Type": "Cold",
+      "Projectiles": 1
+    },
+    "Absolute Zero": {
+      "Cooldown": 1.8,
+      "Range": 40,
+      "Pierce": 999,
+      "Damage": 1,
+      "Damage Type": "Cold",
+      "Projectiles": 1
+    },
+    "Larger Radius": {
+      "Cooldown": 2.4,
+      "Range": 27,
+      "Pierce": 40,
+      "Damage": 1,
+      "Damage Type": "Cold",
+      "Projectiles": 1
+    },
+    "Re-Freeze": {
+      "Cooldown": 2.4,
+      "Range": 27,
+      "Pierce": 40,
+      "Damage": 1,
+      "Damage Type": "Cold",
+      "Projectiles": 1
+    },
+    "Cryo Cannon": {
+      "Cooldown": 1.2,
+      "Range": 46,
+      "Pierce": 40,
+      "Damage": 1,
+      "Damage Type": "Cold",
+      "Projectiles": 1
+    },
+    "Icicles": {
+      "Cooldown": 0.75,
+      "Range": 46,
+      "Pierce": 3,
+      "Damage": 3,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Icicle Impale": {
+      "Cooldown": 0.75,
+      "Range": 46,
+      "Pierce": 3,
+      "Damage": 6,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    }
+  },
+  "Glue Gunner": {
+    "Glue Soak": {
+      "Cooldown": 1,
+      "Range": 46,
+      "Pierce": 1,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Corrosive Glue": {
+      "Cooldown": 1,
+      "Range": 46,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Bloon Dissolver": {
+      "Cooldown": 0.5,
+      "Range": 46,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Bloon Liquefier": {
+      "Cooldown": 0.5,
+      "Range": 46,
+      "Pierce": 3,
+      "Damage": 4,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "The Bloon Solver": {
+      "Cooldown": 0.25,
+      "Range": 46,
+      "Pierce": 3,
+      "Damage": 15,
+      "Damage Type": "Normal",
+      "Projectiles": 2
+    },
+    "Bigger Globs": {
+      "Cooldown": 1,
+      "Range": 46,
+      "Pierce": 2,
+      "Damage": 0,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Glue Splatter": {
+      "Cooldown": 1,
+      "Range": 46,
+      "Pierce": 4,
+      "Damage": 0,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Glue Hose": {
+      "Cooldown": 0.34,
+      "Range": 58,
+      "Pierce": 4,
+      "Damage": 0,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Glue Strike": {
+      "Cooldown": 0.34,
+      "Range": 58,
+      "Pierce": 4,
+      "Damage": 0,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Glue Storm": {
+      "Cooldown": 0.34,
+      "Range": 58,
+      "Pierce": 4,
+      "Damage": 0,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Stickier Glue": {
+      "Cooldown": 1,
+      "Range": 46,
+      "Pierce": 1,
+      "Damage": 0,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Stronger Glue": {
+      "Cooldown": 1,
+      "Range": 46,
+      "Pierce": 1,
+      "Damage": 0,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "MOAB Glue": {
+      "Cooldown": 1,
+      "Range": 46,
+      "Pierce": 1,
+      "Damage": 0,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Relentless Glue": {
+      "Cooldown": 1,
+      "Range": 46,
+      "Pierce": 6,
+      "Damage": 0,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Super Glue": {
+      "Cooldown": 1,
+      "Range": 46,
+      "Pierce": 11,
+      "Damage": 30,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    }
+  },
+  "Desperado": {
+    "Quickdraw": {
+      "Cooldown": 1.2,
+      "Range": 60,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Standoff": {
+      "Cooldown": 1.2,
+      "Range": -15,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Big Iron": {
+      "Cooldown": 1.2,
+      "Range": -30,
+      "Pierce": 1,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 6
+    },
+    "Twin Sixes": {
+      "Cooldown": 1.2,
+      "Range": -30,
+      "Pierce": 1,
+      "Damage": 6,
+      "Damage Type": "Sharp",
+      "Projectiles": 12
+    },
+    "The Blazing Sun": {
+      "Cooldown": 0.3,
+      "Range": -30,
+      "Pierce": 1,
+      "Damage": 20,
+      "Damage Type": "Normal",
+      "Projectiles": 12
+    },
+    "Eagle Eye": {
+      "Cooldown": 1.2,
+      "Range": 60,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Bullseye": {
+      "Cooldown": 1.2,
+      "Range": 60,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Deadeye": {
+      "Cooldown": 1.2,
+      "Range": 28,
+      "Pierce": 1,
+      "Damage": 6,
+      "Damage Type": "Normal",
+      "Projectiles": 2
+    },
+    "Bounty Hunter": {
+      "Cooldown": 1.2,
+      "Range": 28,
+      "Pierce": 1,
+      "Damage": 16,
+      "Damage Type": "Normal",
+      "Projectiles": 2
+    },
+    "Golden Justice": {
+      "Cooldown": 1.2,
+      "Range": 28,
+      "Pierce": 8,
+      "Damage": 24,
+      "Damage Type": "Normal",
+      "Projectiles": 2
+    },
+    "Wanderer": {
+      "Cooldown": 1.2,
+      "Range": -15,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Nomad": {
+      "Cooldown": 1.2,
+      "Range": 50,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Enforcer": {
+      "Cooldown": 1.2,
+      "Range": 50,
+      "Pierce": 1,
+      "Damage": 6,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Avenger": {
+      "Cooldown": 1.2,
+      "Range": 50,
+      "Pierce": 1,
+      "Damage": 18,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "The Desert Phantom": {
+      "Cooldown": 0.6,
+      "Range": 50,
+      "Pierce": 1,
+      "Damage": 50,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    }
+  },
+  "Sniper Monkey": {
+    "Full Metal Jacket": {
+      "Cooldown": 1.59,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 4,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Large Calibre": {
+      "Cooldown": 1.59,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 7,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Deadly Precision": {
+      "Cooldown": 1.59,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 20,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Maim MOAB": {
+      "Cooldown": 1.59,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 30,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Cripple MOAB": {
+      "Cooldown": 1.59,
+      "Range": 1000000,
+      "Pierce": 10,
+      "Damage": 28,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Night Vision Goggles": {
+      "Cooldown": 1.59,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Shrapnel Shot": {
+      "Cooldown": 1.59,
+      "Range": 1000000,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 5
+    },
+    "Bouncing Bullet": {
+      "Cooldown": 1.59,
+      "Range": 1000000,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 5
+    },
+    "Supply Drop": {
+      "Cooldown": 1.59,
+      "Range": 1000000,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 5
+    },
+    "Elite Sniper": {
+      "Cooldown": 0.636,
+      "Range": 1000000,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 5
+    },
+    "Fast Firing": {
+      "Cooldown": 1.113,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Even Faster Firing": {
+      "Cooldown": 0.7791,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Semi-Automatic": {
+      "Cooldown": 0.2597,
+      "Range": 1000000,
+      "Pierce": 5,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Full Auto Rifle": {
+      "Cooldown": 0.1298,
+      "Range": 1000000,
+      "Pierce": 5,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Elite Defender": {
+      "Cooldown": 0.0649,
+      "Range": 1000000,
+      "Pierce": 5,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    }
+  },
+  "Monkey Sub": {
+    "Longer Range": {
+      "Cooldown": 0.75,
+      "Range": 52,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Advanced Intel": {
+      "Cooldown": 0.75,
+      "Range": 52,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Submerge and Support": {
+      "Cooldown": 0.75,
+      "Range": 52,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Bloontonium Reactor": {
+      "Cooldown": 0.75,
+      "Range": 52,
+      "Pierce": 2,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Energizer": {
+      "Cooldown": 0.75,
+      "Range": 52,
+      "Pierce": 2,
+      "Damage": 5,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Barbed Darts": {
+      "Cooldown": 0.75,
+      "Range": 42,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Heat-tipped Darts": {
+      "Cooldown": 0.75,
+      "Range": 42,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Ballistic Missile": {
+      "Cooldown": 0.75,
+      "Range": 50,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "First Strike Capability": {
+      "Cooldown": 0.75,
+      "Range": 50,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Pre-emptive Strike": {
+      "Cooldown": 0.75,
+      "Range": 50,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Twin Guns": {
+      "Cooldown": 0.375,
+      "Range": 42,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Airburst Darts": {
+      "Cooldown": 0.375,
+      "Range": 42,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 3
+    },
+    "Triple Guns": {
+      "Cooldown": 0.2512,
+      "Range": 42,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 3
+    },
+    "Armor Piercing Darts": {
+      "Cooldown": 0.2512,
+      "Range": 42,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 3
+    },
+    "Sub Commander": {
+      "Cooldown": 0.1256,
+      "Range": 42,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 5
+    }
+  },
+  "Monkey Buccaneer": {
+    "Faster Shooting (Monkey Buccaneer)": {
+      "Cooldown": 0.75,
+      "Range": 60,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Double Shot (Monkey Buccaneer)": {
+      "Cooldown": 0.75,
+      "Range": 60,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Destroyer": {
+      "Cooldown": 0.15,
+      "Range": 60,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Aircraft Carrier": {
+      "Cooldown": 0.15,
+      "Range": 60,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Carrier Flagship": {
+      "Cooldown": 0.15,
+      "Range": 60,
+      "Pierce": 7,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Grape Shot": {
+      "Cooldown": 1,
+      "Range": 60,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Hot Shot": {
+      "Cooldown": 1,
+      "Range": 60,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Cannon Ship": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Monkey Pirates": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Pirate Lord": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Long Range": {
+      "Cooldown": 1,
+      "Range": 71,
+      "Pierce": 6,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Crow's Nest": {
+      "Cooldown": 1,
+      "Range": 71,
+      "Pierce": 6,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Merchantman": {
+      "Cooldown": 1,
+      "Range": 71,
+      "Pierce": 6,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Favored Trades": {
+      "Cooldown": 0.5,
+      "Range": 71,
+      "Pierce": 6,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Trade Empire": {
+      "Cooldown": 0.5,
+      "Range": 71,
+      "Pierce": 6,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    }
+  },
+  "Monkey Ace": {
+    "Rapid Fire": {
+      "Cooldown": 1.26,
+      "Range": 22,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Lots More Darts": {
+      "Cooldown": 1.26,
+      "Range": 22,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 12
+    },
+    "Fighter Plane": {
+      "Cooldown": 1.26,
+      "Range": 22,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 12
+    },
+    "Operation: Dart Storm": {
+      "Cooldown": 0.63,
+      "Range": 22,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 16
+    },
+    "Sky Shredder": {
+      "Cooldown": 0.315,
+      "Range": 22,
+      "Pierce": 8,
+      "Damage": 3,
+      "Damage Type": "Normal",
+      "Projectiles": 32
+    },
+    "Exploding Pineapple": {
+      "Cooldown": 1.68,
+      "Range": 22,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Spy Plane": {
+      "Cooldown": 1.68,
+      "Range": 22,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Bomber Ace": {
+      "Cooldown": 1.68,
+      "Range": 22,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Ground Zero": {
+      "Cooldown": 1.68,
+      "Range": 22,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Tsar Bomba": {
+      "Cooldown": 1.68,
+      "Range": 22,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Sharper Darts": {
+      "Cooldown": 1.68,
+      "Range": 22,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Centered Path": {
+      "Cooldown": 1.68,
+      "Range": 22,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Neva-Miss Targeting": {
+      "Cooldown": 1.68,
+      "Range": 22,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Spectre": {
+      "Cooldown": 0.06,
+      "Range": 22,
+      "Pierce": 8,
+      "Damage": 3,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Flying Fortress": {
+      "Cooldown": 0.04,
+      "Range": 22,
+      "Pierce": 8,
+      "Damage": 6,
+      "Damage Type": "Normal",
+      "Projectiles": 8
+    }
+  },
+  "Heli Pilot": {
+    "Quad Darts": {
+      "Cooldown": 0.57,
+      "Range": 42,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Pursuit": {
+      "Cooldown": 0.57,
+      "Range": 42,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Razor Rotors": {
+      "Cooldown": 0.57,
+      "Range": 42,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Apache Dartship": {
+      "Cooldown": 0.4275,
+      "Range": 42,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Apache Prime": {
+      "Cooldown": 0.4275,
+      "Range": 42,
+      "Pierce": 23,
+      "Damage": 6,
+      "Damage Type": "Energy",
+      "Projectiles": 2
+    },
+    "Bigger Jets": {
+      "Cooldown": 0.57,
+      "Range": 42,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "IFR": {
+      "Cooldown": 0.57,
+      "Range": 42,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Downdraft": {
+      "Cooldown": 0.57,
+      "Range": 42,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Support Chinook": {
+      "Cooldown": 0.57,
+      "Range": 42,
+      "Pierce": 3,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Special Poperations": {
+      "Cooldown": 0.57,
+      "Range": 42,
+      "Pierce": 3,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Faster Darts": {
+      "Cooldown": 0.57,
+      "Range": 54.6,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Faster Firing": {
+      "Cooldown": 0.456,
+      "Range": 54.6,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "MOAB Shove": {
+      "Cooldown": 0.456,
+      "Range": 54.6,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Comanche Defense": {
+      "Cooldown": 0.456,
+      "Range": 54.6,
+      "Pierce": 3,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Comanche Commander": {
+      "Cooldown": 0.456,
+      "Range": 54.6,
+      "Pierce": 3,
+      "Damage": 3,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    }
+  },
+  "Mortar Monkey": {
+    "Bigger Blast": {
+      "Cooldown": 2,
+      "Range": 1000000,
+      "Pierce": 45,
+      "Damage": 2,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Bloon Buster": {
+      "Cooldown": 2,
+      "Range": 1000000,
+      "Pierce": 45,
+      "Damage": 3,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Shell Shock": {
+      "Cooldown": 2,
+      "Range": 1000000,
+      "Pierce": 45,
+      "Damage": 3,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "The Big One": {
+      "Cooldown": 2,
+      "Range": 1000000,
+      "Pierce": 85,
+      "Damage": 10,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "The Biggest One": {
+      "Cooldown": 2,
+      "Range": 1000000,
+      "Pierce": 200,
+      "Damage": 25,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Faster Reload (Mortar Monkey)": {
+      "Cooldown": 1.5,
+      "Range": 1000000,
+      "Pierce": 25,
+      "Damage": 2,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Rapid Reload": {
+      "Cooldown": 1.08,
+      "Range": 1000000,
+      "Pierce": 25,
+      "Damage": 2,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Heavy Shells": {
+      "Cooldown": 0.81,
+      "Range": 1000000,
+      "Pierce": 25,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Artillery Battery": {
+      "Cooldown": 0.27,
+      "Range": 1000000,
+      "Pierce": 25,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Pop and Awe": {
+      "Cooldown": 0.0675,
+      "Range": 1000000,
+      "Pierce": 25,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Increased Accuracy": {
+      "Cooldown": 2,
+      "Range": 1000000,
+      "Pierce": 25,
+      "Damage": 2,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Burny Stuff": {
+      "Cooldown": 2,
+      "Range": 1000000,
+      "Pierce": 25,
+      "Damage": 1,
+      "Damage Type": "Plasma",
+      "Projectiles": 1
+    },
+    "Signal Flare": {
+      "Cooldown": 2,
+      "Range": 1000000,
+      "Pierce": 50,
+      "Damage": 1,
+      "Damage Type": "Plasma",
+      "Projectiles": 1
+    },
+    "Shattering Shells": {
+      "Cooldown": 2,
+      "Range": 1000000,
+      "Pierce": 25,
+      "Damage": 5,
+      "Damage Type": "Plasma",
+      "Projectiles": 1
+    },
+    "Blooncineration": {
+      "Cooldown": 2,
+      "Range": 1000000,
+      "Pierce": 25,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    }
+  },
+  "Dartling Gunner": {
+    "Focused Firing": {
+      "Cooldown": 0.2,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Laser Shock": {
+      "Cooldown": 0.2,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Laser Cannon": {
+      "Cooldown": 0.2,
+      "Range": 1000000,
+      "Pierce": 6,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Plasma Accelerator": {
+      "Cooldown": 0.2,
+      "Range": 1000000,
+      "Pierce": 50,
+      "Damage": 1,
+      "Damage Type": "Plasma",
+      "Projectiles": 1
+    },
+    "Ray of Doom": {
+      "Cooldown": 0.2,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 20,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Advanced Targeting": {
+      "Cooldown": 0.2,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Faster Barrel Spin": {
+      "Cooldown": 0.132,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Hydra Rocket Pods": {
+      "Cooldown": 0.132,
+      "Range": 1000000,
+      "Pierce": 6,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Rocket Storm": {
+      "Cooldown": 0.132,
+      "Range": 1000000,
+      "Pierce": 8,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "M.A.D": {
+      "Cooldown": 0.396,
+      "Range": 1000000,
+      "Pierce": 8,
+      "Damage": 3,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Faster Swivel": {
+      "Cooldown": 0.2,
+      "Range": 1000000,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Powerful Darts": {
+      "Cooldown": 0.2,
+      "Range": 1000000,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Buckshot": {
+      "Cooldown": 1.5,
+      "Range": 1000000,
+      "Pierce": 4,
+      "Damage": 4,
+      "Damage Type": "Shatter",
+      "Projectiles": 6
+    },
+    "Bloon Area Denial System": {
+      "Cooldown": 1.5,
+      "Range": 130,
+      "Pierce": 4,
+      "Damage": 4,
+      "Damage Type": "Shatter",
+      "Projectiles": 6
+    },
+    "Bloon Exclusion Zone": {
+      "Cooldown": 1.5,
+      "Range": 130,
+      "Pierce": 6,
+      "Damage": 8,
+      "Damage Type": "Shatter",
+      "Projectiles": 12
+    }
+  },
+  "Wizard Monkey": {
+    "Guided Magic": {
+      "Cooldown": 1.1,
+      "Range": 40,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Arcane Blast": {
+      "Cooldown": 1.1,
+      "Range": 40,
+      "Pierce": 3,
+      "Damage": 2,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Arcane Mastery": {
+      "Cooldown": 0.55,
+      "Range": 60,
+      "Pierce": 7,
+      "Damage": 3,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Arcane Spike": {
+      "Cooldown": 0.275,
+      "Range": 60,
+      "Pierce": 7,
+      "Damage": 6,
+      "Damage Type": "Plasma",
+      "Projectiles": 1
+    },
+    "Archmage": {
+      "Cooldown": 0.1375,
+      "Range": 60,
+      "Pierce": 11,
+      "Damage": 8,
+      "Damage Type": "Plasma",
+      "Projectiles": 1
+    },
+    "Fireball": {
+      "Cooldown": 1.1,
+      "Range": 40,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Wall of Fire": {
+      "Cooldown": 1.1,
+      "Range": 40,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Dragon's Breath": {
+      "Cooldown": 1.1,
+      "Range": 40,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Summon Phoenix": {
+      "Cooldown": 1.1,
+      "Range": 40,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Wizard Lord Phoenix": {
+      "Cooldown": 1.1,
+      "Range": 40,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Intense Magic": {
+      "Cooldown": 1.1,
+      "Range": 40,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Monkey Sense": {
+      "Cooldown": 1.1,
+      "Range": 50,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Shimmer": {
+      "Cooldown": 1.1,
+      "Range": 60,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Necromancer: Unpopped Army": {
+      "Cooldown": 1.1,
+      "Range": 60,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Prince of Darkness": {
+      "Cooldown": 0.275,
+      "Range": 80,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    }
+  },
+  "Super Monkey": {
+    "Laser Blasts": {
+      "Cooldown": 0.045,
+      "Range": 50,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Energy",
+      "Projectiles": 1
+    },
+    "Plasma Blasts": {
+      "Cooldown": 0.03,
+      "Range": 50,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Plasma",
+      "Projectiles": 1
+    },
+    "Sun Avatar": {
+      "Cooldown": 0.03,
+      "Range": 50,
+      "Pierce": 6,
+      "Damage": 1,
+      "Damage Type": "Plasma",
+      "Projectiles": 3
+    },
+    "Sun Temple": {
+      "Cooldown": 0.06,
+      "Range": 65,
+      "Pierce": 20,
+      "Damage": 5,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "True Sun God": {
+      "Cooldown": 0.06,
+      "Range": 65,
+      "Pierce": 20,
+      "Damage": 15,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Super Range": {
+      "Cooldown": 0.045,
+      "Range": 60,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Epic Range": {
+      "Cooldown": 0.045,
+      "Range": 72,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Robo Monkey": {
+      "Cooldown": 0.045,
+      "Range": 72,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Tech Terror": {
+      "Cooldown": 0.045,
+      "Range": 72,
+      "Pierce": 7,
+      "Damage": 1,
+      "Damage Type": "Plasma",
+      "Projectiles": 1
+    },
+    "The Anti-Bloon": {
+      "Cooldown": 0.045,
+      "Range": 82,
+      "Pierce": 12,
+      "Damage": 5,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Knockback": {
+      "Cooldown": 0.045,
+      "Range": 50,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Ultravision": {
+      "Cooldown": 0.045,
+      "Range": 53,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Dark Knight": {
+      "Cooldown": 0.045,
+      "Range": 53,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Dark Champion": {
+      "Cooldown": 0.0225,
+      "Range": 57,
+      "Pierce": 8,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Legend of the Night": {
+      "Cooldown": 0.0225,
+      "Range": 57,
+      "Pierce": 16,
+      "Damage": 10,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    }
+  },
+  "Ninja Monkey": {
+    "Ninja Discipline": {
+      "Cooldown": 0.434,
+      "Range": 40,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Sharp Shurikens": {
+      "Cooldown": 0.434,
+      "Range": 40,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Double Shot (Ninja Monkey)": {
+      "Cooldown": 0.434,
+      "Range": 40,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 2
+    },
+    "Bloonjitsu": {
+      "Cooldown": 0.434,
+      "Range": 40,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 5
+    },
+    "Grandmaster Ninja": {
+      "Cooldown": 0.217,
+      "Range": 50,
+      "Pierce": 4,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Distraction": {
+      "Cooldown": 0.62,
+      "Range": 40,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Counter-Espionage": {
+      "Cooldown": 0.62,
+      "Range": 40,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Shinobi Tactics": {
+      "Cooldown": 0.62,
+      "Range": 40,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Bloon Sabotage": {
+      "Cooldown": 0.62,
+      "Range": 40,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Grand Saboteur": {
+      "Cooldown": 0.62,
+      "Range": 40,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Seeking Shuriken": {
+      "Cooldown": 0.62,
+      "Range": 47,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Caltrops": {
+      "Cooldown": 0.62,
+      "Range": 47,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Flash Bomb": {
+      "Cooldown": 0.62,
+      "Range": 47,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Sticky Bomb": {
+      "Cooldown": 0.62,
+      "Range": 47,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Master Bomber": {
+      "Cooldown": 0.62,
+      "Range": 47,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    }
+  },
+  "Alchemist": {
+    "Larger Potions": {
+      "Cooldown": 2,
+      "Range": 45,
+      "Pierce": 20,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Acidic Mixture Dip": {
+      "Cooldown": 2,
+      "Range": 45,
+      "Pierce": 20,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Berserker Brew": {
+      "Cooldown": 2,
+      "Range": 45,
+      "Pierce": 20,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Stronger Stimulant": {
+      "Cooldown": 2,
+      "Range": 45,
+      "Pierce": 20,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Permanent Brew": {
+      "Cooldown": 2,
+      "Range": 45,
+      "Pierce": 20,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Stronger Acid": {
+      "Cooldown": 2,
+      "Range": 45,
+      "Pierce": 15,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Perishing Potions": {
+      "Cooldown": 2,
+      "Range": 45,
+      "Pierce": 15,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Unstable Concoction": {
+      "Cooldown": 2,
+      "Range": 45,
+      "Pierce": 15,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Transforming Tonic": {
+      "Cooldown": 2,
+      "Range": 45,
+      "Pierce": 15,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Total Transformation": {
+      "Cooldown": 2,
+      "Range": 45,
+      "Pierce": 15,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Faster Throwing (Alchemist)": {
+      "Cooldown": 1.6,
+      "Range": 45,
+      "Pierce": 15,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Acid Pool": {
+      "Cooldown": 1.6,
+      "Range": 45,
+      "Pierce": 15,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Lead to Gold": {
+      "Cooldown": 1.6,
+      "Range": 45,
+      "Pierce": 15,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Rubber to Gold": {
+      "Cooldown": 1.6,
+      "Range": 45,
+      "Pierce": 15,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Bloon Master Alchemist": {
+      "Cooldown": 1.6,
+      "Range": 45,
+      "Pierce": 15,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    }
+  },
+  "Druid": {
+    "Hard Thorns": {
+      "Cooldown": 1.1,
+      "Range": 35,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 5
+    },
+    "Heart of Thunder": {
+      "Cooldown": 1.1,
+      "Range": 35,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 5
+    },
+    "Druid of the Storm": {
+      "Cooldown": 1.1,
+      "Range": 35,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 5
+    },
+    "Ball Lightning": {
+      "Cooldown": 1.1,
+      "Range": 35,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 5
+    },
+    "Monarch of Storms": {
+      "Cooldown": 1.1,
+      "Range": 35,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 5
+    },
+    "Thorn Swarm": {
+      "Cooldown": 1.1,
+      "Range": 35,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Heart of Oak": {
+      "Cooldown": 1.1,
+      "Range": 35,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Druid of the Jungle": {
+      "Cooldown": 1.1,
+      "Range": 35,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Jungle's Bounty": {
+      "Cooldown": 1.1,
+      "Range": 45,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Spirit of the Forest": {
+      "Cooldown": 1.1,
+      "Range": 45,
+      "Pierce": 1,
+      "Damage": 6,
+      "Damage Type": "Sharp",
+      "Projectiles": 8
+    },
+    "Druidic Reach": {
+      "Cooldown": 1.1,
+      "Range": 45,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 5
+    },
+    "Heart of Vengeance": {
+      "Cooldown": 1.1,
+      "Range": 45,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 5
+    },
+    "Druid of Wrath": {
+      "Cooldown": 1.1,
+      "Range": 45,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 5
+    },
+    "Poplust": {
+      "Cooldown": 1.1,
+      "Range": 45,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 5
+    },
+    "Avatar of Wrath": {
+      "Cooldown": 0.55,
+      "Range": 50,
+      "Pierce": 1,
+      "Damage": 4,
+      "Damage Type": "Sharp",
+      "Projectiles": 5
+    }
+  },
+  "Mermonkey": {
+    "Trident Efficiency": {
+      "Cooldown": 1.02,
+      "Range": 28,
+      "Pierce": 3,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Trident Swiftness": {
+      "Cooldown": 0.804,
+      "Range": 28,
+      "Pierce": 3,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Abyss Dweller": {
+      "Cooldown": 0.804,
+      "Range": 28,
+      "Pierce": 3,
+      "Damage": 4,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Abyssal Warrior": {
+      "Cooldown": 0.804,
+      "Range": 28,
+      "Pierce": 3,
+      "Damage": 8,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Lord of the Abyss": {
+      "Cooldown": 0.402,
+      "Range": 28,
+      "Pierce": 3,
+      "Damage": 10,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Sharper Prongs": {
+      "Cooldown": 1.2,
+      "Range": 28,
+      "Pierce": 6,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Tidal Chill": {
+      "Cooldown": 1.2,
+      "Range": 28,
+      "Pierce": 6,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Riptide Champion": {
+      "Cooldown": 1.2,
+      "Range": 35,
+      "Pierce": 25,
+      "Damage": 4,
+      "Damage Type": "Frigid",
+      "Projectiles": 2
+    },
+    "Arctic Knight": {
+      "Cooldown": 1.2,
+      "Range": 35,
+      "Pierce": 25,
+      "Damage": 8,
+      "Damage Type": "Frigid",
+      "Projectiles": 2
+    },
+    "Popseidon": {
+      "Cooldown": 0.6,
+      "Range": 50,
+      "Pierce": 25,
+      "Damage": 15,
+      "Damage Type": "Frigid",
+      "Projectiles": 2
+    },
+    "Echosense Precision": {
+      "Cooldown": 1.2,
+      "Range": 28,
+      "Pierce": 3,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Echosense Network": {
+      "Cooldown": 1.2,
+      "Range": 28,
+      "Pierce": 3,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Alluring Melody": {
+      "Cooldown": 1.2,
+      "Range": 28,
+      "Pierce": 9,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Symphonic Resonance": {
+      "Cooldown": 1.2,
+      "Range": 32,
+      "Pierce": 9,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "The Final Harmonic": {
+      "Cooldown": 1.2,
+      "Range": 38,
+      "Pierce": 18,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    }
+  },
+  "Banana Farm": {
+    "Increased Production": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Greater Production": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Banana Plantation": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Banana Research Facility": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Banana Central": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Long Life Bananas": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Valuable Bananas": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Monkey Bank": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "IMF Loan": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Monkey-Nomics": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "EZ Collect": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Banana Salvage": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Marketplace": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Central Market": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Monkey Wall Street": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    }
+  },
+  "Spike Factory": {
+    "Bigger Stacks": {
+      "Cooldown": 1.75,
+      "Range": 34,
+      "Pierce": 10,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "White Hot Spikes": {
+      "Cooldown": 1.75,
+      "Range": 34,
+      "Pierce": 10,
+      "Damage": 1,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Spiked Balls": {
+      "Cooldown": 1.75,
+      "Range": 34,
+      "Pierce": 11,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Spiked Mines": {
+      "Cooldown": 1.75,
+      "Range": 34,
+      "Pierce": 30,
+      "Damage": 10,
+      "Damage Type": "Plasma",
+      "Projectiles": 1
+    },
+    "Super Mines": {
+      "Cooldown": 3.5,
+      "Range": 34,
+      "Pierce": 60,
+      "Damage": 2500,
+      "Damage Type": "Plasma",
+      "Projectiles": 1
+    },
+    "Faster Production": {
+      "Cooldown": 1.4,
+      "Range": 34,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Even Faster Production": {
+      "Cooldown": 1.05,
+      "Range": 34,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "MOAB SHREDR": {
+      "Cooldown": 1.05,
+      "Range": 34,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Spike Storm": {
+      "Cooldown": 1.05,
+      "Range": 34,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Carpet of Spikes": {
+      "Cooldown": 0.49,
+      "Range": 50,
+      "Pierce": 10,
+      "Damage": 3,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Long Reach": {
+      "Cooldown": 1.75,
+      "Range": 42,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Smart Spikes": {
+      "Cooldown": 1.75,
+      "Range": 42,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Long Life Spikes": {
+      "Cooldown": 1.75,
+      "Range": 42,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Deadly Spikes": {
+      "Cooldown": 1.75,
+      "Range": 42,
+      "Pierce": 5,
+      "Damage": 3,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Perma-Spike": {
+      "Cooldown": 6.0625,
+      "Range": 42,
+      "Pierce": 50,
+      "Damage": 10,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    }
+  },
+  "Monkey Village": {
+    "Bigger Radius": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Jungle Drums": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Primary Training": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Primary Mentoring": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Primary Expertise": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Grow Blocker": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Radar Scanner": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Monkey Intelligence Bureau": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Call to Arms": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Homeland Defense": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Monkey Business": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Monkey Commerce": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Monkey Town": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Monkey City": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    },
+    "Monkeyopolis": {
+      "Cooldown": null,
+      "Range": null,
+      "Pierce": null,
+      "Damage": null,
+      "Damage Type": null,
+      "Projectiles": 1
+    }
+  },
+  "Engineer Monkey": {
+    "Sentry Gun": {
+      "Cooldown": 0.7,
+      "Range": 40,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Faster Engineering": {
+      "Cooldown": 0.7,
+      "Range": 40,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Sprockets": {
+      "Cooldown": 0.35,
+      "Range": 40,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Sentry Expert": {
+      "Cooldown": 0.35,
+      "Range": 40,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Sentry Champion": {
+      "Cooldown": 0.3,
+      "Range": 40,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Larger Service Area": {
+      "Cooldown": 0.7,
+      "Range": 60,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Deconstruction": {
+      "Cooldown": 0.7,
+      "Range": 60,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Cleansing Foam": {
+      "Cooldown": 0.7,
+      "Range": 60,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Overclock": {
+      "Cooldown": 0.7,
+      "Range": 60,
+      "Pierce": 15,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Ultraboost": {
+      "Cooldown": 0.7,
+      "Range": 60,
+      "Pierce": 30,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Oversize Nails": {
+      "Cooldown": 0.7,
+      "Range": 40,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Pin": {
+      "Cooldown": 0.7,
+      "Range": 40,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Double Gun": {
+      "Cooldown": 0.35,
+      "Range": 40,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Bloon Trap": {
+      "Cooldown": 0.35,
+      "Range": 40,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "XXXL Trap": {
+      "Cooldown": 0.35,
+      "Range": 40,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    }
+  },
+  "Beast Handler": {
+    "Piranha": {
+      "Cooldown": 0.6,
+      "Range": 25,
+      "Pierce": 1,
+      "Damage": 1,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Barracuda": {
+      "Cooldown": 0.6,
+      "Range": 30,
+      "Pierce": 4,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Great White": {
+      "Cooldown": 1.1,
+      "Range": 40,
+      "Pierce": 10,
+      "Damage": 12,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Orca": {
+      "Cooldown": 1.1,
+      "Range": 50,
+      "Pierce": 20,
+      "Damage": 30,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Megalodon": {
+      "Cooldown": 1.1,
+      "Range": 60,
+      "Pierce": 50,
+      "Damage": 600,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Microraptor": {
+      "Cooldown": 1,
+      "Range": 20,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Adasaurus": {
+      "Cooldown": 1,
+      "Range": 20,
+      "Pierce": 8,
+      "Damage": 3,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Velociraptor": {
+      "Cooldown": 1,
+      "Range": 24,
+      "Pierce": 14,
+      "Damage": 8,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Tyrannosaurus Rex": {
+      "Cooldown": 1,
+      "Range": 30,
+      "Pierce": 22,
+      "Damage": 26,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Giganotosaurus": {
+      "Cooldown": 1.25,
+      "Range": 50,
+      "Pierce": 60,
+      "Damage": 750,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Gyrfalcon": {
+      "Cooldown": 1,
+      "Range": 60,
+      "Pierce": 3,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Horned Owl": {
+      "Cooldown": 1,
+      "Range": 60,
+      "Pierce": 6,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Golden Eagle": {
+      "Cooldown": 1,
+      "Range": 60,
+      "Pierce": 30,
+      "Damage": 2,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Giant Condor": {
+      "Cooldown": 1,
+      "Range": 60,
+      "Pierce": 30,
+      "Damage": 10,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Pouakai": {
+      "Cooldown": 0.8,
+      "Range": 60,
+      "Pierce": 150,
+      "Damage": 30,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    }
   }
 }
