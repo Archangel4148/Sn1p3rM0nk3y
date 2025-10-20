@@ -1,0 +1,368 @@
+{
+  "Dart Monkey": {
+    "Sharp Shots": {
+      "Cooldown": 0.95,
+      "Range": 32,
+      "Pierce": 3,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Razor Sharp Shots": {
+      "Cooldown": 0.95,
+      "Range": 32,
+      "Pierce": 5,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Spike-o-pult": {
+      "Cooldown": 1.15,
+      "Range": 36.8,
+      "Pierce": 18,
+      "Damage": 2,
+      "Damage Type": "Shatter",
+      "Projectiles": 1
+    },
+    "Juggernaut": {
+      "Cooldown": 1,
+      "Range": 36.8,
+      "Pierce": 60,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Ultra-Juggernaut": {
+      "Cooldown": 1,
+      "Range": 36.8,
+      "Pierce": 50,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 6
+    },
+    "Quick Shots": {
+      "Cooldown": 0.8075,
+      "Range": 32,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Very Quick Shots": {
+      "Cooldown": 0.6365,
+      "Range": 32,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Triple Shot": {
+      "Cooldown": 0.4774,
+      "Range": 32,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 3
+    },
+    "Super Monkey Fan Club": {
+      "Cooldown": 0.2387,
+      "Range": 32,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 3
+    },
+    "Plasma Monkey Fan Club": {
+      "Cooldown": 0.2387,
+      "Range": 32,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 3
+    },
+    "Long Range Darts": {
+      "Cooldown": 0.95,
+      "Range": 40,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Enhanced Eyesight": {
+      "Cooldown": 0.95,
+      "Range": 48,
+      "Pierce": 2,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Crossbow": {
+      "Cooldown": 0.95,
+      "Range": 60,
+      "Pierce": 4,
+      "Damage": 3,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Sharp Shooter": {
+      "Cooldown": 0.475,
+      "Range": 60,
+      "Pierce": 4,
+      "Damage": 6,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Crossbow Master": {
+      "Cooldown": 0.2375,
+      "Range": 80,
+      "Pierce": 8,
+      "Damage": 8,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    }
+  },
+  "Boomerang Monkey": {
+    "Improved Rangs": {
+      "Cooldown": 1.2,
+      "Range": 43,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Glaives": {
+      "Cooldown": 1.2,
+      "Range": 43,
+      "Pierce": 13,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Glaive Ricochet": {
+      "Cooldown": 1.2,
+      "Range": 43,
+      "Pierce": 30,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "M.O.A.R Glaives": {
+      "Cooldown": 0.4,
+      "Range": 43,
+      "Pierce": 60,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Glaive Lord": {
+      "Cooldown": 0.4,
+      "Range": 43,
+      "Pierce": 60,
+      "Damage": 100,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Faster Throwing (Boomerang Monkey)": {
+      "Cooldown": 0.9,
+      "Range": 43,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Faster Rangs": {
+      "Cooldown": 0.6,
+      "Range": 43,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Bionic Boomerang": {
+      "Cooldown": 0.238,
+      "Range": 43,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Turbo Charge": {
+      "Cooldown": 0.238,
+      "Range": 43,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Perma Charge": {
+      "Cooldown": 0.034,
+      "Range": 43,
+      "Pierce": 4,
+      "Damage": 4,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Long Range Rangs": {
+      "Cooldown": 1.2,
+      "Range": 57.19,
+      "Pierce": 4,
+      "Damage": 1,
+      "Damage Type": "Sharp",
+      "Projectiles": 1
+    },
+    "Red Hot Rangs": {
+      "Cooldown": 1.2,
+      "Range": 57.19,
+      "Pierce": 4,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Kylie Boomerang": {
+      "Cooldown": 1.2,
+      "Range": 57.19,
+      "Pierce": 18,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "MOAB Press": {
+      "Cooldown": 1.2,
+      "Range": 57.19,
+      "Pierce": 18,
+      "Damage": 2,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "MOAB Domination": {
+      "Cooldown": 0.6,
+      "Range": 57.19,
+      "Pierce": 54,
+      "Damage": 12,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    }
+  },
+  "Bomb Shooter": {
+    "Bigger Bombs": {
+      "Cooldown": 1.5,
+      "Range": 40,
+      "Pierce": 28,
+      "Damage": 1,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Heavy Bombs": {
+      "Cooldown": 1.5,
+      "Range": 40,
+      "Pierce": 38,
+      "Damage": 2,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Really Big Bombs": {
+      "Cooldown": 1.5,
+      "Range": 40,
+      "Pierce": 80,
+      "Damage": 4,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Bloon Impact": {
+      "Cooldown": 1.5,
+      "Range": 43,
+      "Pierce": 80,
+      "Damage": 4,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Bloon Crush": {
+      "Cooldown": 1.5,
+      "Range": 43,
+      "Pierce": 80,
+      "Damage": 24,
+      "Damage Type": "Normal",
+      "Projectiles": 1
+    },
+    "Faster Reload (Bomb Shooter)": {
+      "Cooldown": 1.125,
+      "Range": 40,
+      "Pierce": 22,
+      "Damage": 1,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Missile Launcher": {
+      "Cooldown": 0.825,
+      "Range": 44,
+      "Pierce": 22,
+      "Damage": 1,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "MOAB Mauler": {
+      "Cooldown": 0.825,
+      "Range": 49,
+      "Pierce": 22,
+      "Damage": 1,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "MOAB Assassin": {
+      "Cooldown": 0.825,
+      "Range": 54,
+      "Pierce": 22,
+      "Damage": 1,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "MOAB Eliminator": {
+      "Cooldown": 0.825,
+      "Range": 54,
+      "Pierce": 22,
+      "Damage": 1,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Extra Range": {
+      "Cooldown": 1.5,
+      "Range": 52,
+      "Pierce": 22,
+      "Damage": 1,
+      "Damage Type": "Explosion",
+      "Projectiles": 1
+    },
+    "Frag Bombs": {
+      "Cooldown": 1.5,
+      "Range": 54,
+      "Pierce": 22,
+      "Damage": 1,
+      "Damage Type": "Explosion",
+      "Projectiles": 8
+    },
+    "Cluster Bombs": {
+      "Cooldown": 1.5,
+      "Range": 54,
+      "Pierce": 8,
+      "Damage": 1,
+      "Damage Type": "Explosion",
+      "Projectiles": 8
+    },
+    "Recursive Cluster": {
+      "Cooldown": 1.5,
+      "Range": 54,
+      "Pierce": 24,
+      "Damage": 2,
+      "Damage Type": "Explosion",
+      "Projectiles": 8
+    },
+    "Bomb Blitz": {
+      "Cooldown": 0.9,
+      "Range": 54,
+      "Pierce": 24,
+      "Damage": 5,
+      "Damage Type": "Explosion",
+      "Projectiles": 8
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "Dart Monkey": {
+    "Cooldown": 0.95,
+    "Range": 32,
+    "Pierce": 2,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 1
+  },
+  "Boomerang Monkey": {
+    "Cooldown": 1.2,
+    "Range": 43,
+    "Pierce": 4,
+    "Damage": 1,
+    "Damage Type": "Sharp",
+    "Projectiles": 1
+  },
+  "Bomb Shooter": {
+    "Cooldown": 1.5,
+    "Range": 40,
+    "Pierce": 22,
+    "Damage": 1,
+    "Damage Type": "Explosion",
+    "Projectiles": 1
+  }
+}
