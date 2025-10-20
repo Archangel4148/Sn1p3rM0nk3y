@@ -316,7 +316,7 @@ class BloonsBrain:
             radius_px=radius_px,
         )
         self.placed_towers.append(placed)
-        cv2.circle(self.occupied_mask, (px, py), int(radius_px * 1.1), 255, -1)
+        cv2.circle(self.occupied_mask, (px, py), int(radius_px * 1.2), 255, -1)
 
     def _get_upgrade(self, tower: Tower, path: str, tier: int):
         upgrades = self.upgrade_data[tower]
@@ -526,7 +526,7 @@ class BloonsBrain:
 
         return score
 
-    def find_best_action(self):
+    def find_best_action(self, tower_list: list[Tower]):
         actions = []
         global_cov = self.get_global_coverage()
         tower_count = len(self.placed_towers)
@@ -535,7 +535,7 @@ class BloonsBrain:
         placement_bias = max(0.05, 1.0 - tower_count * 0.1)
 
         # Tower placements
-        for tower in Tower:
+        for tower in tower_list:
             cost = self.get_tower_cost(tower)
             if self.money < cost:
                 continue
@@ -600,8 +600,11 @@ def main():
     brain = BloonsBrain()
 
     # Select game settings
-    brain.select_track(Track.MONKEY_MEADOW)
-    brain.set_gamemode(BloonsGamemode.HARD_STANDARD)
+    brain.select_track(Track.ALPINE_RUN)
+    brain.set_gamemode(BloonsGamemode.IMPOPPABLE)
+
+    banned_towers = [Tower.GLUE_GUNNER, Tower.MONKEY_VILLAGE]
+    tower_list = [tower for tower in Tower if tower not in banned_towers]
 
     if brain.gamemode in (BloonsGamemode.EASY_SANDBOX, BloonsGamemode.MEDIUM_SANDBOX, BloonsGamemode.HARD_SANDBOX):
         target_screen = BloonsScreen.SANDBOX_MONKEY_SCREEN
@@ -628,7 +631,7 @@ def main():
                 print("Screen recovered — resuming automation.")
 
         try:
-            action = brain.find_best_action()
+            action = brain.find_best_action(tower_list)
             if not action:
                 time.sleep(1)
                 continue

@@ -1,16 +1,25 @@
+import os
+
 import cv2
 import numpy as np
+import pyautogui as pgui
 
 # --- Config ---
-screenshot_path = "../data/tracks/monkey_meadow/screenshot.png"
-output_mask_path = "../data/tracks/monkey_meadow/water_mask.png"
+track_folder_path = "../data/tracks/alpine_run/"
+screenshot_path = track_folder_path + "screenshot.png"
+output_mask_path = track_folder_path + "wall_mask.png"
 max_width, max_height = 1200, 800  # editor window size limit
-color_tolerance = 30  # +/- tolerance in each BGR channel
+color_tolerance = 10  # +/- tolerance in each BGR channel
+
+# --- Ensure folder exists ---
+os.makedirs(track_folder_path, exist_ok=True)
+
+# Capture a screenshot
+screenshot = pgui.screenshot()
+screenshot.save(screenshot_path)
 
 # --- Load screenshot ---
-img = cv2.imread(screenshot_path)
-if img is None:
-    raise FileNotFoundError(f"{screenshot_path} not found!")
+img = np.array(screenshot)
 
 # --- Scale for editing ---
 scale = min(1.0, max_width / img.shape[1], max_height / img.shape[0])
@@ -61,7 +70,6 @@ def mouse_callback(event, x, y, flags, param):
         elif mode == "erase":
             cv2.circle(mask_bgr, (orig_x, orig_y), brush_size, (0, 0, 0), -1)
         scaled_mask[:] = cv2.resize(mask_bgr, scaled_mask.shape[:2][::-1], interpolation=cv2.INTER_NEAREST)
-
 
 cv2.namedWindow("Mask Editor", cv2.WINDOW_NORMAL)
 cv2.resizeWindow("Mask Editor", scaled_img.shape[1], scaled_img.shape[0])
