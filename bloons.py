@@ -1,5 +1,4 @@
 import json
-import random
 import time
 from collections import deque
 from dataclasses import dataclass, field
@@ -21,7 +20,6 @@ class PlacedTower:
     tower: Tower
     position: tuple[float, float]
     upgrades: dict = field(default_factory=lambda: {"top": 0, "middle": 0, "bottom": 0})
-    priority_paths: list[str] | None = None
     radius_px: int = 0
     id: int = field(default_factory=lambda: int(time.time() * 1000))
 
@@ -90,7 +88,7 @@ class BloonsBrain:
         coverage = {"camo": tower_info["base_sees_camo"], "lead": tower_info["base_pops_lead"]}
         for path in tower.upgrades:
             for tier in range(tower.upgrades[path]):
-                upgrade = self.get_upgrade_info(tower.tower, path, tier)
+                upgrade = self._get_upgrade(tower.tower, path, tier)
                 if upgrade:
                     if upgrade["grants_camo"]:
                         coverage["camo"] = True
@@ -112,13 +110,6 @@ class BloonsBrain:
         else:
             # Fallback
             return int(10 * PIXELS_PER_BLOONS_UNIT)
-
-    def get_upgrade_info(self, tower: Tower, path: int, tier: int) -> dict | None:
-        upgrades = self.upgrade_data.get(tower.value, [])
-        for up in upgrades:
-            if up["path"] == path and up["tier"] == tier:
-                return up
-        return None
 
     def get_global_coverage(self) -> dict:
         has_camo = False
@@ -323,16 +314,15 @@ class BloonsBrain:
             tower=tower,
             position=position,
             radius_px=radius_px,
-            priority_paths=[random.choice(["top", "middle", "bottom"]) for _ in range(2)],
         )
         self.placed_towers.append(placed)
         cv2.circle(self.occupied_mask, (px, py), int(radius_px * 1.1), 255, -1)
 
     def _get_upgrade(self, tower: Tower, path: str, tier: int):
         upgrades = self.upgrade_data[tower]
-        path_idx = {"top": 1, "middle": 2, "bottom": 3}[path]
+        path_num = {"top": 1, "middle": 2, "bottom": 3}[path]
         for upgrade in upgrades:
-            if upgrade["path"] == path_idx and upgrade["tier"] == tier:
+            if upgrade["path"] == path_num and upgrade["tier"] == tier:
                 return upgrade
         raise ValueError(f"Upgrade not found for {tower.value} at tier {tier} on path {path}.")
 
@@ -350,20 +340,21 @@ class BloonsBrain:
         cost = upgrade["cost"][self.difficulty.value]
         if self.money < cost:
             raise RuntimeError(
-                f"Not enough money to upgrade {tower_obj.tower.value} at {tower_obj.position} ({path} → {tower_obj.upgrades[path]})")
+                f"Not enough money to upgrade {tower_obj.tower.value} ({path} → {tower_obj.upgrades[path]})")
 
         self.controller.click(*tower_obj.position)
         self.controller.press_key(UPGRADE_HOTKEYS[path])
         time.sleep(0.1)
         self.controller.click(*tower_obj.position)
 
-        vprint(f"Upgraded {tower_obj.value} at {tower_obj.position} for ${cost}/{self.money}")
+        vprint(
+            f"Upgraded {tower_obj.tower.value} with {upgrade['name']} ({path} → {tower_obj.upgrades[path]}) for ${cost}/{self.money}"
+        )
 
         self.update_money_estimate(-cost)
 
         # Increment internal tracking
         tower_obj.upgrades[path] += 1
-        vprint(f"Upgraded {tower_obj.tower.value} at {tower_obj.position} ({path} → {tower_obj.upgrades[path]})")
 
     def can_place_tower_on_map(self, tower: Tower, sample_step: int = 20) -> bool:
         """Check if the tower can be placed anywhere"""
@@ -652,7 +643,7 @@ def main():
 
             # Collect any bananas from the map
             for farm in [t for t in brain.placed_towers if t.tower == Tower.BANANA_FARM]:
-                brain.controller.move(**farm.position)
+                brain.controller.move(*farm.position)
 
         except Exception as e:
             print(f"Action failed: {e}")
