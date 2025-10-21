@@ -25,7 +25,8 @@ class InputController:
             win = self.window_ref
             if win:
                 self.window_geometry = (win.left, win.top, win.width, win.height)
-                vprint(f"Refreshed window geometry: {self.window_geometry}")
+                if not SUPPRESS_FOCUS_OUTPUT:
+                    vprint(f"Refreshed window geometry: {self.window_geometry}")
 
     def screen_coords(self, x: float, y: float) -> tuple[float, float]:
         """Get the absolute screen coordinates of a relative window position

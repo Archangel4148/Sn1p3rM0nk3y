@@ -11,7 +11,7 @@ from data.enums import BloonsDifficulty, BloonsScreen, SCREEN_TRANSITIONS, MAP_S
     MAP_SELECT_RIGHT_ARROW_POSITION, MAP_SELECT_LEFT_ARROW_POSITION, Tower, TOWER_HOTKEYS, UPGRADE_HOTKEYS
 from interaction import WindowManager, InputController
 from money_reader import MoneyReader
-from system_flags import vprint, PIXELS_PER_BLOONS_UNIT
+from system_flags import vprint, PIXELS_PER_BLOONS_UNIT, SUPPRESS_PLACEMENT_LOCATION_OUTPUT, UPGRADE_DELAY
 from vision import identify_screen, get_current_tab
 
 
@@ -343,6 +343,7 @@ class BloonsBrain:
                 f"Not enough money to upgrade {tower_obj.tower.value} ({path} → {tower_obj.upgrades[path]})")
 
         self.controller.click(*tower_obj.position)
+        time.sleep(UPGRADE_DELAY)
         self.controller.press_key(UPGRADE_HOTKEYS[path])
         time.sleep(0.1)
         self.controller.click(*tower_obj.position)
@@ -559,7 +560,8 @@ class BloonsBrain:
 
         norm_x = best_pos[0] / w
         norm_y = best_pos[1] / h
-        vprint(f"Best {tower.value} placement: ({norm_x:.3f}, {norm_y:.3f}) — covers {best_score} flow points")
+        if not SUPPRESS_PLACEMENT_LOCATION_OUTPUT:
+            vprint(f"Best {tower.value} placement: ({norm_x:.3f}, {norm_y:.3f}) — covers {best_score} flow points")
 
         return norm_x, norm_y
 
@@ -589,9 +591,11 @@ class BloonsBrain:
             cd = upgrade.get("Cooldown", 1.0)
 
             # Simple DPS estimate
-            dps = (dmg * pierce * proj) / cd if cd > 0 else 0
-            value = (dps / cost) * (discount ** (upgrade["tier"] - 1))
-
+            try:
+                dps = (dmg * pierce * proj) / cd if cd > 0 else 0
+                value = (dps / cost) * (discount ** (upgrade["tier"] - 1))
+            except TypeError:
+                value = 0
             total_value += value
 
         return total_value
@@ -645,7 +649,7 @@ class BloonsBrain:
 
         return score
 
-    def find_best_action(self, tower_list: list[Tower]):
+    def find_best_action(self, tower_list: list[Tower], allow_placement: bool):
         actions = []
         global_cov = self.get_global_coverage()
         tower_count = len(self.placed_towers)
@@ -654,30 +658,31 @@ class BloonsBrain:
         placement_bias = max(0.05, 1.0 - tower_count * 0.1)
 
         # Tower placements
-        for tower in tower_list:
-            cost = self.get_tower_cost(tower)
-            if self.money < cost:
-                continue
+        if allow_placement:
+            for tower in tower_list:
+                cost = self.get_tower_cost(tower)
+                if self.money < cost:
+                    continue
 
-            # Skip towers that cannot be placed anywhere on this map
-            if not self.can_place_tower_on_map(tower):
-                vprint(f"Skipping {tower.value} — no valid placement area.")
-                continue
+                # Skip towers that cannot be placed anywhere on this map
+                if not self.can_place_tower_on_map(tower):
+                    vprint(f"Skipping {tower.value} — no valid placement area.")
+                    continue
 
-            pos = self.find_best_placement(tower)
-            dps_eff = self.evaluate_tower_dps_efficiency(tower)
-            future_value = self.evaluate_tower_future_value(tower)
-            score = self.evaluate_tower_placement(tower, pos) * placement_bias * (
-                    1 + (dps_eff + 0.2 * future_value) * 100)
+                pos = self.find_best_placement(tower)
+                dps_eff = self.evaluate_tower_dps_efficiency(tower)
+                future_value = self.evaluate_tower_future_value(tower)
+                score = self.evaluate_tower_placement(tower, pos) * placement_bias * (
+                        1 + (dps_eff + 0.2 * future_value) * 100)
 
-            # Favor towers that add missing coverage
-            tower_info = self.get_tower_info(tower)
-            if not global_cov["camo"] and tower_info["base_sees_camo"]:
-                score *= 1.5
-            if not global_cov["lead"] and tower_info["base_pops_lead"]:
-                score *= 1.5
+                # Favor towers that add missing coverage
+                tower_info = self.get_tower_info(tower)
+                if not global_cov["camo"] and tower_info["base_sees_camo"]:
+                    score *= 1.5
+                if not global_cov["lead"] and tower_info["base_pops_lead"]:
+                    score *= 1.5
 
-            actions.append(("place", tower, pos, score))
+                actions.append(("place", tower, pos, score))
 
         # Tower upgrades
         for placed in self.placed_towers:
@@ -723,10 +728,10 @@ def main():
     brain = BloonsBrain()
 
     # Select game settings
-    brain.select_track(Track.ALPINE_RUN)
-    brain.set_gamemode(BloonsGamemode.IMPOPPABLE)
+    brain.select_track(Track.MONKEY_MEADOW)
+    brain.set_gamemode(BloonsGamemode.MEDIUM_STANDARD)
 
-    banned_towers = [Tower.GLUE_GUNNER, Tower.MONKEY_VILLAGE]
+    banned_towers = []
     tower_list = [tower for tower in Tower if tower not in banned_towers]
 
     if brain.gamemode in (BloonsGamemode.EASY_SANDBOX, BloonsGamemode.MEDIUM_SANDBOX, BloonsGamemode.HARD_SANDBOX):
@@ -740,21 +745,25 @@ def main():
     # Start the money reader
     brain.money_reader.start()
 
+    cycle = 0
     while True:
+        cycle += 1
         current_screen = identify_screen(brain.window_manager.capture_window(force_focus=True))
-        if current_screen != BloonsScreen.IN_GAME:
+        while current_screen != BloonsScreen.IN_GAME:
             print(f"Detected screen change ({current_screen}), waiting 5 seconds to confirm...")
             time.sleep(5)
 
             recheck_screen = identify_screen(brain.window_manager.capture_window(force_focus=False))
             if recheck_screen != BloonsScreen.IN_GAME:
-                print(f"Still not in-game after wait ({recheck_screen}), exiting loop.")
-                break
+                print(f"Still not in-game after wait ({recheck_screen})")
             else:
                 print("Screen recovered — resuming automation.")
+                current_screen = recheck_screen
 
-        # try:
-        action = brain.find_best_action(tower_list)
+        placement_check_interval = max(1, min(30, len(brain.placed_towers) * 2))  # e.g., every 2 cycles per tower
+        allow_placements = (cycle % placement_check_interval == 0)
+
+        action = brain.find_best_action(tower_list, allow_placement=allow_placements)
         if not action:
             time.sleep(1)
             continue
