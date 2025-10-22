@@ -5,7 +5,7 @@ import numpy as np
 import pyautogui as pgui
 
 # --- Config ---
-track_folder_path = "../data/tracks/alpine_run/"
+track_folder_path = "../data/tracks/in_the_loop/"
 screenshot_path = track_folder_path + "screenshot.png"
 output_mask_path = track_folder_path + "wall_mask.png"
 max_width, max_height = 1200, 800  # editor window size limit

@@ -8,7 +8,7 @@ import numpy as np
 
 from data.enums import BloonsDifficulty, BloonsScreen, SCREEN_TRANSITIONS, MAP_SELECT_THUMBNAIL_POSITIONS, \
     DIFFICULTY_SELECT_POSITIONS, GAMEMODE_SELECT_POSITIONS, BloonsGamemode, Track, TRACK_THUMBNAIL_LOCATIONS, \
-    MAP_SELECT_RIGHT_ARROW_POSITION, MAP_SELECT_LEFT_ARROW_POSITION, Tower, TOWER_HOTKEYS, UPGRADE_HOTKEYS
+    MAP_SELECT_RIGHT_ARROW_POSITION, MAP_SELECT_LEFT_ARROW_POSITION, Tower, TOWER_HOTKEYS, UPGRADE_HOTKEYS, Hero
 from interaction import WindowManager, InputController
 from money_reader import MoneyReader
 from system_flags import vprint, PIXELS_PER_BLOONS_UNIT, SUPPRESS_PLACEMENT_LOCATION_OUTPUT, UPGRADE_DELAY
@@ -55,6 +55,11 @@ class BloonsBrain:
             self.tower_data = json.load(f)
         with open("data/merged_upgrades.json", "r", encoding="utf-8") as f:
             self.upgrade_data = json.load(f)
+        with open("data/hero_properties.json", "r", encoding="utf-8") as f:
+            self.hero_data = json.load(f)
+
+        self.selected_hero: Hero | None = None
+        self.hero_placed: bool = False
 
     @property
     def money(self) -> int | None:
@@ -73,10 +78,15 @@ class BloonsBrain:
         self._estimated_money = max(self._estimated_money + change, 0)
         self._last_money_estimate_time = time.time()
 
-    def get_tower_info(self, tower: Tower) -> dict:
-        return self.tower_data[tower.value]
+    def get_tower_info(self, tower: Tower | Hero) -> dict:
+        if isinstance(tower, Tower):
+            return self.tower_data[tower.value]
+        elif isinstance(tower, Hero):
+            return self.hero_data[tower.value]
+        else:
+            raise TypeError(f"Unsupported entity type for placement: {type(tower)}")
 
-    def get_tower_range_px(self, tower: Tower) -> int:
+    def get_tower_range_px(self, tower: Tower | Hero) -> int:
         return int(self.get_tower_info(tower)["base_range"] * PIXELS_PER_BLOONS_UNIT)
 
     def get_tower_cost(self, tower: Tower) -> int:
@@ -96,7 +106,7 @@ class BloonsBrain:
                         coverage["lead"] = True
         return coverage
 
-    def get_tower_radius_px(self, tower: Tower) -> int:
+    def get_tower_radius_px(self, tower: Tower | Hero) -> int:
         tower_info = self.get_tower_info(tower)
         shape = tower_info["footprint_shape"]
         if shape == "circular":
@@ -166,6 +176,13 @@ class BloonsBrain:
                 return
 
         raise ValueError(f"Could not derive difficulty for gamemode: {gamemode}")
+
+    def select_hero(self, hero: Hero):
+        """Set which hero the bot should use."""
+        if hero.value not in self.hero_data:
+            raise ValueError(f"Unknown hero '{hero.value}'")
+        self.selected_hero = hero
+        self.hero_placed = False
 
     def wait_for_screen(self, target: BloonsScreen, timeout: float = 10.0, interval: float = 0.5) -> bool:
         """
@@ -290,6 +307,32 @@ class BloonsBrain:
         vprint(f"Reached {target.name}")
         return True
 
+    def place_hero(self, position: tuple[float, float]):
+        if self.selected_hero is None:
+            raise RuntimeError("No hero selected.")
+        if self.hero_placed:
+            vprint("Hero already placed.")
+            return
+
+        info = self.get_hero_info(self.selected_hero)
+        placement_type = info["placement_type"]
+        h, w = self.land_mask.shape[:2]
+        px = int(position[0] * w)
+        py = int(position[1] * h)
+        radius_px = int(info["footprint_radius"] * PIXELS_PER_BLOONS_UNIT)
+
+        # Select hero button (the hotkey for heroes is 'U' by default)
+        self.controller.press_key("p")
+        self.controller.click(*position)
+
+        cost = self.get_hero_cost()
+        vprint(f"Placed hero {self.selected_hero} at {position} for ${cost}/{self.money}")
+        self.update_money_estimate(-cost)
+
+        # Mark occupied space
+        cv2.circle(self.occupied_mask, (px, py), int(radius_px * 1.5), 255, -1)
+        self.hero_placed = True
+
     def place_tower(self, tower: Tower, position: tuple[float, float]):
         current_screen = identify_screen(self.window_manager.capture_window(force_focus=True))
         if current_screen not in (BloonsScreen.IN_GAME, BloonsScreen.SANDBOX_MONKEY_SCREEN):
@@ -357,6 +400,20 @@ class BloonsBrain:
         # Increment internal tracking
         tower_obj.upgrades[path] += 1
 
+    def get_hero_info(self, hero: Hero) -> dict:
+        return self.hero_data[hero.value]
+
+    def get_hero_cost(self) -> int:
+        if self.selected_hero is None:
+            raise RuntimeError("No hero selected.")
+        return self.hero_data[self.selected_hero.value]["base_costs"][self.difficulty.value]
+
+    def get_hero_range_px(self) -> int:
+        if self.selected_hero is None:
+            raise RuntimeError("No hero selected.")
+        info = self.get_hero_info(self.selected_hero)
+        return int(info["base_range"] * PIXELS_PER_BLOONS_UNIT)
+
     def can_place_tower_on_map(self, tower: Tower, sample_step: int = 20) -> bool:
         """Check if the tower can be placed anywhere"""
         tower_info = self.get_tower_info(tower)
@@ -404,10 +461,10 @@ class BloonsBrain:
         info = self.get_tower_info(tower_obj.tower)
 
         # Start with base stats
-        cooldown = info.get("cooldown", 1.0)
-        damage = info.get("damage", 0)
-        pierce = info.get("pierce", 1)
-        projectiles = info.get("projectiles", 1)
+        damage = info.get("damage") or 1
+        cooldown = info.get("cooldown") or 1.0
+        pierce = info.get("pierce") or 1
+        projectiles = info.get("projectiles") or 1
 
         # Apply upgrades
         for path_name, tier in tower_obj.upgrades.items():
@@ -416,10 +473,10 @@ class BloonsBrain:
                     upgrade = self._get_upgrade(tower_obj.tower, path_name, t)
                 except ValueError:
                     continue
-                damage = upgrade.get("Damage", damage)
-                cooldown = upgrade.get("Cooldown", cooldown)
-                pierce = upgrade.get("Pierce", pierce)
-                projectiles = upgrade.get("Projectiles", projectiles)
+                damage = upgrade.get("Damage", damage) or 1
+                cooldown = upgrade.get("Cooldown", cooldown) or 1
+                pierce = upgrade.get("Pierce", pierce) or 1
+                projectiles = upgrade.get("Projectiles", projectiles) or 1
 
         if cooldown <= 0:
             return 0.0  # avoid division by zero
@@ -450,6 +507,14 @@ class BloonsBrain:
             "lead_dps": total_lead_dps,
             "camo_dps": total_camo_dps,
         }
+
+    def get_camo_dps_ratio(self) -> float:
+        dps_data = self.calculate_global_dps()
+        total = dps_data["total_dps"]
+        camo = dps_data["camo_dps"]
+        if total <= 0:
+            return 0.0
+        return camo / total
 
     def evaluate_tower_dps_efficiency(self, tower: Tower) -> float:
         """Estimate DPS per dollar for a tower with no upgrades."""
@@ -483,21 +548,20 @@ class BloonsBrain:
         except Exception:
             return 0.0
 
-    def find_best_placement(self, tower: Tower, sample_step: int = 15) -> tuple[float, float]:
+    def find_best_placement(self, tower: Tower | Hero, sample_step: int = 15) -> tuple[float, float]:
         """
         Find a good placement position for the tower:
         - Valid terrain (land/water)
         - Doesn't overlap the track (tower radius clearance)
         - Maximizes coverage of flow points
         """
-
         if self.selected_track is None or self.flow_points is None:
             raise RuntimeError("No track selected or flow points not loaded.")
 
         tower_info = self.get_tower_info(tower)
-        placement_type = tower_info["placement_type"]
         base_range = self.get_tower_range_px(tower)
         tower_radius = self.get_tower_radius_px(tower)
+        placement_type = tower_info["placement_type"]
 
         # Placement mask
         if placement_type == "land":
@@ -621,7 +685,7 @@ class BloonsBrain:
 
         return score
 
-    def evaluate_upgrade(self, tower_obj, path):
+    def evaluate_upgrade(self, tower_obj, path, camo_ratio):
         next_tier = tower_obj.upgrades[path] + 1
         upgrade = self.get_next_upgrade(tower_obj, path)
         score = 1.0
@@ -635,8 +699,15 @@ class BloonsBrain:
 
         # Reward upgrades that grant missing coverage
         global_coverage = self.get_global_coverage()
-        if not global_coverage["camo"] and upgrade.get("grants_camo"):
+        # if not global_coverage["camo"] and upgrade.get("grants_camo"):
+        #     score *= 2.0
+        if camo_ratio < 0.25 and upgrade.get("grants_camo"):
+            score *= 1.5
+        elif camo_ratio < 0.1 and upgrade.get("grants_camo"):
             score *= 2.0
+        else:
+            score *= 1.2
+
         if not global_coverage["lead"] and upgrade.get("grants_lead"):
             score *= 2.0
 
@@ -652,10 +723,18 @@ class BloonsBrain:
     def find_best_action(self, tower_list: list[Tower], allow_placement: bool):
         actions = []
         global_cov = self.get_global_coverage()
+        camo_ratio = self.get_camo_dps_ratio()
         tower_count = len(self.placed_towers)
 
         # Punish tower placements more as more towers are placed
         placement_bias = max(0.05, 1.0 - tower_count * 0.1)
+
+        # Prioritize hero placement early in the game
+        if not self.hero_placed and self.selected_hero:
+            cost = self.get_hero_cost()
+            if self.money >= cost:
+                pos = self.find_best_placement(self.selected_hero)
+                actions.append(("place_hero", self.selected_hero, pos, 9999))
 
         # Tower placements
         if allow_placement:
@@ -677,8 +756,13 @@ class BloonsBrain:
 
                 # Favor towers that add missing coverage
                 tower_info = self.get_tower_info(tower)
-                if not global_cov["camo"] and tower_info["base_sees_camo"]:
+                if not global_cov["camo"]:
                     score *= 1.5
+                elif camo_ratio < 0.25 and tower_info["base_sees_camo"]:
+                    score *= 1.3  # we have some camo, but still weak
+                elif camo_ratio < 0.1 and tower_info["base_sees_camo"]:
+                    score *= 1.6  # really low camo DPS
+
                 if not global_cov["lead"] and tower_info["base_pops_lead"]:
                     score *= 1.5
 
@@ -710,7 +794,7 @@ class BloonsBrain:
                         if self.money < cost:
                             continue
                         dps_eff = self.evaluate_upgrade_dps_efficiency(placed, path)
-                        score = self.evaluate_upgrade(placed, path) * (1 + dps_eff * 100)
+                        score = self.evaluate_upgrade(placed, path, camo_ratio) * (1 + dps_eff * 100)
 
                         actions.append(("upgrade", placed, path, score))
                 except Exception:
@@ -728,8 +812,9 @@ def main():
     brain = BloonsBrain()
 
     # Select game settings
-    brain.select_track(Track.MONKEY_MEADOW)
+    brain.select_track(Track.IN_THE_LOOP)
     brain.set_gamemode(BloonsGamemode.MEDIUM_STANDARD)
+    brain.select_hero(Hero.SILAS)
 
     banned_towers = []
     tower_list = [tower for tower in Tower if tower not in banned_towers]
@@ -775,6 +860,9 @@ def main():
         elif kind == "upgrade":
             _, tower_obj, path, _ = action
             brain.upgrade_tower(tower_obj, path)
+        elif kind == "place_hero":
+            _, hero_name, pos, _ = action
+            brain.place_hero(pos)
 
         # Collect any bananas from the map
         for farm in [t for t in brain.placed_towers if t.tower == Tower.BANANA_FARM]:

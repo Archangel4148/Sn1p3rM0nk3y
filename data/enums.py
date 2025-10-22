@@ -56,6 +56,26 @@ class Tower(StrEnum):
     WIZARD_MONKEY = "Wizard Monkey"
 
 
+class Hero(StrEnum):
+    QUINCY = "Quincy"
+    GWENDOLIN = "Gwendolin"
+    STRIKER_JONES = "Striker Jones"
+    OBYN_GREENFOOT = "Obyn Greenfoot"
+    CAPTAIN_CHURCHILL = "Captain Churchill"
+    BENJAMIN = "Benjamin"
+    EZILI = "Ezili"
+    PAT_FUSTY = "Pat Fusty"
+    ADORA = "Adora"
+    ADMIRAL_BRICKELL = "Admiral Brickell"
+    ETIENNE = "Etienne"
+    SAUDA = "Sauda"
+    PSI = "Psi"
+    GERALDO = "Geraldo"
+    CORVUS = "Corvus"
+    ROSALIA = "Rosalia"
+    SILAS = "Silas"
+
+
 class Track(StrEnum):
     # Beginner
     ALPINE_RUN = "Alpine Run"

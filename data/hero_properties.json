@@ -1,0 +1,221 @@
+{
+  "Quincy": {
+    "base_range": 50,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 7,
+    "base_costs": [
+      460,
+      540,
+      585,
+      650
+    ]
+  },
+  "Gwendolin": {
+    "base_range": 38,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 7,
+    "base_costs": [
+      615,
+      725,
+      785,
+      870
+    ]
+  },
+  "Striker Jones": {
+    "category": "Hero",
+    "base_range": 55,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 7,
+    "base_costs": [
+      595,
+      700,
+      755,
+      840
+    ]
+  },
+  "Obyn Greenfoot": {
+    "category": "Hero",
+    "base_range": 43,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 8,
+    "base_costs": [
+      555,
+      650,
+      700,
+      780
+    ]
+  },
+  "Captain Churchill": {
+    "category": "Hero",
+    "base_range": 65,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 8,
+    "base_costs": [
+      1700,
+      2000,
+      2160,
+      2400
+    ]
+  },
+  "Benjamin": {
+    "category": "Hero",
+    "base_range": 20,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 7,
+    "base_costs": [
+      1020,
+      1200,
+      1295,
+      1440
+    ]
+  },
+  "Ezili": {
+    "category": "Hero",
+    "base_range": 40,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 7,
+    "base_costs": [
+      510,
+      600,
+      650,
+      720
+    ]
+  },
+  "Pat Fusty": {
+    "category": "Hero",
+    "base_range": 24,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 8,
+    "base_costs": [
+      680,
+      800,
+      860,
+      960
+    ]
+  },
+  "Adora": {
+    "category": "Hero",
+    "base_range": 45,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 7,
+    "base_costs": [
+      850,
+      1000,
+      1080,
+      1200
+    ]
+  },
+  "Admiral Brickell": {
+    "category": "Hero",
+    "base_range": 50,
+    "placement_type": "water",
+    "footprint_shape": "circular",
+    "footprint_radius": 8,
+    "base_costs": [
+      765,
+      900,
+      970,
+      1080
+    ]
+  },
+  "Etienne": {
+    "category": "Hero",
+    "base_range": 55,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 7,
+    "base_costs": [
+      555,
+      650,
+      700,
+      780
+    ]
+  },
+  "Sauda": {
+    "category": "Hero",
+    "base_range": 23,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 7,
+    "base_costs": [
+      510,
+      600,
+      650,
+      720
+    ]
+  },
+  "Psi": {
+    "category": "Hero",
+    "base_range": 1000000,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 7,
+    "base_costs": [
+      850,
+      1000,
+      1080,
+      1200
+    ]
+  },
+  "Geraldo": {
+    "category": "Hero",
+    "base_range": 40,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 7,
+    "base_costs": [
+      640,
+      750,
+      810,
+      900
+    ]
+  },
+  "Corvus": {
+    "category": "Hero",
+    "base_range": 1000000,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 7,
+    "base_costs": [
+      1125,
+      1325,
+      1430,
+      1590
+    ]
+  },
+  "Rosalia": {
+    "category": "Hero",
+    "base_range": 40,
+    "placement_type": "land",
+    "footprint_shape": "circular",
+    "footprint_radius": 9,
+    "base_costs": [
+      745,
+      875,
+      945,
+      1050
+    ]
+  },
+  "Silas": {
+    "category": "Hero",
+    "base_range": 55,
+    "placement_type": "any",
+    "footprint_shape": "circular",
+    "footprint_radius": 7,
+    "base_costs": [
+      725,
+      850,
+      920,
+      1020
+    ]
+  }
+}

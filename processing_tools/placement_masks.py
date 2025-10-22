@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 # --- Config ---
-track_folder_path = "../data/tracks/alpine_run/"
+track_folder_path = "../data/tracks/in_the_loop/"
 track_mask_path = track_folder_path + "track_mask.png"
 wall_mask_path = track_folder_path + "wall_mask.png"
 water_mask_path = track_folder_path + "water_mask.png"
