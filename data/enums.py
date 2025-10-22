@@ -165,6 +165,50 @@ class Track(StrEnum):
     WORKSHOP = "Workshop"
 
 
+class DamageType(StrEnum):
+    NORMAL = "Normal"
+    PLASMA = "Plasma"
+    FRIGID = "Frigid"
+    EXPLOSION = "Explosion"
+    SHATTER = "Shatter"
+    GLACIER = "Glacier"
+    ENERGY = "Energy"
+    SHARP = "Sharp"
+    COLD = "Cold"
+
+
+class CoverageType(StrEnum):
+    CAMO = "Camo"
+    BLACK = "Black"
+    WHITE = "White"
+    LEAD = "Lead"
+    FROZEN = "Frozen"
+    PURPLE = "Purple"
+
+
+COVERAGE_RATIOS = {
+    CoverageType.CAMO: 0.25,
+    CoverageType.LEAD: 0.25,
+    CoverageType.PURPLE: 0.2,
+    CoverageType.WHITE: 0.1,
+    CoverageType.BLACK: 0.1,
+    CoverageType.FROZEN: 0.2,
+}
+
+DAMAGE_TYPE_BY_COVERAGE = {
+    DamageType.NORMAL: (CoverageType.BLACK, CoverageType.WHITE, CoverageType.LEAD, CoverageType.FROZEN,
+                        CoverageType.PURPLE),
+    DamageType.PLASMA: (CoverageType.BLACK, CoverageType.WHITE, CoverageType.LEAD, CoverageType.FROZEN),
+    DamageType.FRIGID: (CoverageType.BLACK, CoverageType.LEAD, CoverageType.FROZEN),
+    DamageType.EXPLOSION: (CoverageType.WHITE, CoverageType.LEAD, CoverageType.FROZEN, CoverageType.PURPLE),
+    DamageType.SHATTER: (CoverageType.BLACK, CoverageType.WHITE, CoverageType.FROZEN, CoverageType.PURPLE),
+    DamageType.GLACIER: (CoverageType.BLACK, CoverageType.LEAD, CoverageType.FROZEN, CoverageType.PURPLE),
+    DamageType.ENERGY: (CoverageType.BLACK, CoverageType.WHITE, CoverageType.FROZEN),
+    DamageType.SHARP: (CoverageType.BLACK, CoverageType.WHITE, CoverageType.PURPLE),
+    DamageType.COLD: (CoverageType.BLACK, CoverageType.FROZEN, CoverageType.PURPLE),
+}
+
+
 class BloonsScreen(StrEnum):
     MAIN_MENU = "Main Menu"
     MAP_SELECT = "Map Select"
@@ -174,6 +218,8 @@ class BloonsScreen(StrEnum):
     SANDBOX_START_POPUP = "Sandbox Start Popup"
     SANDBOX_BLOON_SCREEN = "In Game Sandbox (Bloon Screen)"
     SANDBOX_MONKEY_SCREEN = "In Game Sandbox (Monkey Screen)"
+    GAME_OVER_SCREEN_1 = "Game Over Screen 1"
+    GAME_OVER_SCREEN_2 = "Game Over Screen 2"
 
 
 class BloonsMapLevel(StrEnum):
@@ -334,6 +380,12 @@ PAGE_IDENTIFIER_POINTS = {
                                           ((0.901, 0.925), (254, 254, 254)), ((0.908, 0.910), (255, 221, 0)),
                                           ((0.148, 0.037), (255, 187, 0)), ((0.881, 0.048), (77, 220, 0))]
                                          ],
+    BloonsScreen.GAME_OVER_SCREEN_1: [[((0.325, 0.180), (255, 60, 0)), ((0.472, 0.185), (255, 56, 0)),
+                                      ((0.654, 0.177), (255, 62, 0)), ((0.539, 0.843), (102, 228, 0))]],
+    BloonsScreen.GAME_OVER_SCREEN_2: [[((0.469, 0.154), (163, 81, 33)), ((0.331, 0.337), (255, 38, 0)),
+                                      ((0.668, 0.324), (255, 48, 0)), ((0.665, 0.711), (113, 232, 0)),
+                                      ((0.554, 0.706), (0, 221, 255)), ((0.443, 0.707), (255, 221, 0)),
+                                      ((0.327, 0.706), (0, 221, 255))]],
 }
 SELECTED_MAP_SELECT_TAB_COLOR = (64, 159, 255)
 MAP_SELECT_PAGE_POINTS = [
@@ -464,4 +516,18 @@ SCREEN_TRANSITIONS = {
             "pos": (0.892, 0.946),
         }
     },
+    BloonsScreen.GAME_OVER_SCREEN_1: {
+        BloonsScreen.GAME_OVER_SCREEN_2: {
+            "action": "click",
+            "pos": (0.5, 0.845),
+            "post_delay": 1,
+        }
+    },
+    BloonsScreen.GAME_OVER_SCREEN_2: {
+        BloonsScreen.MAIN_MENU: {
+            "action": "click",
+            "pos": (0.327, 0.749),
+            "post_delay": 1,
+        }
+    }
 }

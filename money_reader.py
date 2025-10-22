@@ -23,6 +23,7 @@ class MoneyReader:
                 if value is not None:
                     with self._lock:
                         self._money = value
+                        print("READ MONEY:", value)
                         self._last_read = time.time()
             except Exception as e:
                 print(f"[MoneyReader] OCR error: {e}")

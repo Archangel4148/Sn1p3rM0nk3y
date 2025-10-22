@@ -8,7 +8,8 @@ import numpy as np
 
 from data.enums import BloonsDifficulty, BloonsScreen, SCREEN_TRANSITIONS, MAP_SELECT_THUMBNAIL_POSITIONS, \
     DIFFICULTY_SELECT_POSITIONS, GAMEMODE_SELECT_POSITIONS, BloonsGamemode, Track, TRACK_THUMBNAIL_LOCATIONS, \
-    MAP_SELECT_RIGHT_ARROW_POSITION, MAP_SELECT_LEFT_ARROW_POSITION, Tower, TOWER_HOTKEYS, UPGRADE_HOTKEYS, Hero
+    MAP_SELECT_RIGHT_ARROW_POSITION, MAP_SELECT_LEFT_ARROW_POSITION, Tower, TOWER_HOTKEYS, UPGRADE_HOTKEYS, Hero, \
+    CoverageType, DAMAGE_TYPE_BY_COVERAGE, COVERAGE_RATIOS
 from interaction import WindowManager, InputController
 from money_reader import MoneyReader
 from system_flags import vprint, PIXELS_PER_BLOONS_UNIT, SUPPRESS_PLACEMENT_LOCATION_OUTPUT, UPGRADE_DELAY
@@ -95,15 +96,24 @@ class BloonsBrain:
     def get_tower_coverage(self, tower: PlacedTower) -> dict:
         """Return a dictionary of tower coverage."""
         tower_info = self.get_tower_info(tower.tower)
-        coverage = {"camo": tower_info["base_sees_camo"], "lead": tower_info["base_pops_lead"]}
+        coverage = {coverage: False for coverage in CoverageType}
+        coverage[CoverageType.CAMO] = tower_info["base_sees_camo"]
+        # Check upgrades for added camo detection
         for path in tower.upgrades:
             for tier in range(1, tower.upgrades[path] + 1):
                 upgrade = self._get_upgrade(tower.tower, path, tier)
                 if upgrade:
                     if upgrade["grants_camo"]:
-                        coverage["camo"] = True
-                    if upgrade["grants_lead"]:
-                        coverage["lead"] = True
+                        coverage[CoverageType.CAMO] = True
+
+        # Update coverage with tower damage type
+        damage_type = self.get_tower_damage_type(tower)
+        if damage_type is None:
+            return coverage
+
+        for c in CoverageType:
+            if c in DAMAGE_TYPE_BY_COVERAGE[damage_type]:
+                coverage[c] = True
         return coverage
 
     def get_tower_radius_px(self, tower: Tower | Hero) -> int:
@@ -122,13 +132,13 @@ class BloonsBrain:
             return int(10 * PIXELS_PER_BLOONS_UNIT)
 
     def get_global_coverage(self) -> dict:
-        has_camo = False
-        has_lead = False
-        for t in self.placed_towers:
-            coverage = self.get_tower_coverage(t)
-            has_camo |= coverage["camo"]
-            has_lead |= coverage["lead"]
-        return {"camo": has_camo, "lead": has_lead}
+        global_coverage = {coverage: False for coverage in CoverageType}
+        for tower in self.placed_towers:
+            tower_cov = self.get_tower_coverage(tower)
+            for ctype, has in tower_cov.items():
+                if has:
+                    global_coverage[ctype] = True
+        return global_coverage
 
     def select_track(self, track: Track):
         """Load track data for the specified track folder"""
@@ -315,19 +325,18 @@ class BloonsBrain:
             return
 
         info = self.get_hero_info(self.selected_hero)
-        placement_type = info["placement_type"]
         h, w = self.land_mask.shape[:2]
         px = int(position[0] * w)
         py = int(position[1] * h)
         radius_px = int(info["footprint_radius"] * PIXELS_PER_BLOONS_UNIT)
 
-        # Select hero button (the hotkey for heroes is 'U' by default)
         self.controller.press_key("p")
         self.controller.click(*position)
 
         cost = self.get_hero_cost()
         vprint(f"Placed hero {self.selected_hero} at {position} for ${cost}/{self.money}")
         self.update_money_estimate(-cost)
+        print("ESTIMATED MONEY:", self._estimated_money)
 
         # Mark occupied space
         cv2.circle(self.occupied_mask, (px, py), int(radius_px * 1.5), 255, -1)
@@ -392,7 +401,7 @@ class BloonsBrain:
         self.controller.click(*tower_obj.position)
 
         vprint(
-            f"Upgraded {tower_obj.tower.value} with {upgrade['name']} ({path} → {tower_obj.upgrades[path]}) for ${cost}/{self.money}"
+            f"Upgraded {tower_obj.tower.value} with {upgrade['name']} ({path} → {tower_obj.upgrades[path] + 1}) for ${cost}/{self.money}"
         )
 
         self.update_money_estimate(-cost)
@@ -413,6 +422,30 @@ class BloonsBrain:
             raise RuntimeError("No hero selected.")
         info = self.get_hero_info(self.selected_hero)
         return int(info["base_range"] * PIXELS_PER_BLOONS_UNIT)
+
+    def get_tower_damage_type(self, tower_obj: PlacedTower) -> str:
+        """
+        Determine the current damage type of the placed tower, based on its highest-tier upgrades.
+        If multiple upgrades change the damage type differently, the first non-base type is chosen.
+        """
+        tower_info = self.get_tower_info(tower_obj.tower)
+        base_type = tower_info.get("damage_type", "Normal")
+
+        # Track the highest tier purchased per path
+        highest_by_path = {path: tier for path, tier in tower_obj.upgrades.items() if tier > 0}
+
+        # Collect damage types from upgrades
+        damage_types = []
+        for path, tier in highest_by_path.items():
+            try:
+                upgrade = self._get_upgrade(tower_obj.tower, path, tier)
+                dt = upgrade.get("Damage Type")
+                if dt and dt != base_type:
+                    damage_types.append(dt)
+            except ValueError:
+                continue
+
+        return damage_types[0] if damage_types else base_type
 
     def can_place_tower_on_map(self, tower: Tower, sample_step: int = 20) -> bool:
         """Check if the tower can be placed anywhere"""
@@ -508,13 +541,26 @@ class BloonsBrain:
             "camo_dps": total_camo_dps,
         }
 
-    def get_camo_dps_ratio(self) -> float:
-        dps_data = self.calculate_global_dps()
-        total = dps_data["total_dps"]
-        camo = dps_data["camo_dps"]
-        if total <= 0:
-            return 0.0
-        return camo / total
+    def get_coverage_ratios(self):
+        total_dps = 0
+        coverage_dps = {c: 0.0 for c in CoverageType}
+
+        for tower in self.placed_towers:
+            dps = self.calculate_tower_dps(tower)
+            total_dps += dps
+
+            tower_cov = self.get_tower_coverage(tower)
+            for ctype, has in tower_cov.items():
+                if has:
+                    coverage_dps[ctype] += dps
+
+        # Avoid divide by zero
+        if total_dps == 0:
+            total_dps = 1
+
+        # Normalize by total DPS
+        ratios = {c: coverage_dps[c] / total_dps for c in CoverageType}
+        return ratios
 
     def evaluate_tower_dps_efficiency(self, tower: Tower) -> float:
         """Estimate DPS per dollar for a tower with no upgrades."""
@@ -664,28 +710,50 @@ class BloonsBrain:
 
         return total_value
 
-    def evaluate_tower_placement(self, tower, pos):
+    def evaluate_tower_placement(self, tower, pos, coverage_ratios: dict[CoverageType, float]):
         # Reward towers that cover more flow points
         range_px = self.get_tower_range_px(tower)
         h, w = self.land_mask.shape[:2]
         x, y = int(pos[0] * w), int(pos[1] * h)
         flow_pts = np.array(self.flow_points)
         dist2 = (flow_pts[:, 0] - x) ** 2 + (flow_pts[:, 1] - y) ** 2
-        coverage_score = np.sum(dist2 < range_px ** 2)
+        track_coverage_score = np.sum(dist2 < range_px ** 2)
+
+        # --- Get what this tower *provides* in coverage ---
+        temp_tower = PlacedTower(tower=tower, position=pos)
+        tower_cov = self.get_tower_coverage(temp_tower)
+
+        # --- Weight coverage by what we *need more of* ---
+        coverage_weight = 0.0
+        for ctype, has in tower_cov.items():
+            if not has:
+                continue
+
+            desired_ratio = COVERAGE_RATIOS.get(ctype, 0.0)
+            current_ratio = coverage_ratios.get(ctype, 0.0)
+
+            # Reward towers that help underrepresented coverage types
+            ratio_deficit = max(0.0, desired_ratio - current_ratio)
+            coverage_weight += (ratio_deficit ** 1.5) * 2
+
+        # Don't let coverage entirely ignore high-dps towers
+        coverage_weight = max(coverage_weight, 0.1)
 
         # Penalize adding too many of the same tower
         same_type_count = sum(1 for t in self.placed_towers if t.tower == tower)
-        penalty = same_type_count * 0.3  # tune this weight
+        duplicate_penalty = 1 / (1 + same_type_count)
 
-        # Reward diversity
-        unique_towers = len({t.tower for t in self.placed_towers})
-        diversity_bonus = 1 + 0.05 * unique_towers
+        # Reward DPS efficiency (low cost/dps ratio)
+        dps_eff_bonus = 1 + self.evaluate_tower_dps_efficiency(tower) * 0.8
 
-        score = coverage_score * (1 - penalty) * diversity_bonus
+        # Reward potential future value for the tower
+        future_value_bonus = 1 + self.evaluate_tower_future_value(tower) * 0.8
+
+        score = track_coverage_score * coverage_weight * duplicate_penalty * dps_eff_bonus * future_value_bonus
 
         return score
 
-    def evaluate_upgrade(self, tower_obj, path, camo_ratio):
+    def evaluate_upgrade(self, tower_obj, path, coverage_ratios: dict[CoverageType, float]):
         next_tier = tower_obj.upgrades[path] + 1
         upgrade = self.get_next_upgrade(tower_obj, path)
         score = 1.0
@@ -693,48 +761,56 @@ class BloonsBrain:
         # Reward higher tier upgrades
         score += next_tier * 0.5
 
-        # Slightly reward upgrades that grant coverage (regardless of global coverage)
-        if upgrade.get("grants_camo") or upgrade.get("grants_lead"):
-            score *= 1.2
-
-        # Reward upgrades that grant missing coverage
-        global_coverage = self.get_global_coverage()
-        # if not global_coverage["camo"] and upgrade.get("grants_camo"):
-        #     score *= 2.0
-        if camo_ratio < 0.25 and upgrade.get("grants_camo"):
-            score *= 1.5
-        elif camo_ratio < 0.1 and upgrade.get("grants_camo"):
-            score *= 2.0
-        else:
-            score *= 1.2
-
-        if not global_coverage["lead"] and upgrade.get("grants_lead"):
-            score *= 2.0
-
-        # Special coverage for camo leads
+        # Tower coverage before upgrade
         tower_coverage = self.get_tower_coverage(tower_obj)
-        if tower_coverage["camo"] and upgrade.get("grants_lead"):
-            score *= 2.0
-        elif tower_coverage["lead"] and upgrade.get("grants_camo"):
-            score *= 2.0
+
+        # Find coverage post-upgrade
+        upgraded_coverage = tower_coverage.copy()
+        if upgrade.get("grants_camo"):
+            upgraded_coverage[CoverageType.CAMO] = True
+
+        # Compare coverage before and after
+        tower_damage_type = self.get_tower_damage_type(tower_obj)
+        upgrade_damage_type = upgrade.get("Damage Type") or tower_damage_type
+        if upgrade_damage_type != tower_damage_type:
+            base_pops = DAMAGE_TYPE_BY_COVERAGE[tower_damage_type]
+            upgrade_pops = DAMAGE_TYPE_BY_COVERAGE[upgrade_damage_type]
+            # If upgrade pops more types, add those to coverage
+            for bloon_type in upgrade_pops - base_pops:
+                upgraded_coverage[bloon_type] = True
+
+        # Coverage incentives (prefer upgrades that help weak coverage types)
+        ratio_incentive = 0.0
+        for ctype, has_coverage in upgraded_coverage.items():
+            if not has_coverage:
+                continue
+            current_ratio = coverage_ratios.get(ctype, 0.0)
+            desired_ratio = COVERAGE_RATIOS.get(ctype, 0.0)
+
+            # Reward closing the gap between current and desired
+            if current_ratio < desired_ratio:
+                gap = desired_ratio - current_ratio
+                ratio_incentive += gap * 1.5  # ADJUST THIS IF NECESSARY!
+
+        score *= (1.0 + ratio_incentive)
 
         return score
 
     def find_best_action(self, tower_list: list[Tower], allow_placement: bool):
         actions = []
-        global_cov = self.get_global_coverage()
-        camo_ratio = self.get_camo_dps_ratio()
+        coverage_ratios = self.get_coverage_ratios()
         tower_count = len(self.placed_towers)
 
         # Punish tower placements more as more towers are placed
         placement_bias = max(0.05, 1.0 - tower_count * 0.1)
 
-        # Prioritize hero placement early in the game
+        # Hero placement
         if not self.hero_placed and self.selected_hero:
             cost = self.get_hero_cost()
             if self.money >= cost:
                 pos = self.find_best_placement(self.selected_hero)
-                actions.append(("place_hero", self.selected_hero, pos, 9999))
+                # Prioritize hero placement as early as possible
+                actions.append(("place_hero", self.selected_hero, pos, 9999999999))
 
         # Tower placements
         if allow_placement:
@@ -749,22 +825,7 @@ class BloonsBrain:
                     continue
 
                 pos = self.find_best_placement(tower)
-                dps_eff = self.evaluate_tower_dps_efficiency(tower)
-                future_value = self.evaluate_tower_future_value(tower)
-                score = self.evaluate_tower_placement(tower, pos) * placement_bias * (
-                        1 + (dps_eff + 0.2 * future_value) * 100)
-
-                # Favor towers that add missing coverage
-                tower_info = self.get_tower_info(tower)
-                if not global_cov["camo"]:
-                    score *= 1.5
-                elif camo_ratio < 0.25 and tower_info["base_sees_camo"]:
-                    score *= 1.3  # we have some camo, but still weak
-                elif camo_ratio < 0.1 and tower_info["base_sees_camo"]:
-                    score *= 1.6  # really low camo DPS
-
-                if not global_cov["lead"] and tower_info["base_pops_lead"]:
-                    score *= 1.5
+                score = self.evaluate_tower_placement(tower, pos, coverage_ratios) * placement_bias
 
                 actions.append(("place", tower, pos, score))
 
@@ -794,7 +855,7 @@ class BloonsBrain:
                         if self.money < cost:
                             continue
                         dps_eff = self.evaluate_upgrade_dps_efficiency(placed, path)
-                        score = self.evaluate_upgrade(placed, path, camo_ratio) * (1 + dps_eff * 100)
+                        score = self.evaluate_upgrade(placed, path, coverage_ratios) * (1 + dps_eff * 100)
 
                         actions.append(("upgrade", placed, path, score))
                 except Exception:
@@ -812,8 +873,8 @@ def main():
     brain = BloonsBrain()
 
     # Select game settings
-    brain.select_track(Track.IN_THE_LOOP)
-    brain.set_gamemode(BloonsGamemode.MEDIUM_STANDARD)
+    brain.select_track(Track.ALPINE_RUN)
+    brain.set_gamemode(BloonsGamemode.HARD_SANDBOX)
     brain.select_hero(Hero.SILAS)
 
     banned_towers = []
@@ -830,6 +891,7 @@ def main():
     # Start the money reader
     brain.money_reader.start()
 
+    game_over = False
     cycle = 0
     while True:
         cycle += 1
@@ -841,9 +903,16 @@ def main():
             recheck_screen = identify_screen(brain.window_manager.capture_window(force_focus=False))
             if recheck_screen != BloonsScreen.IN_GAME:
                 print(f"Still not in-game after wait ({recheck_screen})")
+                if current_screen in (BloonsScreen.GAME_OVER_SCREEN_1, BloonsScreen.GAME_OVER_SCREEN_2):
+                    game_over = True
+                    break
             else:
                 print("Screen recovered — resuming automation.")
                 current_screen = recheck_screen
+
+        if game_over:
+            print("Game Over! Exiting loop...")
+            break
 
         placement_check_interval = max(1, min(30, len(brain.placed_towers) * 2))  # e.g., every 2 cycles per tower
         allow_placements = (cycle % placement_check_interval == 0)
@@ -854,6 +923,7 @@ def main():
             continue
 
         kind = action[0]
+        print(f"FOUND ACTION WITH PRIORITY {action[3]}")
         if kind == "place":
             _, tower, pos, _ = action
             brain.place_tower(tower, pos)
