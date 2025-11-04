@@ -29,10 +29,7 @@ class BloonsBrain:
     def __init__(self, window_title: str = "BloonsTD6"):
         # Track data
         self.selected_track: Track | None = None
-        self.track_mask = None
-        self.land_mask = None
-        self.water_mask = None
-        self.flow_points = None
+        self.track_mask = self.land_mask = self.water_mask = self.flow_points = None
 
         # Game data
         self.difficulty: BloonsDifficulty | None = None
@@ -62,16 +59,20 @@ class BloonsBrain:
         self.selected_hero: Hero | None = None
         self.hero_placed: bool = False
 
+    ############## MONEY HANDLING ##############
+
     @property
     def money(self) -> int | None:
-        """Return the most recent know money value (either from reader or estimate)"""
+        """Return the most recent know money value (from OCR or estimate)"""
         ocr_money, ocr_time = self.money_reader.get_money()
         if self._last_money_estimate_time is None:
             self._estimated_money = ocr_money
             return ocr_money
         if ocr_time is None:
             return self._estimated_money
-        return ocr_money if ocr_time >= self._last_money_estimate_time else self._estimated_money
+        if ocr_time >= self._last_money_estimate_time:
+            return ocr_money
+        return self._estimated_money
 
     def update_money_estimate(self, change: int):
         if self._estimated_money is None:
@@ -79,19 +80,44 @@ class BloonsBrain:
         self._estimated_money = max(self._estimated_money + change, 0)
         self._last_money_estimate_time = time.time()
 
+    ############## TOWER INFO ##############
+
     def get_tower_info(self, tower: Tower | Hero) -> dict:
         if isinstance(tower, Tower):
             return self.tower_data[tower.value]
         elif isinstance(tower, Hero):
             return self.hero_data[tower.value]
-        else:
-            raise TypeError(f"Unsupported entity type for placement: {type(tower)}")
+        raise TypeError(f"Unsupported entity type: {type(tower)}")
 
     def get_tower_range_px(self, tower: Tower | Hero) -> int:
         return int(self.get_tower_info(tower)["base_range"] * PIXELS_PER_BLOONS_UNIT)
 
-    def get_tower_cost(self, tower: Tower) -> int:
+    def get_tower_cost(self, tower: Tower | Hero) -> int:
         return self.get_tower_info(tower)["base_costs"][self.difficulty.value]
+
+    def get_tower_damage_type(self, tower_obj: PlacedTower) -> str:
+        """
+        Determine the current damage type of the placed tower, based on its highest-tier upgrades.
+        If multiple upgrades change the damage type differently, the first non-base type is chosen.
+        """
+        tower_info = self.get_tower_info(tower_obj.tower)
+        base_type = tower_info.get("damage_type", "Normal")
+
+        # Track the highest tier purchased per path
+        highest_by_path = {path: tier for path, tier in tower_obj.upgrades.items() if tier > 0}
+
+        # Collect damage types from upgrades
+        damage_types = []
+        for path, tier in highest_by_path.items():
+            try:
+                upgrade = self._get_upgrade(tower_obj.tower, path, tier)
+                dt = upgrade.get("Damage Type")
+                if dt and dt != base_type:
+                    damage_types.append(dt)
+            except ValueError:
+                continue
+
+        return damage_types[0] if damage_types else base_type
 
     def get_tower_coverage(self, tower: PlacedTower) -> dict:
         """Return a dictionary of tower coverage."""
@@ -131,6 +157,49 @@ class BloonsBrain:
             # Fallback
             return int(10 * PIXELS_PER_BLOONS_UNIT)
 
+    def calculate_tower_dps(self, tower_obj: PlacedTower) -> float:
+        """
+        Calculate an estimated DPS for the given placed tower, including upgrades.
+        Only considers basic damage, pierce, and cooldown. Effects like abilities,
+        special attacks, or area-of-effect multipliers are not included here.
+        """
+        info = self.get_tower_info(tower_obj.tower)
+
+        # Start with base stats
+        damage = info.get("damage") or 1
+        cooldown = info.get("cooldown") or 1.0
+        pierce = info.get("pierce") or 1
+        projectiles = info.get("projectiles") or 1
+
+        # Apply upgrades
+        for path_name, tier in tower_obj.upgrades.items():
+            for t in range(1, tier + 1):
+                try:
+                    upgrade = self._get_upgrade(tower_obj.tower, path_name, t)
+                except ValueError:
+                    continue
+                damage = upgrade.get("Damage", damage) or 1
+                cooldown = upgrade.get("Cooldown", cooldown) or 1
+                pierce = upgrade.get("Pierce", pierce) or 1
+                projectiles = upgrade.get("Projectiles", projectiles) or 1
+
+        if cooldown <= 0:
+            return 0.0  # avoid division by zero
+        dps = (damage * pierce * projectiles) / cooldown
+        return dps
+
+    def get_tower_dps_efficiency(self, tower: Tower) -> float:
+        """Estimate DPS per dollar for a tower with no upgrades."""
+        try:
+            dummy = PlacedTower(tower=tower, position=(0, 0))
+            dps = self.calculate_tower_dps(dummy)
+            cost = self.get_tower_cost(tower)
+            return dps / cost if cost > 0 else 0
+        except Exception:
+            return 0.0
+
+    ############## COLLECTIVE (GLOBAL) INFO ##############
+
     def get_global_coverage(self) -> dict:
         global_coverage = {coverage: False for coverage in CoverageType}
         for tower in self.placed_towers:
@@ -139,6 +208,54 @@ class BloonsBrain:
                 if has:
                     global_coverage[ctype] = True
         return global_coverage
+
+    def calculate_global_dps(self) -> dict:
+        """
+        Calculate total DPS across all placed towers.
+        Also return total DPS for towers that can pop leads and detect camos.
+        """
+        total_dps = 0.0
+        total_lead_dps = 0.0
+        total_camo_dps = 0.0
+
+        for tower_obj in self.placed_towers:
+            dps = self.calculate_tower_dps(tower_obj)
+            total_dps += dps
+
+            coverage = self.get_tower_coverage(tower_obj)
+            if coverage.get("lead"):
+                total_lead_dps += dps
+            if coverage.get("camo"):
+                total_camo_dps += dps
+
+        return {
+            "total_dps": total_dps,
+            "lead_dps": total_lead_dps,
+            "camo_dps": total_camo_dps,
+        }
+
+    def get_coverage_ratios(self):
+        total_dps = 0
+        coverage_dps = {c: 0.0 for c in CoverageType}
+
+        for tower in self.placed_towers:
+            dps = self.calculate_tower_dps(tower)
+            total_dps += dps
+
+            tower_cov = self.get_tower_coverage(tower)
+            for ctype, has in tower_cov.items():
+                if has:
+                    coverage_dps[ctype] += dps
+
+        # Avoid divide by zero
+        if total_dps == 0:
+            total_dps = 1
+
+        # Normalize by total DPS
+        ratios = {c: coverage_dps[c] / total_dps for c in CoverageType}
+        return ratios
+
+    ############## TRACK/GAME SETUP ##############
 
     def select_track(self, track: Track):
         """Load track data for the specified track folder"""
@@ -193,6 +310,8 @@ class BloonsBrain:
             raise ValueError(f"Unknown hero '{hero.value}'")
         self.selected_hero = hero
         self.hero_placed = False
+
+    ############## NAVIGATION ##############
 
     def wait_for_screen(self, target: BloonsScreen, timeout: float = 10.0, interval: float = 0.5) -> bool:
         """
@@ -317,30 +436,7 @@ class BloonsBrain:
         vprint(f"Reached {target.name}")
         return True
 
-    def place_hero(self, position: tuple[float, float]):
-        if self.selected_hero is None:
-            raise RuntimeError("No hero selected.")
-        if self.hero_placed:
-            vprint("Hero already placed.")
-            return
-
-        info = self.get_hero_info(self.selected_hero)
-        h, w = self.land_mask.shape[:2]
-        px = int(position[0] * w)
-        py = int(position[1] * h)
-        radius_px = int(info["footprint_radius"] * PIXELS_PER_BLOONS_UNIT)
-
-        self.controller.press_key("p")
-        self.controller.click(*position)
-
-        cost = self.get_hero_cost()
-        vprint(f"Placed hero {self.selected_hero} at {position} for ${cost}/{self.money}")
-        self.update_money_estimate(-cost)
-        print("ESTIMATED MONEY:", self._estimated_money)
-
-        # Mark occupied space
-        cv2.circle(self.occupied_mask, (px, py), int(radius_px * 1.5), 255, -1)
-        self.hero_placed = True
+    ############## TOWER PLACEMENT ##############
 
     def place_tower(self, tower: Tower, position: tuple[float, float]):
         current_screen = identify_screen(self.window_manager.capture_window(force_focus=True))
@@ -369,6 +465,166 @@ class BloonsBrain:
         )
         self.placed_towers.append(placed)
         cv2.circle(self.occupied_mask, (px, py), int(radius_px * 1.5), 255, -1)
+
+    def place_hero(self, position: tuple[float, float]):
+        if self.selected_hero is None:
+            raise RuntimeError("No hero selected.")
+        if self.hero_placed:
+            vprint("Hero already placed.")
+            return
+
+        info = self.get_tower_info(self.selected_hero)
+        h, w = self.land_mask.shape[:2]
+        px = int(position[0] * w)
+        py = int(position[1] * h)
+        radius_px = int(info["footprint_radius"] * PIXELS_PER_BLOONS_UNIT)
+
+        self.controller.press_key("p")
+        self.controller.click(*position)
+
+        cost = self.get_tower_cost(self.selected_hero)
+        vprint(f"Placed hero {self.selected_hero} at {position} for ${cost}/{self.money}")
+        self.update_money_estimate(-cost)
+
+        # Mark occupied space
+        cv2.circle(self.occupied_mask, (px, py), int(radius_px * 1.5), 255, -1)
+        self.hero_placed = True
+
+    def can_place_tower_on_map(self, tower: Tower | Hero, sample_step: int = 20) -> bool:
+        """Check if the tower can be placed anywhere"""
+        tower_info = self.get_tower_info(tower)
+        placement_type = tower_info["placement_type"]
+
+        if placement_type == "land":
+            mask = self.land_mask
+        elif placement_type == "water":
+            mask = self.water_mask
+        elif placement_type == "any":
+            mask = cv2.bitwise_or(self.land_mask, self.water_mask)
+        else:
+            return False
+
+        if mask is None:
+            return False
+
+        tower_radius = self.get_tower_radius_px(tower)
+        h, w = mask.shape[:2]
+
+        for y in range(0, h, sample_step):
+            for x in range(0, w, sample_step):
+                if mask[y, x, 0] < 128:
+                    continue
+                y0 = max(y - tower_radius, 0)
+                y1 = min(y + tower_radius, h)
+                x0 = max(x - tower_radius, 0)
+                x1 = min(x + tower_radius, w)
+
+                # Ensure it doesn't overlap the track
+                if np.any(self.track_mask[y0:y1, x0:x1, 0] > 128):
+                    continue
+
+                # Found at least one valid spot
+                return True
+
+        return False
+
+    def find_best_placement(self, tower: Tower | Hero, sample_step: int = 15) -> tuple[float, float]:
+        """
+        Find a good placement position for the tower:
+        - Valid terrain (land/water/any)
+        - Doesn't overlap the track (tower radius clearance)
+        - Maximizes number of flow points in range
+        """
+        if self.selected_track is None or self.flow_points is None:
+            raise RuntimeError("No track selected or flow points not loaded.")
+
+        # Collect tower parameters
+        tower_info = self.get_tower_info(tower)
+        base_range = self.get_tower_range_px(tower)
+        tower_radius = self.get_tower_radius_px(tower)
+        placement_type = tower_info["placement_type"]
+
+        # Select the correct placement mask
+        if placement_type == "land":
+            mask = self.land_mask
+        elif placement_type == "water":
+            mask = self.water_mask
+        elif placement_type == "any":
+            mask = self.land_mask | self.water_mask
+        else:
+            raise ValueError(f"Unknown placement type: {placement_type}")
+
+        if mask is None:
+            raise RuntimeError(f"No mask loaded for {placement_type} placement.")
+        if self.track_mask is None:
+            raise RuntimeError("Track mask not loaded.")
+
+        # Prepare data for scanning
+        flow_pts = np.array(self.flow_points)
+        if flow_pts.shape[1] != 2:
+            raise ValueError("Flow points must be (x, y) pairs.")
+
+        h, w = mask.shape[:2]
+        range_sq = base_range ** 2
+        tower_r = int(np.ceil(tower_radius))
+
+        best_score = -1
+        best_pos = None
+
+        # Scan the full screen grid for valid placements (and score them)
+        for y in range(0, h, sample_step):
+            for x in range(0, w, sample_step):
+                # Validate terrain, track overlap, and tower overlap
+                if not self._is_valid_terrain(mask, x, y):
+                    continue
+                if self._intersects_track(x, y, tower_r, w, h):
+                    continue
+                if self._overlaps_existing_tower(x, y, tower_r, w, h):
+                    continue
+
+                # Score the placement by its flow point coverage
+                score = self._score_flow_point_coverage(flow_pts, x, y, range_sq)
+
+                if score > best_score:
+                    best_score = score
+                    best_pos = (x, y)
+
+        if best_pos is None:
+            raise RuntimeError(f"No valid placement found for {tower.value} on {self.selected_track}.")
+
+        # Normalize and return
+        norm_x, norm_y = best_pos[0] / w, best_pos[1] / h
+
+        if not SUPPRESS_PLACEMENT_LOCATION_OUTPUT:
+            vprint(f"Best {tower.value} placement: ({norm_x:.3f}, {norm_y:.3f}) — covers {best_score} flow points")
+
+        return norm_x, norm_y
+
+    @staticmethod
+    def _is_valid_terrain(mask: np.ndarray, x: int, y: int) -> bool:
+        """Check if the mask allows placement at (x, y)."""
+        return bool(mask[y, x, 0] >= 128)
+
+    def _intersects_track(self, x: int, y: int, radius: int, w: int, h: int) -> bool:
+        """Return True if tower area overlaps the track."""
+        y0, y1 = max(y - radius, 0), min(y + radius, h)
+        x0, x1 = max(x - radius, 0), min(x + radius, w)
+        sub_track = self.track_mask[y0:y1, x0:x1, 0]
+        return np.any(sub_track > 128)
+
+    def _overlaps_existing_tower(self, x: int, y: int, radius: int, w: int, h: int) -> bool:
+        """Return True if area intersects already occupied region."""
+        y0, y1 = max(y - radius, 0), min(y + radius, h)
+        x0, x1 = max(x - radius, 0), min(x + radius, w)
+        return np.any(self.occupied_mask[y0:y1, x0:x1] > 0)
+
+    @staticmethod
+    def _score_flow_point_coverage(flow_pts: np.ndarray, x: int, y: int, range_sq: float) -> int:
+        """Count how many flow points lie within tower range."""
+        dist2 = (flow_pts[:, 0] - x) ** 2 + (flow_pts[:, 1] - y) ** 2
+        return np.sum(dist2 < range_sq)
+
+    ############## UPGRADES ##############
 
     def _get_upgrade(self, tower: Tower, path: str, tier: int):
         upgrades = self.upgrade_data[tower]
@@ -409,169 +665,6 @@ class BloonsBrain:
         # Increment internal tracking
         tower_obj.upgrades[path] += 1
 
-    def get_hero_info(self, hero: Hero) -> dict:
-        return self.hero_data[hero.value]
-
-    def get_hero_cost(self) -> int:
-        if self.selected_hero is None:
-            raise RuntimeError("No hero selected.")
-        return self.hero_data[self.selected_hero.value]["base_costs"][self.difficulty.value]
-
-    def get_hero_range_px(self) -> int:
-        if self.selected_hero is None:
-            raise RuntimeError("No hero selected.")
-        info = self.get_hero_info(self.selected_hero)
-        return int(info["base_range"] * PIXELS_PER_BLOONS_UNIT)
-
-    def get_tower_damage_type(self, tower_obj: PlacedTower) -> str:
-        """
-        Determine the current damage type of the placed tower, based on its highest-tier upgrades.
-        If multiple upgrades change the damage type differently, the first non-base type is chosen.
-        """
-        tower_info = self.get_tower_info(tower_obj.tower)
-        base_type = tower_info.get("damage_type", "Normal")
-
-        # Track the highest tier purchased per path
-        highest_by_path = {path: tier for path, tier in tower_obj.upgrades.items() if tier > 0}
-
-        # Collect damage types from upgrades
-        damage_types = []
-        for path, tier in highest_by_path.items():
-            try:
-                upgrade = self._get_upgrade(tower_obj.tower, path, tier)
-                dt = upgrade.get("Damage Type")
-                if dt and dt != base_type:
-                    damage_types.append(dt)
-            except ValueError:
-                continue
-
-        return damage_types[0] if damage_types else base_type
-
-    def can_place_tower_on_map(self, tower: Tower, sample_step: int = 20) -> bool:
-        """Check if the tower can be placed anywhere"""
-        tower_info = self.get_tower_info(tower)
-        placement_type = tower_info["placement_type"]
-
-        if placement_type == "land":
-            mask = self.land_mask
-        elif placement_type == "water":
-            mask = self.water_mask
-        elif placement_type == "any":
-            mask = cv2.bitwise_or(self.land_mask, self.water_mask)
-        else:
-            return False
-
-        if mask is None:
-            return False
-
-        tower_radius = self.get_tower_radius_px(tower)
-        h, w = mask.shape[:2]
-
-        for y in range(0, h, sample_step):
-            for x in range(0, w, sample_step):
-                if mask[y, x, 0] < 128:
-                    continue
-                y0 = max(y - tower_radius, 0)
-                y1 = min(y + tower_radius, h)
-                x0 = max(x - tower_radius, 0)
-                x1 = min(x + tower_radius, w)
-
-                # Ensure it doesn't overlap the track
-                if np.any(self.track_mask[y0:y1, x0:x1, 0] > 128):
-                    continue
-
-                # Found at least one valid spot
-                return True
-
-        return False
-
-    def calculate_tower_dps(self, tower_obj: PlacedTower) -> float:
-        """
-        Calculate an estimated DPS for the given placed tower, including upgrades.
-        Only considers basic damage, pierce, and cooldown. Effects like abilities,
-        special attacks, or area-of-effect multipliers are not included here.
-        """
-        info = self.get_tower_info(tower_obj.tower)
-
-        # Start with base stats
-        damage = info.get("damage") or 1
-        cooldown = info.get("cooldown") or 1.0
-        pierce = info.get("pierce") or 1
-        projectiles = info.get("projectiles") or 1
-
-        # Apply upgrades
-        for path_name, tier in tower_obj.upgrades.items():
-            for t in range(1, tier + 1):
-                try:
-                    upgrade = self._get_upgrade(tower_obj.tower, path_name, t)
-                except ValueError:
-                    continue
-                damage = upgrade.get("Damage", damage) or 1
-                cooldown = upgrade.get("Cooldown", cooldown) or 1
-                pierce = upgrade.get("Pierce", pierce) or 1
-                projectiles = upgrade.get("Projectiles", projectiles) or 1
-
-        if cooldown <= 0:
-            return 0.0  # avoid division by zero
-        dps = (damage * pierce * projectiles) / cooldown
-        return dps
-
-    def calculate_global_dps(self) -> dict:
-        """
-        Calculate total DPS across all placed towers.
-        Also return total DPS for towers that can pop leads and detect camos.
-        """
-        total_dps = 0.0
-        total_lead_dps = 0.0
-        total_camo_dps = 0.0
-
-        for tower_obj in self.placed_towers:
-            dps = self.calculate_tower_dps(tower_obj)
-            total_dps += dps
-
-            coverage = self.get_tower_coverage(tower_obj)
-            if coverage.get("lead"):
-                total_lead_dps += dps
-            if coverage.get("camo"):
-                total_camo_dps += dps
-
-        return {
-            "total_dps": total_dps,
-            "lead_dps": total_lead_dps,
-            "camo_dps": total_camo_dps,
-        }
-
-    def get_coverage_ratios(self):
-        total_dps = 0
-        coverage_dps = {c: 0.0 for c in CoverageType}
-
-        for tower in self.placed_towers:
-            dps = self.calculate_tower_dps(tower)
-            total_dps += dps
-
-            tower_cov = self.get_tower_coverage(tower)
-            for ctype, has in tower_cov.items():
-                if has:
-                    coverage_dps[ctype] += dps
-
-        # Avoid divide by zero
-        if total_dps == 0:
-            total_dps = 1
-
-        # Normalize by total DPS
-        ratios = {c: coverage_dps[c] / total_dps for c in CoverageType}
-        return ratios
-
-    def evaluate_tower_dps_efficiency(self, tower: Tower) -> float:
-        """Estimate DPS per dollar for a tower with no upgrades."""
-        try:
-            dummy = PlacedTower(tower=tower, position=(0, 0))
-            dps = self.calculate_tower_dps(dummy)
-            cost = self.get_tower_cost(tower)
-            return dps / cost if cost > 0 else 0
-        except Exception:
-            return 0.0
-
     def evaluate_upgrade_dps_efficiency(self, tower_obj: PlacedTower, path: str) -> float:
         """Estimate DPS gain per dollar for the next upgrade."""
         try:
@@ -594,88 +687,7 @@ class BloonsBrain:
         except Exception:
             return 0.0
 
-    def find_best_placement(self, tower: Tower | Hero, sample_step: int = 15) -> tuple[float, float]:
-        """
-        Find a good placement position for the tower:
-        - Valid terrain (land/water)
-        - Doesn't overlap the track (tower radius clearance)
-        - Maximizes coverage of flow points
-        """
-        if self.selected_track is None or self.flow_points is None:
-            raise RuntimeError("No track selected or flow points not loaded.")
-
-        tower_info = self.get_tower_info(tower)
-        base_range = self.get_tower_range_px(tower)
-        tower_radius = self.get_tower_radius_px(tower)
-        placement_type = tower_info["placement_type"]
-
-        # Placement mask
-        if placement_type == "land":
-            mask = self.land_mask
-        elif placement_type == "water":
-            mask = self.water_mask
-        elif placement_type == "any":
-            mask = self.land_mask | self.water_mask
-        else:
-            raise ValueError(f"Unknown placement type: {placement_type}")
-
-        if mask is None:
-            raise RuntimeError(f"No mask loaded for {placement_type} placement.")
-
-        # Track mask should be loaded
-        if self.track_mask is None:
-            raise RuntimeError("Track mask not loaded.")
-
-        flow_pts = np.array(self.flow_points)
-        if flow_pts.shape[1] != 2:
-            raise ValueError("Flow points must be (x, y) pairs.")
-
-        h, w = mask.shape[:2]
-        best_score = -1
-        best_pos = None
-
-        # Scan the whole screen for the best placement
-        range_sq = base_range ** 2
-        tower_r = int(np.ceil(tower_radius))
-        for y in range(0, h, sample_step):
-            for x in range(0, w, sample_step):
-                # Check terrain
-                if mask[y, x, 0] < 128:
-                    continue
-
-                # Skip placements too close to the track
-                y0 = max(y - tower_r, 0)
-                y1 = min(y + tower_r, h)
-                x0 = max(x - tower_r, 0)
-                x1 = min(x + tower_r, w)
-                sub_track = self.track_mask[y0:y1, x0:x1, 0]
-
-                if np.any(sub_track > 128):  # track present inside radius
-                    continue
-
-                # Skip placements too close to other towers
-                if np.any(self.occupied_mask[y0:y1, x0:x1] > 0):
-                    continue
-
-                # Score based on nearby flow points
-                dist2 = (flow_pts[:, 0] - x) ** 2 + (flow_pts[:, 1] - y) ** 2
-                score = np.sum(dist2 < range_sq)
-
-                if score > best_score:
-                    best_score = score
-                    best_pos = (x, y)
-
-        if best_pos is None:
-            raise RuntimeError(f"No valid placement found for {tower.value} on {self.selected_track}.")
-
-        norm_x = best_pos[0] / w
-        norm_y = best_pos[1] / h
-        if not SUPPRESS_PLACEMENT_LOCATION_OUTPUT:
-            vprint(f"Best {tower.value} placement: ({norm_x:.3f}, {norm_y:.3f}) — covers {best_score} flow points")
-
-        return norm_x, norm_y
-
-    ############### STRATEGY/HEURISTICS ###############
+    ############## STRATEGY/HEURISTICS ##############
 
     def evaluate_tower_future_value(self, tower: Tower, discount: float = 0.7) -> float:
         """
@@ -744,7 +756,7 @@ class BloonsBrain:
         duplicate_penalty = 1 / (1 + same_type_count)
 
         # Reward DPS efficiency (low cost/dps ratio)
-        dps_eff_bonus = 1 + self.evaluate_tower_dps_efficiency(tower) * 0.8
+        dps_eff_bonus = 1 + self.get_tower_dps_efficiency(tower) * 0.8
 
         # Reward potential future value for the tower
         future_value_bonus = 1 + self.evaluate_tower_future_value(tower) * 0.8
@@ -806,7 +818,7 @@ class BloonsBrain:
 
         # Hero placement
         if not self.hero_placed and self.selected_hero:
-            cost = self.get_hero_cost()
+            cost = self.get_tower_cost(self.selected_hero)
             if self.money >= cost:
                 pos = self.find_best_placement(self.selected_hero)
                 # Prioritize hero placement as early as possible
@@ -873,9 +885,9 @@ def main():
     brain = BloonsBrain()
 
     # Select game settings
-    brain.select_track(Track.ALPINE_RUN)
-    brain.set_gamemode(BloonsGamemode.HARD_SANDBOX)
-    brain.select_hero(Hero.SILAS)
+    brain.select_track(Track.MONKEY_MEADOW)
+    brain.set_gamemode(BloonsGamemode.HARD_STANDARD)
+    brain.select_hero(Hero.SAUDA)
 
     banned_towers = []
     tower_list = [tower for tower in Tower if tower not in banned_towers]
@@ -923,7 +935,6 @@ def main():
             continue
 
         kind = action[0]
-        print(f"FOUND ACTION WITH PRIORITY {action[3]}")
         if kind == "place":
             _, tower, pos, _ = action
             brain.place_tower(tower, pos)
@@ -937,9 +948,6 @@ def main():
         # Collect any bananas from the map
         for farm in [t for t in brain.placed_towers if t.tower == Tower.BANANA_FARM]:
             brain.controller.move(*farm.position)
-
-        # except Exception as e:
-        #     print(f"Action failed: {e}")
 
         time.sleep(0.2)
 
