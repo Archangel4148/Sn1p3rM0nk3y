@@ -1,5 +1,6 @@
 from data.enums import (
     STARTING_CASH,
+    STARTING_ROUND,
     BloonsDifficulty,
     BloonsGamemode,
     Hero,
@@ -9,6 +10,7 @@ from data.enums import (
 from data.hero_data import HeroDatabase
 from data.rounds_data import RoundData, RoundsDatabase
 from data.tower_data import TowerDatabase
+from data.track_data import TrackDatabase
 from data.upgrade_data import UpgradeDatabase
 from observation import PlacedTower
 
@@ -21,9 +23,13 @@ class Catalog:
         self.towers = TowerDatabase()
         self.heroes = HeroDatabase()
         self.upgrades = UpgradeDatabase()
+        self.tracks = TrackDatabase()
 
     def starting_cash(self, gamemode: BloonsGamemode) -> float:
         return STARTING_CASH[gamemode]
+
+    def starting_round(self, gamemode: BloonsGamemode) -> int:
+        return STARTING_ROUND[gamemode]
 
     def cost_place(self, tower: Tower | Hero, difficulty: BloonsDifficulty) -> float:
         """Get the cost to place the provided tower/hero in the provided difficulty"""
@@ -77,3 +83,13 @@ class Catalog:
     def remaining_rounds(self, from_round: int) -> tuple[RoundData, ...]:
         """Get RoundData for all remaining rounds in the database"""
         return self.rounds.remaining_from(from_round)
+
+    def income_for_round(self, round_index: int, gamemode: BloonsGamemode) -> float | None:
+        """Cash credited after the given round finishes. None if that round is not in the table."""
+        data = self.rounds.get_round_data(round_index)
+        if data is None:
+            return None
+        cash = float(data.total_cash)
+        if gamemode == BloonsGamemode.HALF_CASH:
+            cash *= 0.5
+        return cash

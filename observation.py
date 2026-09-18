@@ -32,7 +32,7 @@ class PlacedTower:
 @dataclass(frozen=True)
 class Sensed:
     # "Real" data we receive from the Harness
-    screen: BloonsScreen
+    screen: BloonsScreen | None
     play_idle: bool
     last_step_ok: bool
 

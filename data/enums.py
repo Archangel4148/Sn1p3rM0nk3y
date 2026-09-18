@@ -49,6 +49,28 @@ STARTING_CASH: dict[BloonsGamemode, float] = {
 }
 
 
+# First round the match actually runs (CHIMPS/Impoppable skip 1–5; Deflation starts at 31).
+STARTING_ROUND: dict[BloonsGamemode, int] = {
+    BloonsGamemode.EASY_STANDARD: 1,
+    BloonsGamemode.PRIMARY_ONLY: 1,
+    BloonsGamemode.DEFLATION: 31,
+    BloonsGamemode.EASY_SANDBOX: 1,
+    BloonsGamemode.MEDIUM_STANDARD: 1,
+    BloonsGamemode.MILITARY_ONLY: 1,
+    BloonsGamemode.APOPALYPSE: 1,
+    BloonsGamemode.REVERSE: 1,
+    BloonsGamemode.MEDIUM_SANDBOX: 1,
+    BloonsGamemode.HARD_SANDBOX: 1,
+    BloonsGamemode.HARD_STANDARD: 1,
+    BloonsGamemode.MAGIC_MONKEYS_ONLY: 1,
+    BloonsGamemode.DOUBLE_HP_MOABS: 1,
+    BloonsGamemode.HALF_CASH: 1,
+    BloonsGamemode.ALTERNATE_BLOONS_ROUNDS: 1,
+    BloonsGamemode.IMPOPPABLE: 6,
+    BloonsGamemode.CHIMPS: 6,
+}
+
+
 class Tower(StrEnum):
     ALCHEMIST = "Alchemist"
     BANANA_FARM = "Banana Farm"
@@ -477,6 +499,9 @@ GAMEMODE_SELECT_POSITIONS = {
         BloonsGamemode.CHIMPS: (0.838, 0.684),
     }
 }
+
+# In-game / sandbox play-triangle (same control the idle clock samples).
+PLAY_BUTTON_POSITION = (0.892, 0.946)
 
 SCREEN_TRANSITIONS = {
     BloonsScreen.MAIN_MENU: {
