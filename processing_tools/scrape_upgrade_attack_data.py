@@ -9,7 +9,7 @@ from playwright.async_api import async_playwright
 # --- Config ---
 BASE_URL = "https://www.bloonswiki.com"
 TOWER_LIST_URL = f"{BASE_URL}/Tower"
-OUTPUT_DIR = Path("../data/scraped_bloons")
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "data" / "scrapes"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 SAVE_HTML = False  # Saves HTML locally
 CRAWL_DELAY = 5

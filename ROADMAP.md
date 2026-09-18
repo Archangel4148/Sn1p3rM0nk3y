@@ -106,7 +106,7 @@ Search until **every** remaining round passes. If the model dies on a later camo
 
 ### Heroes (v1–v2)
 
-Do not pretend a level-1 hero is a 5-xxx Super. XP (hence level) changes every round even if you buy nothing. `hero_properties.json` is only cost / range / footprint.
+Do not pretend a level-1 hero is a 5-xxx Super. XP (hence level) changes every round even if you buy nothing. `data/tables/heroes.json` is only cost / range / footprint.
 
 Until there is a per-level stat table + XP-by-round (deterministic if you don’t leak):
 
@@ -230,7 +230,10 @@ app/                     # later companion UI
 interaction.py
 vision.py
 processing_tools/track_flow_points.py
-data/rounds.json
+data/tables/rounds.json
+data/tables/towers.json
+data/tables/heroes.json
+data/tables/upgrades.json
 data/tracks/<map>/path_points.json
 main.py
 ```
@@ -341,5 +344,5 @@ Your planner is more ambitious than a script. It will stay honest only if meters
 - Cash OCR in `money_reader.py` / `vision.py` (delete from live path in v1)
 - Placement: one `flow_points` polyline + land/water/track masks (Meadow, In The Loop, Alpine Run)
 - `track_flow_points.py` — single polyline
-- `hero_properties.json` — cost/range/footprint only
+- `data/tables/heroes.json` — cost/range/footprint only
 - `banned_towers = []` in `main()` — stub for `PlanConstraint`

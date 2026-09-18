@@ -45,11 +45,11 @@ class BloonsBrain:
         # self.money_reader = MoneyReader(self.window_manager, interval=3)
 
         # Tower data
-        with open("data/combined_towers.json", "r", encoding="utf-8") as f:
+        with open("data/tables/towers.json", "r", encoding="utf-8") as f:
             self.tower_data = json.load(f)
-        with open("data/merged_upgrades.json", "r", encoding="utf-8") as f:
+        with open("data/tables/upgrades.json", "r", encoding="utf-8") as f:
             self.upgrade_data = json.load(f)
-        with open("data/hero_properties.json", "r", encoding="utf-8") as f:
+        with open("data/tables/heroes.json", "r", encoding="utf-8") as f:
             self.hero_data = json.load(f)
 
         self.selected_hero: Hero | None = None

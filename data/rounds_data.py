@@ -57,7 +57,7 @@ class RoundData:
         )
 
 class RoundsDatabase:
-    RAW_JSON_PATH = Path(__file__).parent / "rounds.json"
+    RAW_JSON_PATH = Path(__file__).parent / "tables" / "rounds.json"
     def __init__(self):
         self._data = self.load_rounds_data()
 
@@ -71,6 +71,13 @@ class RoundsDatabase:
             return RoundData.from_dict(round_dict)
         except StopIteration:
             return None
+
+    def remaining_from(self, from_round: int) -> tuple[RoundData, ...]:
+        return tuple(
+            RoundData.from_dict(data)
+            for data in self._data
+            if data["round"] >= from_round
+        )
 
 if __name__ == "__main__":
     db = RoundsDatabase()

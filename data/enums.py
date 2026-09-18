@@ -28,6 +28,27 @@ class BloonsGamemode(StrEnum):
     CHIMPS = "CHIMPS"
 
 
+STARTING_CASH: dict[BloonsGamemode, float] = {
+    BloonsGamemode.EASY_STANDARD: 650.0,
+    BloonsGamemode.PRIMARY_ONLY: 650.0,
+    BloonsGamemode.DEFLATION: 20000.0,
+    BloonsGamemode.EASY_SANDBOX: float("inf"),
+    BloonsGamemode.MEDIUM_STANDARD: 650.0,
+    BloonsGamemode.MILITARY_ONLY: 650.0,
+    BloonsGamemode.APOPALYPSE: 650.0,
+    BloonsGamemode.REVERSE: 650.0,
+    BloonsGamemode.MEDIUM_SANDBOX: float("inf"),
+    BloonsGamemode.HARD_SANDBOX: float("inf"),
+    BloonsGamemode.HARD_STANDARD: 650.0,
+    BloonsGamemode.MAGIC_MONKEYS_ONLY: 650.0,
+    BloonsGamemode.DOUBLE_HP_MOABS: 650.0,
+    BloonsGamemode.HALF_CASH: 325.0,
+    BloonsGamemode.ALTERNATE_BLOONS_ROUNDS: 650.0,
+    BloonsGamemode.IMPOPPABLE: 650.0,
+    BloonsGamemode.CHIMPS: 650.0,
+}
+
+
 class Tower(StrEnum):
     ALCHEMIST = "Alchemist"
     BANANA_FARM = "Banana Farm"
