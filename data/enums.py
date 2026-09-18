@@ -257,6 +257,11 @@ TOWER_HOTKEYS = {
     Tower.WIZARD_MONKEY: "a",
 }
 
+class UpgradePath(StrEnum):
+    TOP = "top"
+    MIDDLE = "middle"
+    BOTTOM = "bottom"
+
 UPGRADE_HOTKEYS = {
     "top": ",",
     "middle": ".",

@@ -2,6 +2,7 @@ import json
 import time
 from collections import deque
 from dataclasses import dataclass, field
+import uuid
 
 import cv2
 import numpy as np
@@ -12,17 +13,12 @@ from data.enums import BloonsDifficulty, BloonsScreen, SCREEN_TRANSITIONS, MAP_S
     CoverageType, DAMAGE_TYPE_BY_COVERAGE, COVERAGE_RATIOS
 from interaction import WindowManager, InputController
 # from money_reader import MoneyReader
+from observation import PlacedTower
 from system_flags import vprint, PIXELS_PER_BLOONS_UNIT, SUPPRESS_PLACEMENT_LOCATION_OUTPUT, UPGRADE_DELAY
 from vision import identify_screen, get_current_tab
 
 
-@dataclass
-class PlacedTower:
-    tower: Tower
-    position: tuple[float, float]
-    upgrades: dict = field(default_factory=lambda: {"top": 0, "middle": 0, "bottom": 0})
-    radius_px: int = 0
-    id: int = field(default_factory=lambda: int(time.time() * 1000))
+
 
 
 class BloonsBrain:
