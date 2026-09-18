@@ -4,6 +4,7 @@ import time
 from vision import ocr_number_from_image
 
 
+# TODO: Deprecate OCR!
 class MoneyReader:
     def __init__(self, window_manager, region=(0.192, 0.015, 0.156, 0.049), interval=0.3):
         self.window_manager = window_manager

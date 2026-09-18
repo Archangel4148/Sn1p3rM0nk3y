@@ -11,7 +11,7 @@ from data.enums import BloonsDifficulty, BloonsScreen, SCREEN_TRANSITIONS, MAP_S
     MAP_SELECT_RIGHT_ARROW_POSITION, MAP_SELECT_LEFT_ARROW_POSITION, Tower, TOWER_HOTKEYS, UPGRADE_HOTKEYS, Hero, \
     CoverageType, DAMAGE_TYPE_BY_COVERAGE, COVERAGE_RATIOS
 from interaction import WindowManager, InputController
-from money_reader import MoneyReader
+# from money_reader import MoneyReader
 from system_flags import vprint, PIXELS_PER_BLOONS_UNIT, SUPPRESS_PLACEMENT_LOCATION_OUTPUT, UPGRADE_DELAY
 from vision import identify_screen, get_current_tab
 
@@ -46,7 +46,7 @@ class BloonsBrain:
         self.controller: InputController = self.window_manager.get_relative_controller()
 
         # Money reader thread
-        self.money_reader = MoneyReader(self.window_manager, interval=3)
+        # self.money_reader = MoneyReader(self.window_manager, interval=3)
 
         # Tower data
         with open("data/combined_towers.json", "r", encoding="utf-8") as f:
@@ -63,16 +63,18 @@ class BloonsBrain:
 
     @property
     def money(self) -> int | None:
-        """Return the most recent know money value (from OCR or estimate)"""
-        ocr_money, ocr_time = self.money_reader.get_money()
-        if self._last_money_estimate_time is None:
-            self._estimated_money = ocr_money
-            return ocr_money
-        if ocr_time is None:
-            return self._estimated_money
-        if ocr_time >= self._last_money_estimate_time:
-            return ocr_money
-        return self._estimated_money
+        # TODO: Deprecate the live money system!
+        return 0.0
+    #     """Return the most recent know money value (from OCR or estimate)"""
+    #     ocr_money, ocr_time = self.money_reader.get_money()
+    #     if self._last_money_estimate_time is None:
+    #         self._estimated_money = ocr_money
+    #         return ocr_money
+    #     if ocr_time is None:
+    #         return self._estimated_money
+    #     if ocr_time >= self._last_money_estimate_time:
+    #         return ocr_money
+    #     return self._estimated_money
 
     def update_money_estimate(self, change: int):
         if self._estimated_money is None:
@@ -901,7 +903,7 @@ def main():
     brain.navigate_to(target_screen)
 
     # Start the money reader
-    brain.money_reader.start()
+    # brain.money_reader.start()
 
     game_over = False
     cycle = 0

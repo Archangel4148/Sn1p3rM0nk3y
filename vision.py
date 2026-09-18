@@ -1,8 +1,3 @@
-import cv2
-import easyocr
-import numpy as np
-from PIL import ImageOps, Image
-
 from data.enums import BloonsScreen, PAGE_IDENTIFIER_POINTS, MAP_SELECT_PAGE_POINTS, SELECTED_MAP_SELECT_TAB_COLOR
 from system_flags import vprint, VERBOSE, SUPPRESS_SCREEN_MATCHING_OUTPUT
 
@@ -13,7 +8,7 @@ def color_close(a, b, tol=5):
 
 def identify_screen(capture) -> BloonsScreen | None:
     """Identify the screen using sets of pixel identifiers.
-    Each screen can have multiple valid match sets — if any set matches fully, the screen is identified.
+    Each screen can have multiple valid match sets. If any set matches fully, the screen is identified.
     """
 
     for screen, match_sets in PAGE_IDENTIFIER_POINTS.items():
@@ -61,24 +56,25 @@ def get_current_tab(capture):
     return None
 
 
-def ocr_number_from_image(pil_img: Image.Image) -> int | None:
-    # Convert to grayscale
-    gray = ImageOps.grayscale(pil_img)
-    img_array = np.array(gray)
-    _, img_bin = cv2.threshold(img_array, 180, 255, cv2.THRESH_BINARY)
+# TODO: Deprecate OCR!
+# def ocr_number_from_image(pil_img: Image.Image) -> int | None:
+#     # Convert to grayscale
+#     gray = ImageOps.grayscale(pil_img)
+#     img_array = np.array(gray)
+#     _, img_bin = cv2.threshold(img_array, 180, 255, cv2.THRESH_BINARY)
 
-    # OCR
-    reader = easyocr.Reader(["en"], gpu=True)
-    results = reader.readtext(img_bin)
+#     # OCR
+#     reader = easyocr.Reader(["en"], gpu=True)
+#     results = reader.readtext(img_bin)
 
-    if not results:
-        return None
+#     if not results:
+#         return None
 
-    # Take the first detected text and filter digits
-    text = ''.join(filter(str.isdigit, results[0][1]))
+#     # Take the first detected text and filter digits
+#     text = ''.join(filter(str.isdigit, results[0][1]))
 
-    return int(text) if text else None
+#     return int(text) if text else None
 
-import torch
-print(torch.cuda.is_available())
-print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else "No GPU detected")
+# import torch
+# print(torch.cuda.is_available())
+# print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else "No GPU detected")
