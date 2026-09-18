@@ -531,3 +531,27 @@ SCREEN_TRANSITIONS = {
         }
     }
 }
+
+class BloonType(StrEnum):
+    RED = "Red"
+    BLUE = "Blue"
+    GREEN = "Green"
+    YELLOW = "Yellow"
+    PINK = "Pink"
+    BLACK = "Black"
+    WHITE = "White"
+    ZEBRA = "Zebra"
+    RAINBOW = "Rainbow"
+    PURPLE = "Purple"
+    LEAD = "Lead"
+    CERAMIC = "Ceramic"
+    MOAB = "MOAB"
+    BFB = "BFB"
+    ZOMG = "ZOMG"
+    DDT = "DDT"
+    BAD = "BAD"
+
+class BloonModifier(StrEnum):
+    FORTIFIED = "Fortified"
+    CAMO = "Camo"
+    REGROW = "Regrow"

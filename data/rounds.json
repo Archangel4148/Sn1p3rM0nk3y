@@ -1,28 +1,28 @@
 [
   {
-    "round": "1",
+    "round": 1,
     "bloon_groups": [
       {
         "type": "Red",
         "count": 20
       }
     ],
-    "rbe": "20",
+    "rbe": 20,
     "cash": "$20 + $101"
   },
   {
-    "round": "2",
+    "round": 2,
     "bloon_groups": [
       {
         "type": "Red",
         "count": 35
       }
     ],
-    "rbe": "35",
+    "rbe": 35,
     "cash": "$35 + $102"
   },
   {
-    "round": "3",
+    "round": 3,
     "bloon_groups": [
       {
         "type": "Red",
@@ -37,11 +37,11 @@
         "count": 15
       }
     ],
-    "rbe": "35",
+    "rbe": 35,
     "cash": "$35 + $103"
   },
   {
-    "round": "4",
+    "round": 4,
     "bloon_groups": [
       {
         "type": "Red",
@@ -56,11 +56,11 @@
         "count": 10
       }
     ],
-    "rbe": "71",
+    "rbe": 71,
     "cash": "$71 + $104"
   },
   {
-    "round": "5",
+    "round": 5,
     "bloon_groups": [
       {
         "type": "Blue",
@@ -75,11 +75,11 @@
         "count": 15
       }
     ],
-    "rbe": "59",
+    "rbe": 59,
     "cash": "$59 + $105"
   },
   {
-    "round": "6",
+    "round": 6,
     "bloon_groups": [
       {
         "type": "Green",
@@ -94,11 +94,11 @@
         "count": 15
       }
     ],
-    "rbe": "57",
+    "rbe": 57,
     "cash": "$57 + $106"
   },
   {
-    "round": "7",
+    "round": 7,
     "bloon_groups": [
       {
         "type": "Blue",
@@ -117,11 +117,11 @@
         "count": 10
       }
     ],
-    "rbe": "75",
+    "rbe": 75,
     "cash": "$75 + $107"
   },
   {
-    "round": "8",
+    "round": 8,
     "bloon_groups": [
       {
         "type": "Blue",
@@ -140,22 +140,22 @@
         "count": 12
       }
     ],
-    "rbe": "92",
+    "rbe": 92,
     "cash": "$92 + $108"
   },
   {
-    "round": "9",
+    "round": 9,
     "bloon_groups": [
       {
         "type": "Green",
         "count": 30
       }
     ],
-    "rbe": "90",
+    "rbe": 90,
     "cash": "$90 + $109"
   },
   {
-    "round": "10",
+    "round": 10,
     "bloon_groups": [
       {
         "type": "Blue",
@@ -170,11 +170,11 @@
         "count": 22
       }
     ],
-    "rbe": "204",
+    "rbe": 204,
     "cash": "$204 + $110"
   },
   {
-    "round": "11",
+    "round": 11,
     "bloon_groups": [
       {
         "type": "Yellow",
@@ -193,11 +193,11 @@
         "count": 10
       }
     ],
-    "rbe": "78",
+    "rbe": 78,
     "cash": "$78 + $111"
   },
   {
-    "round": "12",
+    "round": 12,
     "bloon_groups": [
       {
         "type": "Green",
@@ -212,11 +212,11 @@
         "count": 5
       }
     ],
-    "rbe": "80",
+    "rbe": 80,
     "cash": "$80 + $112"
   },
   {
-    "round": "13",
+    "round": 13,
     "bloon_groups": [
       {
         "type": "Blue",
@@ -227,11 +227,11 @@
         "count": 23
       }
     ],
-    "rbe": "169",
+    "rbe": 169,
     "cash": "$169 + $113"
   },
   {
-    "round": "14",
+    "round": 14,
     "bloon_groups": [
       {
         "type": "Red",
@@ -266,11 +266,11 @@
         "count": 5
       }
     ],
-    "rbe": "145",
+    "rbe": 145,
     "cash": "$145 + $114"
   },
   {
-    "round": "15",
+    "round": 15,
     "bloon_groups": [
       {
         "type": "Red",
@@ -293,11 +293,11 @@
         "count": 5
       }
     ],
-    "rbe": "151",
+    "rbe": 151,
     "cash": "$151 + $115"
   },
   {
-    "round": "16",
+    "round": 16,
     "bloon_groups": [
       {
         "type": "Green",
@@ -312,22 +312,22 @@
         "count": 8
       }
     ],
-    "rbe": "152",
+    "rbe": 152,
     "cash": "$152 + $116"
   },
   {
-    "round": "17",
+    "round": 17,
     "bloon_groups": [
       {
         "type": "RegrowYellow",
         "count": 12
       }
     ],
-    "rbe": "48",
+    "rbe": 48,
     "cash": "$48 + $117"
   },
   {
-    "round": "18",
+    "round": 18,
     "bloon_groups": [
       {
         "type": "Green",
@@ -338,11 +338,11 @@
         "count": 20
       }
     ],
-    "rbe": "240",
+    "rbe": 240,
     "cash": "$240 + $118"
   },
   {
-    "round": "19",
+    "round": 19,
     "bloon_groups": [
       {
         "type": "Green",
@@ -361,22 +361,22 @@
         "count": 4
       }
     ],
-    "rbe": "141",
+    "rbe": 141,
     "cash": "$141 + $119"
   },
   {
-    "round": "20",
+    "round": 20,
     "bloon_groups": [
       {
         "type": "Black",
         "count": 6
       }
     ],
-    "rbe": "66",
+    "rbe": 66,
     "cash": "$66 + $120"
   },
   {
-    "round": "21",
+    "round": 21,
     "bloon_groups": [
       {
         "type": "Yellow",
@@ -391,22 +391,22 @@
         "count": 4
       }
     ],
-    "rbe": "230",
+    "rbe": 230,
     "cash": "$230 + $121"
   },
   {
-    "round": "22",
+    "round": 22,
     "bloon_groups": [
       {
         "type": "White",
         "count": 16
       }
     ],
-    "rbe": "176",
+    "rbe": 176,
     "cash": "$176 + $122"
   },
   {
-    "round": "23",
+    "round": 23,
     "bloon_groups": [
       {
         "type": "Black",
@@ -417,11 +417,11 @@
         "count": 7
       }
     ],
-    "rbe": "154",
+    "rbe": 154,
     "cash": "$154 + $123"
   },
   {
-    "round": "24",
+    "round": 24,
     "bloon_groups": [
       {
         "type": "CamoGreen",
@@ -432,11 +432,11 @@
         "count": 20
       }
     ],
-    "rbe": "43",
+    "rbe": 43,
     "cash": "$43 + $124"
   },
   {
-    "round": "25",
+    "round": 25,
     "bloon_groups": [
       {
         "type": "RegrowYellow",
@@ -447,11 +447,11 @@
         "count": 10
       }
     ],
-    "rbe": "210",
+    "rbe": 210,
     "cash": "$210 + $125"
   },
   {
-    "round": "26",
+    "round": 26,
     "bloon_groups": [
       {
         "type": "Pink",
@@ -462,11 +462,11 @@
         "count": 4
       }
     ],
-    "rbe": "207",
+    "rbe": 207,
     "cash": "$207 + $126"
   },
   {
-    "round": "27",
+    "round": 27,
     "bloon_groups": [
       {
         "type": "Red",
@@ -485,22 +485,22 @@
         "count": 45
       }
     ],
-    "rbe": "535",
+    "rbe": 535,
     "cash": "$535 + $127"
   },
   {
-    "round": "28",
+    "round": 28,
     "bloon_groups": [
       {
         "type": "Lead",
         "count": 6
       }
     ],
-    "rbe": "138",
+    "rbe": 138,
     "cash": "$138 + $128"
   },
   {
-    "round": "29",
+    "round": 29,
     "bloon_groups": [
       {
         "type": "Yellow",
@@ -511,22 +511,22 @@
         "count": 15
       }
     ],
-    "rbe": "260",
+    "rbe": 260,
     "cash": "$260 + $129"
   },
   {
-    "round": "30",
+    "round": 30,
     "bloon_groups": [
       {
         "type": "Lead",
         "count": 9
       }
     ],
-    "rbe": "207",
+    "rbe": 207,
     "cash": "$207 + $130"
   },
   {
-    "round": "31",
+    "round": 31,
     "bloon_groups": [
       {
         "type": "Black",
@@ -545,11 +545,11 @@
         "count": 2
       }
     ],
-    "rbe": "406",
+    "rbe": 406,
     "cash": "$406 + $131"
   },
   {
-    "round": "32",
+    "round": 32,
     "bloon_groups": [
       {
         "type": "Black",
@@ -564,11 +564,11 @@
         "count": 10
       }
     ],
-    "rbe": "495",
+    "rbe": 495,
     "cash": "$495 + $132"
   },
   {
-    "round": "33",
+    "round": 33,
     "bloon_groups": [
       {
         "type": "CamoRed",
@@ -579,11 +579,11 @@
         "count": 13
       }
     ],
-    "rbe": "72",
+    "rbe": 72,
     "cash": "$72 + $133"
   },
   {
-    "round": "34",
+    "round": 34,
     "bloon_groups": [
       {
         "type": "Yellow",
@@ -594,11 +594,11 @@
         "count": 6
       }
     ],
-    "rbe": "778",
+    "rbe": 778,
     "cash": "$778 + $134"
   },
   {
-    "round": "35",
+    "round": 35,
     "bloon_groups": [
       {
         "type": "White",
@@ -617,11 +617,11 @@
         "count": 30
       }
     ],
-    "rbe": "1,015",
+    "rbe": 1015,
     "cash": "$1,015 + $135"
   },
   {
-    "round": "36",
+    "round": 36,
     "bloon_groups": [
       {
         "type": "Pink",
@@ -644,11 +644,11 @@
         "count": 60
       }
     ],
-    "rbe": "760",
+    "rbe": 760,
     "cash": "$760 + $136"
   },
   {
-    "round": "37",
+    "round": 37,
     "bloon_groups": [
       {
         "type": "Black",
@@ -671,11 +671,11 @@
         "count": 7
       }
     ],
-    "rbe": "1,202",
+    "rbe": 1202,
     "cash": "$1,202 + $137"
   },
   {
-    "round": "38",
+    "round": 38,
     "bloon_groups": [
       {
         "type": "White",
@@ -698,11 +698,11 @@
         "count": 2
       }
     ],
-    "rbe": "1,157",
+    "rbe": 1157,
     "cash": "$1,139 + $138"
   },
   {
-    "round": "39",
+    "round": 39,
     "bloon_groups": [
       {
         "type": "Black",
@@ -725,22 +725,22 @@
         "count": 2
       }
     ],
-    "rbe": "1,620",
+    "rbe": 1620,
     "cash": "$1,620 + $139"
   },
   {
-    "round": "40",
+    "round": 40,
     "bloon_groups": [
       {
         "type": "MOAB",
         "count": 1
       }
     ],
-    "rbe": "616",
+    "rbe": 616,
     "cash": "$381 + $140"
   },
   {
-    "round": "41",
+    "round": 41,
     "bloon_groups": [
       {
         "type": "Black",
@@ -751,11 +751,11 @@
         "count": 60
       }
     ],
-    "rbe": "2,040",
+    "rbe": 2040,
     "cash": "$2,040 + $141"
   },
   {
-    "round": "42",
+    "round": 42,
     "bloon_groups": [
       {
         "type": "RegrowRainbow",
@@ -766,11 +766,11 @@
         "count": 5
       }
     ],
-    "rbe": "517",
+    "rbe": 517,
     "cash": "$517 + $142"
   },
   {
-    "round": "43",
+    "round": 43,
     "bloon_groups": [
       {
         "type": "Rainbow",
@@ -781,11 +781,11 @@
         "count": 7
       }
     ],
-    "rbe": "1,198",
+    "rbe": 1198,
     "cash": "$1,135 + $143"
   },
   {
-    "round": "44",
+    "round": 44,
     "bloon_groups": [
       {
         "type": "Zebra",
@@ -808,11 +808,11 @@
         "count": 10
       }
     ],
-    "rbe": "1,150",
+    "rbe": 1150,
     "cash": "$1,150 + $144"
   },
   {
-    "round": "45",
+    "round": 45,
     "bloon_groups": [
       {
         "type": "Rainbow",
@@ -831,22 +831,22 @@
         "count": 4
       }
     ],
-    "rbe": "2,289",
+    "rbe": 2289,
     "cash": "$2,289 + $145"
   },
   {
-    "round": "46",
+    "round": 46,
     "bloon_groups": [
       {
         "type": "FortifiedCeramic",
         "count": 6
       }
     ],
-    "rbe": "684",
+    "rbe": 684,
     "cash": "$570 + $146"
   },
   {
-    "round": "47",
+    "round": 47,
     "bloon_groups": [
       {
         "type": "Ceramic",
@@ -857,11 +857,11 @@
         "count": 70
       }
     ],
-    "rbe": "1,598",
+    "rbe": 1598,
     "cash": "$1,490 + $147"
   },
   {
-    "round": "48",
+    "round": 48,
     "bloon_groups": [
       {
         "type": "RegrowPink",
@@ -880,11 +880,11 @@
         "count": 3
       }
     ],
-    "rbe": "2,752",
+    "rbe": 2752,
     "cash": "$2,695 + $148"
   },
   {
-    "round": "49",
+    "round": 49,
     "bloon_groups": [
       {
         "type": "Green",
@@ -911,11 +911,11 @@
         "count": 10
       }
     ],
-    "rbe": "4,771",
+    "rbe": 4771,
     "cash": "$4,609 + $149"
   },
   {
-    "round": "50",
+    "round": 50,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -938,11 +938,11 @@
         "count": 1
       }
     ],
-    "rbe": "3,540",
+    "rbe": 3540,
     "cash": "$2,890 + $150"
   },
   {
-    "round": "51",
+    "round": 51,
     "bloon_groups": [
       {
         "type": "CamoCeramic",
@@ -953,11 +953,11 @@
         "count": 10
       }
     ],
-    "rbe": "2,030",
+    "rbe": 2030,
     "cash": "$947.5 + $151"
   },
   {
-    "round": "52",
+    "round": 52,
     "bloon_groups": [
       {
         "type": "Rainbow",
@@ -980,11 +980,11 @@
         "count": 5
       }
     ],
-    "rbe": "3,447",
+    "rbe": 3447,
     "cash": "$1,443.5 + $152"
   },
   {
-    "round": "53",
+    "round": 53,
     "bloon_groups": [
       {
         "type": "CamoPink",
@@ -1003,11 +1003,11 @@
         "count": 1
       }
     ],
-    "rbe": "2,248",
+    "rbe": 2248,
     "cash": "$771.5 + $153"
   },
   {
-    "round": "54",
+    "round": 54,
     "bloon_groups": [
       {
         "type": "Ceramic",
@@ -1022,11 +1022,11 @@
         "count": 1
       }
     ],
-    "rbe": "4,872",
+    "rbe": 4872,
     "cash": "$2,043.5 + $154"
   },
   {
-    "round": "55",
+    "round": 55,
     "bloon_groups": [
       {
         "type": "Ceramic",
@@ -1049,11 +1049,11 @@
         "count": 1
       }
     ],
-    "rbe": "5,296",
+    "rbe": 5296,
     "cash": "$2,328 + $155"
   },
   {
-    "round": "56",
+    "round": 56,
     "bloon_groups": [
       {
         "type": "CamoRainbow",
@@ -1064,11 +1064,11 @@
         "count": 1
       }
     ],
-    "rbe": "2,496",
+    "rbe": 2496,
     "cash": "$1,130.5 + $156"
   },
   {
-    "round": "57",
+    "round": 57,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -1083,11 +1083,11 @@
         "count": 2
       }
     ],
-    "rbe": "4,344",
+    "rbe": 4344,
     "cash": "$1,702 + $157"
   },
   {
-    "round": "58",
+    "round": 58,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -1102,11 +1102,11 @@
         "count": 10
       }
     ],
-    "rbe": "5,780",
+    "rbe": 5780,
     "cash": "$2,140 + $158"
   },
   {
-    "round": "59",
+    "round": 59,
     "bloon_groups": [
       {
         "type": "Ceramic",
@@ -1121,22 +1121,22 @@
         "count": 10
       }
     ],
-    "rbe": "4,270",
+    "rbe": 4270,
     "cash": "$2,000 + $159"
   },
   {
-    "round": "60",
+    "round": 60,
     "bloon_groups": [
       {
         "type": "BFB",
         "count": 1
       }
     ],
-    "rbe": "3,164",
+    "rbe": 3164,
     "cash": "$762.5 + $160"
   },
   {
-    "round": "61",
+    "round": 61,
     "bloon_groups": [
       {
         "type": "RegrowZebra",
@@ -1147,11 +1147,11 @@
         "count": 5
       }
     ],
-    "rbe": "6,530",
+    "rbe": 6530,
     "cash": "$1,071 + $161"
   },
   {
-    "round": "62",
+    "round": 62,
     "bloon_groups": [
       {
         "type": "Purple",
@@ -1170,11 +1170,11 @@
         "count": 15
       }
     ],
-    "rbe": "8,247",
+    "rbe": 8247,
     "cash": "$1,224.4 + $162"
   },
   {
-    "round": "63",
+    "round": 63,
     "bloon_groups": [
       {
         "type": "Lead",
@@ -1193,11 +1193,11 @@
         "count": 42
       }
     ],
-    "rbe": "14,413",
+    "rbe": 14413,
     "cash": "$2,663 + $163"
   },
   {
-    "round": "64",
+    "round": 64,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -1208,11 +1208,11 @@
         "count": 3
       }
     ],
-    "rbe": "6,264",
+    "rbe": 6264,
     "cash": "$685.8 + $164"
   },
   {
-    "round": "65",
+    "round": 65,
     "bloon_groups": [
       {
         "type": "Zebra",
@@ -1235,11 +1235,11 @@
         "count": 2
       }
     ],
-    "rbe": "18,966",
+    "rbe": 18966,
     "cash": "$2,906.6 + $165"
   },
   {
-    "round": "66",
+    "round": 66,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -1258,11 +1258,11 @@
         "count": 3
       }
     ],
-    "rbe": "7,496",
+    "rbe": 7496,
     "cash": "$838.2 + $166"
   },
   {
-    "round": "67",
+    "round": 67,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -1277,11 +1277,11 @@
         "count": 4
       }
     ],
-    "rbe": "6,410",
+    "rbe": 6410,
     "cash": "$856.6 + $167"
   },
   {
-    "round": "68",
+    "round": 68,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -1292,11 +1292,11 @@
         "count": 1
       }
     ],
-    "rbe": "5,628",
+    "rbe": 5628,
     "cash": "$609.8 + $168"
   },
   {
-    "round": "69",
+    "round": 69,
     "bloon_groups": [
       {
         "type": "FortifiedLead",
@@ -1311,11 +1311,11 @@
         "count": 50
       }
     ],
-    "rbe": "6,680",
+    "rbe": 6680,
     "cash": "$1,246 + $169"
   },
   {
-    "round": "70",
+    "round": 70,
     "bloon_groups": [
       {
         "type": "Rainbow",
@@ -1330,11 +1330,11 @@
         "count": 4
       }
     ],
-    "rbe": "13,184",
+    "rbe": 13184,
     "cash": "$2,448.8 + $170"
   },
   {
-    "round": "71",
+    "round": 71,
     "bloon_groups": [
       {
         "type": "Ceramic",
@@ -1345,11 +1345,11 @@
         "count": 10
       }
     ],
-    "rbe": "9,280",
+    "rbe": 9280,
     "cash": "$1,332 + $171"
   },
   {
-    "round": "72",
+    "round": 72,
     "bloon_groups": [
       {
         "type": "RegrowCeramic",
@@ -1364,11 +1364,11 @@
         "count": 1
       }
     ],
-    "rbe": "10,280",
+    "rbe": 10280,
     "cash": "$1,332 + $172"
   },
   {
-    "round": "73",
+    "round": 73,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -1383,11 +1383,11 @@
         "count": 1
       }
     ],
-    "rbe": "11,256",
+    "rbe": 11256,
     "cash": "$1,219.6 + $173"
   },
   {
-    "round": "74",
+    "round": 74,
     "bloon_groups": [
       {
         "type": "Ceramic",
@@ -1406,11 +1406,11 @@
         "count": 60
       }
     ],
-    "rbe": "18,054",
+    "rbe": 18054,
     "cash": "$2,870 + $174"
   },
   {
-    "round": "75",
+    "round": 75,
     "bloon_groups": [
       {
         "type": "BFB",
@@ -1441,22 +1441,22 @@
         "count": 3
       }
     ],
-    "rbe": "25,402",
+    "rbe": 25402,
     "cash": "$2,500.8 + $175"
   },
   {
-    "round": "76",
+    "round": 76,
     "bloon_groups": [
       {
         "type": "RegrowCeramic",
         "count": 60
       }
     ],
-    "rbe": "6,240",
+    "rbe": 6240,
     "cash": "$1,140 + $176"
   },
   {
-    "round": "77",
+    "round": 77,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -1467,11 +1467,11 @@
         "count": 5
       }
     ],
-    "rbe": "22,596",
+    "rbe": 22596,
     "cash": "$2,363.2 + $177"
   },
   {
-    "round": "78",
+    "round": 78,
     "bloon_groups": [
       {
         "type": "Rainbow",
@@ -1494,11 +1494,11 @@
         "count": 72
       }
     ],
-    "rbe": "26,382",
+    "rbe": 26382,
     "cash": "$4,684 + $178"
   },
   {
-    "round": "79",
+    "round": 79,
     "bloon_groups": [
       {
         "type": "RegrowRainbow",
@@ -1513,22 +1513,22 @@
         "count": 2
       }
     ],
-    "rbe": "45,804",
+    "rbe": 45804,
     "cash": "$6,530 + $179"
   },
   {
-    "round": "80",
+    "round": 80,
     "bloon_groups": [
       {
         "type": "ZOMG",
         "count": 1
       }
     ],
-    "rbe": "16,656",
+    "rbe": 16656,
     "cash": "$1,220.2 + $180"
   },
   {
-    "round": "81",
+    "round": 81,
     "bloon_groups": [
       {
         "type": "BFB",
@@ -1539,11 +1539,11 @@
         "count": 8
       }
     ],
-    "rbe": "44,506",
+    "rbe": 44506,
     "cash": "$5,185 + $181"
   },
   {
-    "round": "82",
+    "round": 82,
     "bloon_groups": [
       {
         "type": "BFB",
@@ -1554,11 +1554,11 @@
         "count": 5
       }
     ],
-    "rbe": "52,320",
+    "rbe": 52320,
     "cash": "$4,575 + $182"
   },
   {
-    "round": "83",
+    "round": 83,
     "bloon_groups": [
       {
         "type": "Ceramic",
@@ -1577,11 +1577,11 @@
         "count": 30
       }
     ],
-    "rbe": "25,080",
+    "rbe": 25080,
     "cash": "$4,566 + $183"
   },
   {
-    "round": "84",
+    "round": 84,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -1592,44 +1592,44 @@
         "count": 10
       }
     ],
-    "rbe": "51,480",
+    "rbe": 51480,
     "cash": "$6,860 + $184"
   },
   {
-    "round": "85",
+    "round": 85,
     "bloon_groups": [
       {
         "type": "ZOMG",
         "count": 2
       }
     ],
-    "rbe": "30,704",
+    "rbe": 30704,
     "cash": "$2,440.4 + $185"
   },
   {
-    "round": "86",
+    "round": 86,
     "bloon_groups": [
       {
         "type": "FortifiedBFB",
         "count": 5
       }
     ],
-    "rbe": "27,040",
+    "rbe": 27040,
     "cash": "$762.5 + $186"
   },
   {
-    "round": "87",
+    "round": 87,
     "bloon_groups": [
       {
         "type": "ZOMG",
         "count": 4
       }
     ],
-    "rbe": "63,008",
+    "rbe": 63008,
     "cash": "$2,440.4 + $187"
   },
   {
-    "round": "88",
+    "round": 88,
     "bloon_groups": [
       {
         "type": "BFB",
@@ -1644,11 +1644,11 @@
         "count": 2
       }
     ],
-    "rbe": "63,600",
+    "rbe": 63600,
     "cash": "$3,126 + $188"
   },
   {
-    "round": "89",
+    "round": 89,
     "bloon_groups": [
       {
         "type": "FortifiedMOAB",
@@ -1659,11 +1659,11 @@
         "count": 8
       }
     ],
-    "rbe": "64,384",
+    "rbe": 64384,
     "cash": "$1,982 + $189"
   },
   {
-    "round": "90",
+    "round": 90,
     "bloon_groups": [
       {
         "type": "FortifiedCamoRegrowLead",
@@ -1674,11 +1674,11 @@
         "count": 3
       }
     ],
-    "rbe": "2,756",
+    "rbe": 2756,
     "cash": "$149.3 + $190"
   },
   {
-    "round": "91",
+    "round": 91,
     "bloon_groups": [
       {
         "type": "FortifiedCeramic",
@@ -1689,11 +1689,11 @@
         "count": 20
       }
     ],
-    "rbe": "71,160",
+    "rbe": 71160,
     "cash": "$4,000 + $191"
   },
   {
-    "round": "92",
+    "round": 92,
     "bloon_groups": [
       {
         "type": "FortifiedMOAB",
@@ -1704,11 +1704,11 @@
         "count": 4
       }
     ],
-    "rbe": "117,408",
+    "rbe": 117408,
     "cash": "$4,345.4 + $192"
   },
   {
-    "round": "93",
+    "round": 93,
     "bloon_groups": [
       {
         "type": "FortifiedBFB",
@@ -1719,11 +1719,11 @@
         "count": 6
       }
     ],
-    "rbe": "62,936",
+    "rbe": 62936,
     "cash": "$1,753.6 + $193"
   },
   {
-    "round": "94",
+    "round": 94,
     "bloon_groups": [
       {
         "type": "BFB",
@@ -1734,11 +1734,11 @@
         "count": 6
       }
     ],
-    "rbe": "178,112",
+    "rbe": 178112,
     "cash": "$7,473.1 + $194"
   },
   {
-    "round": "95",
+    "round": 95,
     "bloon_groups": [
       {
         "type": "CamoRegrowPurple",
@@ -1757,11 +1757,11 @@
         "count": 50
       }
     ],
-    "rbe": "80,860",
+    "rbe": 80860,
     "cash": "$3,523 + $195"
   },
   {
-    "round": "96",
+    "round": 96,
     "bloon_groups": [
       {
         "type": "BFB",
@@ -1788,22 +1788,22 @@
         "count": 6
       }
     ],
-    "rbe": "238,952",
+    "rbe": 238952,
     "cash": "$9,759.6 + $196"
   },
   {
-    "round": "97",
+    "round": 97,
     "bloon_groups": [
       {
         "type": "FortifiedZOMG",
         "count": 2
       }
     ],
-    "rbe": "69,984",
+    "rbe": 69984,
     "cash": "$1,220.2 + $197"
   },
   {
-    "round": "98",
+    "round": 98,
     "bloon_groups": [
       {
         "type": "FortifiedBFB",
@@ -1814,11 +1814,11 @@
         "count": 8
       }
     ],
-    "rbe": "327,456",
+    "rbe": 327456,
     "cash": "$9,455.8 + $198"
   },
   {
-    "round": "99",
+    "round": 99,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -1829,22 +1829,22 @@
         "count": 9
       }
     ],
-    "rbe": "47,424",
+    "rbe": 47424,
     "cash": "$2,628.9 + $199"
   },
   {
-    "round": "100",
+    "round": 100,
     "bloon_groups": [
       {
         "type": "BAD",
         "count": 1
       }
     ],
-    "rbe": "67,200",
+    "rbe": 67200,
     "cash": "$1,334.6 + $200"
   },
   {
-    "round": "101",
+    "round": 101,
     "bloon_groups": [
       {
         "type": "Purple",
@@ -1863,11 +1863,11 @@
         "count": 200
       }
     ],
-    "rbe": "20,020",
+    "rbe": 20020,
     "cash": "$563 + $201"
   },
   {
-    "round": "102",
+    "round": 102,
     "bloon_groups": [
       {
         "type": "ZOMG",
@@ -1898,11 +1898,11 @@
         "count": 3
       }
     ],
-    "rbe": "199,826",
+    "rbe": 199826,
     "cash": "$2,249.2 + $202"
   },
   {
-    "round": "103",
+    "round": 103,
     "bloon_groups": [
       {
         "type": "FortifiedZOMG",
@@ -1929,11 +1929,11 @@
         "count": 68
       }
     ],
-    "rbe": "507,908",
+    "rbe": 507908,
     "cash": "$5,967.4 + $203"
   },
   {
-    "round": "104",
+    "round": 104,
     "bloon_groups": [
       {
         "type": "FortifiedMOAB",
@@ -1992,11 +1992,11 @@
         "count": 25
       }
     ],
-    "rbe": "387,472",
+    "rbe": 387472,
     "cash": "$7,387.5 + $204"
   },
   {
-    "round": "105",
+    "round": 105,
     "bloon_groups": [
       {
         "type": "Ceramic",
@@ -2015,11 +2015,11 @@
         "count": 300
       }
     ],
-    "rbe": "152,340",
+    "rbe": 152340,
     "cash": "$4,196.25 + $205"
   },
   {
-    "round": "106",
+    "round": 106,
     "bloon_groups": [
       {
         "type": "DDT",
@@ -2050,11 +2050,11 @@
         "count": 12
       }
     ],
-    "rbe": "113,376",
+    "rbe": 113376,
     "cash": "$1,771.65 + $206"
   },
   {
-    "round": "107",
+    "round": 107,
     "bloon_groups": [
       {
         "type": "FortifiedCeramic",
@@ -2069,11 +2069,11 @@
         "count": 10
       }
     ],
-    "rbe": "447,384",
+    "rbe": 447384,
     "cash": "$3,658.7 + $207"
   },
   {
-    "round": "108",
+    "round": 108,
     "bloon_groups": [
       {
         "type": "ZOMG",
@@ -2084,11 +2084,11 @@
         "count": 10
       }
     ],
-    "rbe": "643,088",
+    "rbe": 643088,
     "cash": "$5,795.95 + $208"
   },
   {
-    "round": "109",
+    "round": 109,
     "bloon_groups": [
       {
         "type": "ZOMG",
@@ -2115,11 +2115,11 @@
         "count": 15
       }
     ],
-    "rbe": "552,345",
+    "rbe": 552345,
     "cash": "$7,439.25 + $209"
   },
   {
-    "round": "110",
+    "round": 110,
     "bloon_groups": [
       {
         "type": "BFB",
@@ -2142,11 +2142,11 @@
         "count": 6
       }
     ],
-    "rbe": "141,410",
+    "rbe": 141410,
     "cash": "$2,477.75 + $210"
   },
   {
-    "round": "111",
+    "round": 111,
     "bloon_groups": [
       {
         "type": "ZOMG",
@@ -2161,11 +2161,11 @@
         "count": 5
       }
     ],
-    "rbe": "949,472",
+    "rbe": 949472,
     "cash": "$9,456.55 + $211"
   },
   {
-    "round": "112",
+    "round": 112,
     "bloon_groups": [
       {
         "type": "FortifiedBFB",
@@ -2176,11 +2176,11 @@
         "count": 21
       }
     ],
-    "rbe": "261,648",
+    "rbe": 261648,
     "cash": "$2,458.8 + $212"
   },
   {
-    "round": "113",
+    "round": 113,
     "bloon_groups": [
       {
         "type": "FortifiedMOAB",
@@ -2199,11 +2199,11 @@
         "count": 42
       }
     ],
-    "rbe": "231,102",
+    "rbe": 231102,
     "cash": "$2,971.5 + $213"
   },
   {
-    "round": "114",
+    "round": 114,
     "bloon_groups": [
       {
         "type": "DDT",
@@ -2238,11 +2238,11 @@
         "count": 3
       }
     ],
-    "rbe": "483,416",
+    "rbe": 483416,
     "cash": "$5,394.15 + $214"
   },
   {
-    "round": "115",
+    "round": 115,
     "bloon_groups": [
       {
         "type": "DDT",
@@ -2277,11 +2277,11 @@
         "count": 36
       }
     ],
-    "rbe": "492,396",
+    "rbe": 492396,
     "cash": "$5,394.15 + $215"
   },
   {
-    "round": "116",
+    "round": 116,
     "bloon_groups": [
       {
         "type": "FortifiedZOMG",
@@ -2304,11 +2304,11 @@
         "count": 200
       }
     ],
-    "rbe": "575,600",
+    "rbe": 575600,
     "cash": "$3,932.9 + $216"
   },
   {
-    "round": "117",
+    "round": 117,
     "bloon_groups": [
       {
         "type": "Lead",
@@ -2323,11 +2323,11 @@
         "count": 18
       }
     ],
-    "rbe": "75,010",
+    "rbe": 75010,
     "cash": "$944.75 + $217"
   },
   {
-    "round": "118",
+    "round": 118,
     "bloon_groups": [
       {
         "type": "ZOMG",
@@ -2338,11 +2338,11 @@
         "count": 30
       }
     ],
-    "rbe": "398,784",
+    "rbe": 398784,
     "cash": "$4,232.1 + $218"
   },
   {
-    "round": "119",
+    "round": 119,
     "bloon_groups": [
       {
         "type": "BAD",
@@ -2353,11 +2353,11 @@
         "count": 1
       }
     ],
-    "rbe": "319,020",
+    "rbe": 319020,
     "cash": "$2,001.9 + $219"
   },
   {
-    "round": "120",
+    "round": 120,
     "bloon_groups": [
       {
         "type": "ZOMG",
@@ -2372,11 +2372,11 @@
         "count": 24
       }
     ],
-    "rbe": "431,808",
+    "rbe": 431808,
     "cash": "$5,032.8 + $220"
   },
   {
-    "round": "121",
+    "round": 121,
     "bloon_groups": [
       {
         "type": "FortifiedBFB",
@@ -2391,11 +2391,11 @@
         "count": 6
       }
     ],
-    "rbe": "516,500",
+    "rbe": 516500,
     "cash": "$1,372.48 + $221"
   },
   {
-    "round": "122",
+    "round": 122,
     "bloon_groups": [
       {
         "type": "BFB",
@@ -2418,11 +2418,11 @@
         "count": 75
       }
     ],
-    "rbe": "386,730",
+    "rbe": 386730,
     "cash": "$1,861.5 + $222"
   },
   {
-    "round": "123",
+    "round": 123,
     "bloon_groups": [
       {
         "type": "FortifiedZOMG",
@@ -2433,22 +2433,22 @@
         "count": 200
       }
     ],
-    "rbe": "629,936",
+    "rbe": 629936,
     "cash": "$2,500.16 + $223"
   },
   {
-    "round": "124",
+    "round": 124,
     "bloon_groups": [
       {
         "type": "FortifiedBFB",
         "count": 75
       }
     ],
-    "rbe": "738,600",
+    "rbe": 738600,
     "cash": "$2,287.5 + $224"
   },
   {
-    "round": "125",
+    "round": 125,
     "bloon_groups": [
       {
         "type": "ZOMG",
@@ -2523,11 +2523,11 @@
         "count": 3
       }
     ],
-    "rbe": "939,624",
+    "rbe": 939624,
     "cash": "$4,323.48 + $225"
   },
   {
-    "round": "126",
+    "round": 126,
     "bloon_groups": [
       {
         "type": "FortifiedCamoRegrowLead",
@@ -2538,11 +2538,11 @@
         "count": 99
       }
     ],
-    "rbe": "141,778",
+    "rbe": 141778,
     "cash": "$754.52 + $226"
   },
   {
-    "round": "127",
+    "round": 127,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -2553,11 +2553,11 @@
         "count": 24
       }
     ],
-    "rbe": "178,248",
+    "rbe": 178248,
     "cash": "$1,097.76 + $227"
   },
   {
-    "round": "128",
+    "round": 128,
     "bloon_groups": [
       {
         "type": "FortifiedDDT",
@@ -2572,11 +2572,11 @@
         "count": 30
       }
     ],
-    "rbe": "322,048",
+    "rbe": 322048,
     "cash": "$1,592.18 + $228"
   },
   {
-    "round": "129",
+    "round": 129,
     "bloon_groups": [
       {
         "type": "FortifiedZOMG",
@@ -2615,11 +2615,11 @@
         "count": 3
       }
     ],
-    "rbe": "826,792",
+    "rbe": 826792,
     "cash": "$2,011.76 + $229"
   },
   {
-    "round": "130",
+    "round": 130,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -2674,22 +2674,22 @@
         "count": 48
       }
     ],
-    "rbe": "307,968",
+    "rbe": 307968,
     "cash": "$1,554.48 + $230"
   },
   {
-    "round": "131",
+    "round": 131,
     "bloon_groups": [
       {
         "type": "FortifiedZOMG",
         "count": 18
       }
     ],
-    "rbe": "1,461,456",
+    "rbe": 1461456,
     "cash": "$2,196.36 + $231"
   },
   {
-    "round": "132",
+    "round": 132,
     "bloon_groups": [
       {
         "type": "ZOMG",
@@ -2724,11 +2724,11 @@
         "count": 100
       }
     ],
-    "rbe": "1,268,688",
+    "rbe": 1268688,
     "cash": "$2,952.48 + $232"
   },
   {
-    "round": "133",
+    "round": 133,
     "bloon_groups": [
       {
         "type": "FortifiedMOAB",
@@ -2791,11 +2791,11 @@
         "count": 3
       }
     ],
-    "rbe": "1,153,341",
+    "rbe": 1153341,
     "cash": "$3,072.94 + $233"
   },
   {
-    "round": "134",
+    "round": 134,
     "bloon_groups": [
       {
         "type": "FortifiedBFB",
@@ -2818,11 +2818,11 @@
         "count": 4
       }
     ],
-    "rbe": "374,840",
+    "rbe": 374840,
     "cash": "$1,220 + $234"
   },
   {
-    "round": "135",
+    "round": 135,
     "bloon_groups": [
       {
         "type": "FortifiedZOMG",
@@ -2845,11 +2845,11 @@
         "count": 7
       }
     ],
-    "rbe": "1,386,840",
+    "rbe": 1386840,
     "cash": "$1,868.3 + $235"
   },
   {
-    "round": "136",
+    "round": 136,
     "bloon_groups": [
       {
         "type": "FortifiedMOAB",
@@ -2860,11 +2860,11 @@
         "count": 24
       }
     ],
-    "rbe": "402,624",
+    "rbe": 402624,
     "cash": "$1,463.52 + $236"
   },
   {
-    "round": "137",
+    "round": 137,
     "bloon_groups": [
       {
         "type": "ZOMG",
@@ -2879,11 +2879,11 @@
         "count": 48
       }
     ],
-    "rbe": "1,143,984",
+    "rbe": 1143984,
     "cash": "$3,294.12 + $237"
   },
   {
-    "round": "138",
+    "round": 138,
     "bloon_groups": [
       {
         "type": "FortifiedDDT",
@@ -2910,11 +2910,11 @@
         "count": 12
       }
     ],
-    "rbe": "442,872",
+    "rbe": 442872,
     "cash": "$960.12 + $238"
   },
   {
-    "round": "139",
+    "round": 139,
     "bloon_groups": [
       {
         "type": "MOAB",
@@ -2953,11 +2953,11 @@
         "count": 18
       }
     ],
-    "rbe": "401,346",
+    "rbe": 401346,
     "cash": "$1,927.86 + $239"
   },
   {
-    "round": "140",
+    "round": 140,
     "bloon_groups": [
       {
         "type": "FortifiedBAD",
@@ -2968,7 +2968,7 @@
         "count": 1
       }
     ],
-    "rbe": "645,440",
+    "rbe": 645440,
     "cash": "$533.84 + $240"
   }
 ]
