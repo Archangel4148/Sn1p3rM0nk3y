@@ -4,7 +4,7 @@ import time
 import cv2
 import pyautogui as pgui
 
-from bloons import BloonsBrain
+from old_code.bloons import BloonsBrain
 from data.enums import Track, BloonsGamemode, BloonsScreen
 from interaction import WindowManager, InputController
 
