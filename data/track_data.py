@@ -2,16 +2,19 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import json
 
+import numpy as np
+
 from data.enums import Track
+from data.masks import load_mask
 
 
 @dataclass
 class TrackData:
     track: Track
     folder: Path
-    track_mask: object
-    land_mask: object
-    water_mask: object
+    track_mask: np.ndarray
+    land_mask: np.ndarray
+    water_mask: np.ndarray
     flow_points: list
     path_corners: list = field(default_factory=list)
 
@@ -21,11 +24,8 @@ class TrackData:
         h, w = self.land_mask.shape[:2]
         return h, w
 
-    def empty_occupancy(self):
-        import numpy as np
-        if self.land_mask.ndim == 3:
-            return np.zeros_like(self.land_mask[:, :, 0], dtype=np.uint8)
-        return np.zeros_like(self.land_mask, dtype=np.uint8)
+    def empty_occupancy(self) -> np.ndarray:
+        return np.zeros(self.land_mask.shape[:2], dtype=np.uint8)
 
     @staticmethod
     def folder_name(track: Track) -> str:
@@ -33,17 +33,9 @@ class TrackData:
 
     @classmethod
     def from_folder(cls, track: Track, folder: Path) -> "TrackData":
-        import cv2
-
-        track_mask = cv2.imread(str(folder / "track_mask.png"))
-        land_mask = cv2.imread(str(folder / "land_placement_mask.png"))
-        water_mask = cv2.imread(str(folder / "water_placement_mask.png"))
-        if track_mask is None:
-            raise RuntimeError(f"Could not load track mask: {folder / 'track_mask.png'}")
-        if land_mask is None:
-            raise RuntimeError(f"Could not load land placement mask: {folder / 'land_placement_mask.png'}")
-        if water_mask is None:
-            raise RuntimeError(f"Could not load water placement mask: {folder / 'water_placement_mask.png'}")
+        track_mask = load_mask(folder / "track_mask.png")
+        land_mask = load_mask(folder / "land_placement_mask.png")
+        water_mask = load_mask(folder / "water_placement_mask.png")
 
         with open(folder / "path_points.json", "r", encoding="utf-8") as f:
             points = json.load(f)

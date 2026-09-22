@@ -18,6 +18,7 @@ class PlacedTower:
     # One tower/hero that we believe is on the map
     tower: Tower | Hero
     position: tuple[float, float]
+    ref: str
     upgrades: dict[UpgradePath, int] = field(
         default_factory=lambda: {
             UpgradePath.TOP: 0,

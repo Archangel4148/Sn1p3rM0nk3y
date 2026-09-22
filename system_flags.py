@@ -9,5 +9,10 @@ PIXELS_PER_BLOONS_UNIT = 5.375
 
 
 def vprint(*args, **kwargs):
-    if VERBOSE:
+    if not VERBOSE:
+        return
+    try:
         print(*args, **kwargs)
+    except UnicodeEncodeError:
+        text = " ".join(str(a) for a in args)
+        print(text.encode("ascii", "replace").decode("ascii"), **kwargs)

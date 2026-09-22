@@ -205,7 +205,7 @@ class GameHarness(Harness):
         self._cash += income
         finished = self._round_index
         self._round_index += 1
-        vprint(f"Round {finished} done (+${income} → ${self._cash}, next {self._round_index})")
+        vprint(f"Round {finished} done (+${income} -> ${self._cash}, next {self._round_index})")
         return self._ok()
 
     def _wait_for_round_end(self, timeout: float = 300.0, interval: float = 0.25) -> bool:
@@ -227,12 +227,17 @@ class GameHarness(Harness):
             return self._fail(err)
         if self._track_data is None:
             return self._fail("no_track")
+        if self._ref_taken(action.ref):
+            return self._fail("duplicate_ref")
         cost = self._catalog.cost_place(action.tower, setup.difficulty)
         if self._cash < cost:
             return self._fail("cannot_afford")
 
-        placed = self._place(action.tower, action.position, cost)
-        vprint(f"Placed {action.tower.value} at {action.position} for ${cost}/{self._cash}")
+        placed = self._place(action.tower, action.position, cost, action.ref)
+        vprint(
+            f"Placed {action.tower.value} ({action.ref}) at {action.position} "
+            f"for ${cost}/{self._cash}"
+        )
         return self._ok(placed_id=placed.id)
 
     def _step_place_hero(self, action: PlaceHero, capture) -> StepResult:
@@ -244,13 +249,18 @@ class GameHarness(Harness):
             return self._fail("no_track")
         if self._hero_placed:
             return self._fail("hero_already_placed")
+        if self._ref_taken(action.ref):
+            return self._fail("duplicate_ref")
         cost = self._catalog.cost_place(setup.hero, setup.difficulty)
         if self._cash < cost:
             return self._fail("cannot_afford")
 
-        placed = self._place(setup.hero, action.position, cost, hotkey="p")
+        placed = self._place(setup.hero, action.position, cost, action.ref, hotkey="p")
         self._hero_placed = True
-        vprint(f"Placed hero {setup.hero} at {action.position} for ${cost}/{self._cash}")
+        vprint(
+            f"Placed hero {setup.hero} ({action.ref}) at {action.position} "
+            f"for ${cost}/{self._cash}"
+        )
         return self._ok(placed_id=placed.id)
 
     def _step_upgrade(self, action: Upgrade, capture) -> StepResult:
@@ -259,9 +269,11 @@ class GameHarness(Harness):
         if err:
             return self._fail(err)
         try:
-            idx, placed = self._placed_by_id(action.tower_id)
+            idx, placed = self._placed_by_ref(action.ref)
         except KeyError:
             return self._fail("unknown_tower")
+        if not isinstance(placed.tower, Tower):
+            return self._fail("upgrading_hero")
         if action.upgrade_path not in self._catalog.legal_upgrades(placed):
             return self._fail("illegal_upgrade")
         cost = self._catalog.cost_upgrade(placed, action.upgrade_path, setup.difficulty)
@@ -283,8 +295,9 @@ class GameHarness(Harness):
         new_upgrades[action.upgrade_path] = new_upgrades[action.upgrade_path] + 1
         self._placed[idx] = replace(placed, upgrades=new_upgrades)
         vprint(
-            f"Upgraded {placed.tower} with {name} "
-            f"({action.upgrade_path.value} → {new_upgrades[action.upgrade_path]}) for ${cost}/{self._cash}"
+            f"Upgraded {placed.ref} ({placed.tower}) with {name} "
+            f"({action.upgrade_path.value} -> {new_upgrades[action.upgrade_path]}) "
+            f"for ${cost}/{self._cash}"
         )
         return self._ok()
 
@@ -293,6 +306,7 @@ class GameHarness(Harness):
         kind: Tower | Hero,
         position: tuple[float, float],
         cost: float,
+        ref: str,
         hotkey: str | None = None,
     ) -> PlacedTower:
         if hotkey is not None:
@@ -305,17 +319,21 @@ class GameHarness(Harness):
         self._controller.press_key(key)
         self._controller.click(*position)
         self._spend(cost)
-        placed = PlacedTower(tower=kind, position=position, radius_px=radius_px)
+        placed = PlacedTower(tower=kind, position=position, ref=ref, radius_px=radius_px)
         self._placed.append(placed)
         self._mark_occupied(position, radius_px)
         return placed
 
+    def _ref_taken(self, ref: str) -> bool:
+        return any(placed.ref == ref for placed in self._placed)
+
     def _mark_occupied(self, position: tuple[float, float], radius_px: int) -> None:
-        import cv2
+        from data.masks import stamp_disk
+
         h, w = self._track_data.size
         px = int(position[0] * w)
         py = int(position[1] * h)
-        cv2.circle(self._occupied_mask, (px, py), int(radius_px * 1.5), 255, -1)
+        stamp_disk(self._occupied_mask, px, py, int(radius_px * 1.5))
 
     def _is_play_idle(self, capture) -> bool:
         # TODO: play-triangle vs fast-forward pixel.
@@ -460,11 +478,11 @@ class GameHarness(Harness):
         vprint(f"Reached {target.name}")
         return True
 
-    def _placed_by_id(self, tower_id: uuid.UUID) -> tuple[int, PlacedTower]:
+    def _placed_by_ref(self, ref: str) -> tuple[int, PlacedTower]:
         for i, placed in enumerate(self._placed):
-            if placed.id == tower_id:
+            if placed.ref == ref:
                 return i, placed
-        raise KeyError(f"No placed tower with id {tower_id}")
+        raise KeyError(f"No placed tower with ref '{ref}'")
 
     def _placement_mask(self, kind: Tower | Hero):
         if self._track_data is None:
@@ -481,19 +499,20 @@ class GameHarness(Harness):
         if data.placement_type == "water":
             return self._track_data.water_mask
         if data.placement_type == "any":
-            import cv2
-            return cv2.bitwise_or(self._track_data.land_mask, self._track_data.water_mask)
+            from data.masks import mask_or
+
+            return mask_or(self._track_data.land_mask, self._track_data.water_mask)
         raise ValueError(f"Unknown placement type: {data.placement_type}")
 
     @staticmethod
     def _is_valid_terrain(mask, x: int, y: int) -> bool:
-        return bool(mask[y, x, 0] >= 128)
+        return bool(mask[y, x] >= 128)
 
     def _intersects_track(self, x: int, y: int, radius: int, w: int, h: int) -> bool:
         import numpy as np
         y0, y1 = max(y - radius, 0), min(y + radius, h)
         x0, x1 = max(x - radius, 0), min(x + radius, w)
-        return bool(np.any(self._track_data.track_mask[y0:y1, x0:x1, 0] > 128))
+        return bool(np.any(self._track_data.track_mask[y0:y1, x0:x1] > 128))
 
     def _overlaps_existing_tower(self, x: int, y: int, radius: int, w: int, h: int) -> bool:
         import numpy as np
@@ -508,7 +527,7 @@ class GameHarness(Harness):
 
         for y in range(0, h, sample_step):
             for x in range(0, w, sample_step):
-                if mask[y, x, 0] < 128:
+                if mask[y, x] < 128:
                     continue
                 if self._intersects_track(x, y, tower_radius, w, h):
                     continue
