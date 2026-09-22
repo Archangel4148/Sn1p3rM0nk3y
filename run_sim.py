@@ -1,27 +1,23 @@
-"""Run the Meadow smoke plan against SimulatedHarness (no BTD6 window)."""
+"""Replay and evaluate the Meadow smoke plan on SimulatedHarness."""
 
-from executor import Executor
-from harness.simulated_harness import SimulatedHarness
 from plans.meadow_smoke import PLAN, SETUP
+from planning.evaluate import evaluate_plan
 from system_flags import vprint
 
 
 def main() -> None:
-    harness = SimulatedHarness()
-    obs = harness.reset(SETUP)
+    report = evaluate_plan(SETUP, PLAN)
     vprint(
-        f"Start: round {obs.believed.round_index}, "
-        f"${obs.believed.cash}, placed={len(obs.believed.placed)}"
+        f"Plan estimated {'SURVIVE' if report.ok else 'LOSE'}"
+        + (f" (first loss round {report.first_loss_round})" if report.first_loss_round else "")
+        + (f" error={report.error}" if report.error else "")
     )
-
-    obs = Executor().run(harness, PLAN)
-    vprint(
-        f"Done: round {obs.believed.round_index}, "
-        f"${obs.believed.cash}, placed={len(obs.believed.placed)}, "
-        f"last_ok={obs.sensed.last_step_ok}"
-    )
-    for tower in obs.believed.placed:
-        vprint(f"  {tower.ref}: {tower.tower} @ {tower.position} {tower.upgrades}")
+    for verdict in report.rounds:
+        mark = "ok" if not verdict.estimated_lose else "LOSE"
+        vprint(
+            f"  r{verdict.round_num} [{mark}/{verdict.status.value}] "
+            f"rbe={verdict.rbe} dps={verdict.board_dps:.1f} {verdict.detail}"
+        )
 
 
 if __name__ == "__main__":
