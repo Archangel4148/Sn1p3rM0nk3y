@@ -13,7 +13,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum
 
-from actions import Action, StartRound
+from actions import Action, PlaceHero, PlaceTower, StartRound, Upgrade
 from catalog import Catalog
 from data.enums import (
     DAMAGE_TYPE_BY_COVERAGE,
@@ -47,20 +47,82 @@ class RoundVerdict:
 
     @property
     def estimated_lose(self) -> bool:
-        return self.status != RoundVerdictStatus.PASS
+        # return self.status != RoundVerdictStatus.PASS
+        return self.status == RoundVerdictStatus.HARD_FAIL
 
 
 @dataclass(frozen=True)
 class PlanEvaluation:
-    # True only if every StartRound was an estimated survive and the tape ran.
+    # True only if the tape ran, every purchase was legal, and no hard loss.
     ok: bool
     rounds: tuple[RoundVerdict, ...]
     first_loss_round: int | None = None
     error: str | None = None
+    illegal_purchase: str | None = None
 
     @property
     def estimated_lose(self) -> bool:
-        return not self.ok
+        return not self.ok and self.illegal_purchase is None
+
+
+def purchase_illegality(
+    observation: Observation,
+    setup: GameSetup,
+    action: Action,
+    catalog: Catalog,
+) -> str | None:
+    """Return a reason the buy is illegal, or None if it is allowed.
+
+    Covers affordability, crosspath rules, refs, and known catalog entries.
+    Placement terrain is not checked here (harness / candidates own that).
+    """
+    believed = observation.believed
+
+    if isinstance(action, PlaceTower):
+        if catalog.towers.get_tower_data(action.tower) is None:
+            return f"unknown_tower:{action.tower.value}"
+        if any(p.ref == action.ref for p in believed.placed):
+            return f"duplicate_ref:{action.ref}"
+        cost = catalog.cost_place(action.tower, setup.difficulty)
+        if believed.cash < cost:
+            return f"cannot_afford:{action.tower.value}:${cost:.0f}>${believed.cash:.0f}"
+        return None
+
+    if isinstance(action, PlaceHero):
+        if believed.hero_placed:
+            return "hero_already_placed"
+        if any(p.ref == action.ref for p in believed.placed):
+            return f"duplicate_ref:{action.ref}"
+        if catalog.heroes.get_hero_data(setup.hero) is None:
+            return f"unknown_hero:{setup.hero.value}"
+        cost = catalog.cost_place(setup.hero, setup.difficulty)
+        if believed.cash < cost:
+            return f"cannot_afford:hero:${cost:.0f}>${believed.cash:.0f}"
+        return None
+
+    if isinstance(action, Upgrade):
+        placed = next((p for p in believed.placed if p.ref == action.ref), None)
+        if placed is None:
+            return f"unknown_ref:{action.ref}"
+        if not isinstance(placed.tower, Tower):
+            return f"upgrading_hero:{action.ref}"
+        if action.upgrade_path not in catalog.legal_upgrades(placed):
+            cross = "/".join(
+                str(placed.upgrades[p]) for p in placed.upgrades
+            )
+            return (
+                f"illegal_upgrade:{action.ref}:{action.upgrade_path.value}"
+                f"(from {cross})"
+            )
+        cost = catalog.cost_upgrade(placed, action.upgrade_path, setup.difficulty)
+        if believed.cash < cost:
+            return (
+                f"cannot_afford:{action.ref}:{action.upgrade_path.value}"
+                f":${cost:.0f}>${believed.cash:.0f}"
+            )
+        return None
+
+    return None
 
 
 def bloon_group_requirements(group) -> set[CoverageType]:
@@ -247,7 +309,11 @@ def evaluate_plan(
     soft_clear_factor: float = 0.05,
     stop_on_estimated_loss: bool = True,
 ) -> PlanEvaluation:
-    """Replay the plan on a harness; before each StartRound, score the upcoming round."""
+    """Replay the plan on a harness; before each StartRound, score the upcoming round.
+
+    Shop actions are checked for legal purchases (cash, crosspath, refs) before
+    the harness steps them.
+    """
     catalog = catalog or Catalog()
     harness = harness or SimulatedHarness()
     obs = harness.reset(setup)
@@ -276,6 +342,16 @@ def evaluate_plan(
                     rounds=tuple(verdicts),
                     first_loss_round=verdict.round_num,
                 )
+
+        illegal = purchase_illegality(obs, setup, action, catalog)
+        if illegal is not None:
+            vprint(f"[eval] illegal purchase at step {i}: {illegal}")
+            return PlanEvaluation(
+                ok=False,
+                rounds=tuple(verdicts),
+                error=f"step {i}: {illegal}",
+                illegal_purchase=illegal,
+            )
 
         result = harness.step(action)
         obs = result.observation
