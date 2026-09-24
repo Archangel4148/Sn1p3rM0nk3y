@@ -24,6 +24,7 @@ from data.enums import (
 )
 from data.track_data import TrackData
 from harness import Harness
+from harness.placement import find_placement_candidates
 from interaction import InputController, WindowManager
 from observation import (
     Believed,
@@ -31,6 +32,7 @@ from observation import (
     GameSetup,
     Observation,
     PlacedTower,
+    PlacementCandidate,
     Sensed,
     StepResult,
 )
@@ -132,6 +134,16 @@ class GameHarness(Harness):
             remaining=self._catalog.remaining_rounds(self._round_index)
         )
         return Observation(sensed=sensed, believed=believed, forecast=forecast)
+
+    def placement_candidates(self, tower: Tower | Hero) -> list[PlacementCandidate]:
+        if self._track_data is None or self._occupied_mask is None:
+            raise RuntimeError("No track loaded; call reset() first.")
+        return find_placement_candidates(
+            self._catalog,
+            self._track_data,
+            self._occupied_mask,
+            tower,
+        )
 
     def step(self, action: Action) -> StepResult:
         try:

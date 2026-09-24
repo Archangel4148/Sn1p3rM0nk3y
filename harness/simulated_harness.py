@@ -6,6 +6,7 @@ from catalog import Catalog
 from data.enums import BloonsScreen, Hero, Tower, Track
 from data.track_data import TrackData
 from harness import Harness
+from harness.placement import find_placement_candidates, footprint_radius_px
 from observation import (
     Believed,
     Forecast,
@@ -16,7 +17,7 @@ from observation import (
     Sensed,
     StepResult,
 )
-from system_flags import PIXELS_PER_BLOONS_UNIT, vprint
+from system_flags import vprint
 
 
 class SimulatedHarness(Harness):
@@ -33,6 +34,7 @@ class SimulatedHarness(Harness):
         self._screen: BloonsScreen = BloonsScreen.IN_GAME
         self._track_data: TrackData | None = None
         self._occupied_mask = None
+        self._silent = False
 
     def reset(self, setup: GameSetup) -> Observation:
         if self._catalog.heroes.get_hero_data(setup.hero) is None:
@@ -48,11 +50,15 @@ class SimulatedHarness(Harness):
         self._select_track(setup.track)
         self._screen = BloonsScreen.IN_GAME
 
-        vprint(
+        self._log(
             f"[sim] Reset {setup.track.value} / {setup.gamemode.value} / {setup.hero.value} "
             f"(round {self._round_index}, ${self._cash})"
         )
         return self.observe()
+
+    def _log(self, message: str) -> None:
+        if not self._silent:
+            vprint(message)
 
     def observe(self) -> Observation:
         setup = self._require_setup()
@@ -80,13 +86,22 @@ class SimulatedHarness(Harness):
             return self._step(action)
         except Exception as e:
             self._last_step_ok = False
-            vprint(f"[sim] step() caught {type(e).__name__}: {e}")
+            self._log(f"[sim] step() caught {type(e).__name__}: {e}")
             if self._setup is None:
                 raise
             return StepResult(ok=False, observation=self.observe(), error=str(e))
 
     def placement_candidates(self, tower: Tower | Hero) -> list[PlacementCandidate]:
-        raise NotImplementedError
+        if self._track_data is None or self._occupied_mask is None:
+            raise RuntimeError("No track loaded; call reset() first.")
+        from harness.placement import find_placement_candidates
+
+        return find_placement_candidates(
+            self._catalog,
+            self._track_data,
+            self._occupied_mask,
+            tower,
+        )
 
     def _step(self, action: Action) -> StepResult:
         self._require_setup()
@@ -108,7 +123,7 @@ class SimulatedHarness(Harness):
 
     def _fail(self, error: str) -> StepResult:
         self._last_step_ok = False
-        vprint(f"[sim] step failed: {error}")
+        self._log(f"[sim] step failed: {error}")
         return StepResult(ok=False, observation=self.observe(), error=error)
 
     def _shop_error(self) -> str | None:
@@ -140,7 +155,7 @@ class SimulatedHarness(Harness):
         finished = self._round_index
         self._round_index += 1
         self._play_idle = True
-        vprint(
+        self._log(
             f"[sim] Round {finished} done (+${income} -> ${self._cash}, "
             f"next {self._round_index})"
         )
@@ -160,7 +175,7 @@ class SimulatedHarness(Harness):
             return self._fail("cannot_afford")
 
         placed = self._commit_place(action.tower, action.position, cost, action.ref)
-        vprint(
+        self._log(
             f"[sim] Placed {action.tower.value} ({action.ref}) at {action.position} "
             f"for ${cost}/{self._cash}"
         )
@@ -183,7 +198,7 @@ class SimulatedHarness(Harness):
 
         placed = self._commit_place(setup.hero, action.position, cost, action.ref)
         self._hero_placed = True
-        vprint(
+        self._log(
             f"[sim] Placed hero {setup.hero} ({action.ref}) at {action.position} "
             f"for ${cost}/{self._cash}"
         )
@@ -214,7 +229,7 @@ class SimulatedHarness(Harness):
         new_upgrades = dict(placed.upgrades)
         new_upgrades[action.upgrade_path] = new_upgrades[action.upgrade_path] + 1
         self._placed[idx] = replace(placed, upgrades=new_upgrades)
-        vprint(
+        self._log(
             f"[sim] Upgraded {placed.ref} ({placed.tower}) with {name} "
             f"({action.upgrade_path.value} -> {new_upgrades[action.upgrade_path]}) "
             f"for ${cost}/{self._cash}"
@@ -257,21 +272,27 @@ class SimulatedHarness(Harness):
         raise KeyError(f"No placed tower with ref '{ref}'")
 
     def _footprint_radius_px(self, kind: Tower | Hero) -> int:
-        if isinstance(kind, Tower):
-            data = self._catalog.towers.get_tower_data(kind)
-        else:
-            data = self._catalog.heroes.get_hero_data(kind)
-        if data is None:
-            raise KeyError(f"No catalog entry for {kind}")
+        return footprint_radius_px(self._catalog, kind)
 
-        if data.footprint_shape == "circular":
-            return int((data.footprint_radius or 10) * PIXELS_PER_BLOONS_UNIT)
-        if data.footprint_shape == "rectangular":
-            width = getattr(data, "footprint_width", None) or 10
-            height = getattr(data, "footprint_height", None) or 10
-            radius = (width ** 2 + height ** 2) ** 0.5 / 2
-            return int(radius * PIXELS_PER_BLOONS_UNIT)
-        return int(10 * PIXELS_PER_BLOONS_UNIT)
+    def clone(self) -> "SimulatedHarness":
+        """Deep-enough copy for planner search forks (no shared mutable masks)."""
+        other = SimulatedHarness.__new__(SimulatedHarness)
+        Harness.__init__(other)
+        other._catalog = self._catalog
+        other._setup = self._setup
+        other._round_index = self._round_index
+        other._cash = self._cash
+        other._placed = list(self._placed)
+        other._hero_placed = self._hero_placed
+        other._last_step_ok = self._last_step_ok
+        other._play_idle = self._play_idle
+        other._screen = self._screen
+        other._track_data = self._track_data
+        other._occupied_mask = (
+            None if self._occupied_mask is None else self._occupied_mask.copy()
+        )
+        other._silent = True
+        return other
 
     def _mark_occupied(self, position: tuple[float, float], radius_px: int) -> None:
         from data.masks import stamp_disk

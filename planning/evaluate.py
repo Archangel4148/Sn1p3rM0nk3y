@@ -1,8 +1,13 @@
 """Estimated pass/fail for a board vs upcoming round data.
 
 Not a bloon sim. Hard fail = something on the round nothing can interact with
-(estimated leak → lives to 0). Soft fail = coverage ok but clear rate looks
-too low for that round's RBE (likely leak). Pass = estimated survive.
+(estimated leak → lives to 0). Soft fail = coverage ok but estimated damage
+budget while bloons are in range is below the round's RBE (likely leak).
+Pass = estimated survive.
+
+Damage budget ≈ sum(tower_dps * path_transit_s * path_fraction_in_range).
+Path fraction comes from flow points inside each tower's range; transit time
+is path length / an assumed bloon speed (default ~red).
 
 Heroes are ignored in coverage/DPS until hero leveling exists — do not count
 on PlaceHero for evaluation.
@@ -12,6 +17,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import StrEnum
+
+import numpy as np
 
 from actions import Action, PlaceHero, PlaceTower, StartRound, Upgrade
 from catalog import Catalog
@@ -24,10 +31,15 @@ from data.enums import (
     Tower,
 )
 from data.rounds_data import RoundData
+from data.track_data import TrackData, TrackDatabase
 from harness import Harness
+from harness.placement import attack_range_px
 from harness.simulated_harness import SimulatedHarness
 from observation import GameSetup, Observation, PlacedTower
-from system_flags import vprint
+from system_flags import PIXELS_PER_BLOONS_UNIT, vprint
+
+# Approx red-bloon speed in game units/sec. Faster bloons => tighter soft gate.
+DEFAULT_BLOON_SPEED = 25.0
 
 
 class RoundVerdictStatus(StrEnum):
@@ -42,6 +54,8 @@ class RoundVerdict:
     status: RoundVerdictStatus
     rbe: int
     board_dps: float
+    effective_dps: float = 0.0
+    damage_budget: float = 0.0
     missing: tuple[CoverageType, ...] = ()
     detail: str = ""
 
@@ -49,6 +63,9 @@ class RoundVerdict:
     def estimated_lose(self) -> bool:
         # return self.status != RoundVerdictStatus.PASS
         return self.status == RoundVerdictStatus.HARD_FAIL
+
+
+_TRACK_DB = TrackDatabase()
 
 
 @dataclass(frozen=True)
@@ -254,16 +271,64 @@ def board_dps(placed: tuple[PlacedTower, ...], catalog: Catalog) -> float:
     )
 
 
+def path_length_units(track: TrackData) -> float:
+    flow = np.asarray(track.flow_points, dtype=float)
+    if len(flow) < 2:
+        return 0.0
+    return float(np.sqrt(((flow[1:] - flow[:-1]) ** 2).sum(axis=1)).sum()) / PIXELS_PER_BLOONS_UNIT
+
+
+def path_fraction_in_range(
+    placed: PlacedTower,
+    track: TrackData,
+    catalog: Catalog,
+) -> float:
+    """Fraction of flow points that fall inside this tower's attack range."""
+    if not isinstance(placed.tower, Tower):
+        return 0.0
+    flow = np.asarray(track.flow_points, dtype=float)
+    if len(flow) == 0:
+        return 0.0
+
+    h, w = track.size
+    x = placed.position[0] * w
+    y = placed.position[1] * h
+    range_px = attack_range_px(catalog, placed.tower)
+    if range_px <= 0:
+        return 0.0
+
+    in_range = np.sum((flow[:, 0] - x) ** 2 + (flow[:, 1] - y) ** 2 < float(range_px * range_px))
+    return float(in_range) / float(len(flow))
+
+
+def effective_board_dps(
+    placed: tuple[PlacedTower, ...],
+    track: TrackData,
+    catalog: Catalog,
+) -> float:
+    """Raw DPS scaled by how much of the path each tower can see."""
+    total = 0.0
+    for tower in placed:
+        if not isinstance(tower.tower, Tower):
+            continue
+        total += tower_dps(tower, catalog) * path_fraction_in_range(tower, track, catalog)
+    return total
+
+
 def evaluate_round(
     observation: Observation,
     round_data: RoundData,
     catalog: Catalog,
     *,
-    soft_clear_factor: float = 0.05,
+    bloon_speed: float = DEFAULT_BLOON_SPEED,
+    clear_margin: float = 1.0,
+    track: TrackData | None = None,
 ) -> RoundVerdict:
     """Score the current board against one upcoming round.
 
-    soft_clear_factor: require board_dps >= rbe * factor (very rough clear-rate gate).
+    Soft gate: damage_budget = effective_dps * (path_length / bloon_speed)
+    must be >= rbe * clear_margin. effective_dps weights each tower by the
+    fraction of flow points inside its range.
     """
     placed = observation.believed.placed
     dps = board_dps(placed, catalog)
@@ -271,24 +336,46 @@ def evaluate_round(
     need = round_requirements(round_data)
     missing = tuple(sorted((c for c in need if not coverage[c]), key=lambda c: c.value))
 
+    track = track or _TRACK_DB.get_track_data(observation.believed.track)
+    if track is None:
+        return RoundVerdict(
+            round_num=round_data.round_num,
+            status=RoundVerdictStatus.HARD_FAIL,
+            rbe=round_data.rbe,
+            board_dps=dps,
+            detail=f"no track data for {observation.believed.track.value}",
+        )
+
+    eff = effective_board_dps(placed, track, catalog)
+    transit = path_length_units(track) / max(bloon_speed, 1e-6)
+    budget = eff * transit
+
     if missing:
         return RoundVerdict(
             round_num=round_data.round_num,
             status=RoundVerdictStatus.HARD_FAIL,
             rbe=round_data.rbe,
             board_dps=dps,
+            effective_dps=eff,
+            damage_budget=budget,
             missing=missing,
             detail=f"missing coverage: {', '.join(c.value for c in missing)}",
         )
 
-    required = round_data.rbe * soft_clear_factor
-    if dps < required:
+    required = round_data.rbe * clear_margin
+    if budget < required:
         return RoundVerdict(
             round_num=round_data.round_num,
             status=RoundVerdictStatus.SOFT_FAIL,
             rbe=round_data.rbe,
             board_dps=dps,
-            detail=f"dps {dps:.1f} < required {required:.1f} (rbe {round_data.rbe})",
+            effective_dps=eff,
+            damage_budget=budget,
+            detail=(
+                f"budget {budget:.0f} < required {required:.0f} "
+                f"(eff_dps={eff:.1f} raw_dps={dps:.1f} transit={transit:.1f}s "
+                f"rbe={round_data.rbe})"
+            ),
         )
 
     return RoundVerdict(
@@ -296,7 +383,12 @@ def evaluate_round(
         status=RoundVerdictStatus.PASS,
         rbe=round_data.rbe,
         board_dps=dps,
-        detail=f"dps {dps:.1f} ok for rbe {round_data.rbe}",
+        effective_dps=eff,
+        damage_budget=budget,
+        detail=(
+            f"budget {budget:.0f} ok for rbe {round_data.rbe} "
+            f"(eff_dps={eff:.1f} raw_dps={dps:.1f} transit={transit:.1f}s)"
+        ),
     )
 
 
@@ -306,7 +398,8 @@ def evaluate_plan(
     *,
     catalog: Catalog | None = None,
     harness: Harness | None = None,
-    soft_clear_factor: float = 0.05,
+    bloon_speed: float = DEFAULT_BLOON_SPEED,
+    clear_margin: float = 1.0,
     stop_on_estimated_loss: bool = True,
 ) -> PlanEvaluation:
     """Replay the plan on a harness; before each StartRound, score the upcoming round.
@@ -318,6 +411,7 @@ def evaluate_plan(
     harness = harness or SimulatedHarness()
     obs = harness.reset(setup)
     verdicts: list[RoundVerdict] = []
+    track = _TRACK_DB.get_track_data(setup.track)
 
     for i, action in enumerate(plan):
         if isinstance(action, StartRound):
@@ -329,7 +423,12 @@ def evaluate_plan(
                     error=f"no round data for {obs.believed.round_index}",
                 )
             verdict = evaluate_round(
-                obs, round_data, catalog, soft_clear_factor=soft_clear_factor
+                obs,
+                round_data,
+                catalog,
+                bloon_speed=bloon_speed,
+                clear_margin=clear_margin,
+                track=track,
             )
             verdicts.append(verdict)
             vprint(
