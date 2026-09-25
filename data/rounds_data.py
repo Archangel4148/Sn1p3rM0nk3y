@@ -60,24 +60,19 @@ class RoundsDatabase:
     RAW_JSON_PATH = Path(__file__).parent / "tables" / "rounds.json"
     def __init__(self):
         self._data = self.load_rounds_data()
+        parsed = [RoundData.from_dict(row) for row in self._data]
+        self._by_round = {row.round_num: row for row in parsed}
+        self._ordered = tuple(sorted(parsed, key=lambda row: row.round_num))
 
     def load_rounds_data(self) -> dict:
         with open(self.RAW_JSON_PATH, "r", encoding="utf-8") as f:
             return json.load(f, parse_int=int)
 
     def get_round_data(self, round: int) -> RoundData | None:
-        try:
-            round_dict = next(data for data in self._data if data["round"] == round)
-            return RoundData.from_dict(round_dict)
-        except StopIteration:
-            return None
+        return self._by_round.get(round)
 
     def remaining_from(self, from_round: int) -> tuple[RoundData, ...]:
-        return tuple(
-            RoundData.from_dict(data)
-            for data in self._data
-            if data["round"] >= from_round
-        )
+        return tuple(row for row in self._ordered if row.round_num >= from_round)
 
 if __name__ == "__main__":
     db = RoundsDatabase()
